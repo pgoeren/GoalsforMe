@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import { GoalProvider } from './context/GoalContext';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
@@ -9,7 +9,7 @@ import History from './pages/History';
 export default function App() {
   return (
     <GoalProvider>
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<Dashboard />} />
@@ -18,7 +18,7 @@ export default function App() {
             <Route path="/history" element={<History />} />
           </Route>
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </GoalProvider>
   );
 }
