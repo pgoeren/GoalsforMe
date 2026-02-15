@@ -1,0 +1,93 @@
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useGoals } from '../context/GoalContext';
+import GoalCard from '../components/GoalCard';
+import { getQuarterlyGoals } from '../firebase/goalService';
+import { getNextCheckIn, formatDate, getCurrentQuarter } from '../utils/checkInDates';
+
+export default function Dashboard() {
+  const { yearlyGoals, loading } = useGoals();
+  const [quarterlyData, setQuarterlyData] = useState({});
+  const navigate = useNavigate();
+  const currentYear = new Date().getFullYear();
+  const nextCheckIn = getNextCheckIn(currentYear);
+
+  useEffect(() => {
+    async function loadQuarterly() {
+      const data = {};
+      for (const goal of yearlyGoals) {
+        data[goal.id] = await getQuarterlyGoals(goal.id);
+      }
+      setQuarterlyData(data);
+    }
+    if (yearlyGoals.length > 0) loadQuarterly();
+  }, [yearlyGoals]);
+
+  if (loading) {
+    return <div className="loading-spinner">Loading your goals...</div>;
+  }
+
+  return (
+    <div className="dashboard">
+      <div className="dashboard-header">
+        <h1>My Goals</h1>
+        <button className="btn btn-primary" onClick={() => navigate('/add')}>
+          + New Goal
+        </button>
+      </div>
+
+      {nextCheckIn && (
+        <div className="next-checkin-banner">
+          <div className="banner-content">
+            <span className="banner-label">Next Check-in</span>
+            <span className="banner-date">
+              {nextCheckIn.label} &mdash; {formatDate(nextCheckIn.date)}
+            </span>
+          </div>
+        </div>
+      )}
+
+      {yearlyGoals.length === 0 ? (
+        <div className="empty-state">
+          <div className="empty-icon">
+            <svg viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="#CBD5E1" strokeWidth="1.5">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M8 12l2 2 4-4" />
+            </svg>
+          </div>
+          <h2>No goals yet</h2>
+          <p>Start by creating your first yearly goal. You'll define what success looks like and break it down into quarterly milestones.</p>
+          <button className="btn btn-primary" onClick={() => navigate('/add')}>
+            Create Your First Goal
+          </button>
+        </div>
+      ) : (
+        <>
+          <div className="goals-summary">
+            <div className="summary-stat">
+              <span className="stat-value">{yearlyGoals.length}</span>
+              <span className="stat-label">Goals</span>
+            </div>
+            <div className="summary-stat">
+              <span className="stat-value">Q{getCurrentQuarter()}</span>
+              <span className="stat-label">Current</span>
+            </div>
+            <div className="summary-stat">
+              <span className="stat-value">{currentYear}</span>
+              <span className="stat-label">Year</span>
+            </div>
+          </div>
+          <div className="goals-grid">
+            {yearlyGoals.map(goal => (
+              <GoalCard
+                key={goal.id}
+                goal={goal}
+                quarterlyProgress={quarterlyData[goal.id]}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
