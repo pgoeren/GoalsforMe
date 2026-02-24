@@ -1,5 +1,50 @@
 import { getCheckInDatesForYear, getCurrentQuarter } from '../utils/checkInDates';
 
+function formatICSDate(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}${m}${d}`;
+}
+
+function buildICS(events) {
+  const lines = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//GoalsForMe//CheckIns//EN',
+  ];
+  for (const ev of events) {
+    const dtStart = formatICSDate(ev.date);
+    const next = new Date(ev.date);
+    next.setDate(next.getDate() + 1);
+    const dtEnd = formatICSDate(next);
+    lines.push(
+      'BEGIN:VEVENT',
+      `DTSTART;VALUE=DATE:${dtStart}`,
+      `DTEND;VALUE=DATE:${dtEnd}`,
+      `SUMMARY:${ev.label} - Goal Review`,
+      `DESCRIPTION:Time to review your quarterly goals and track progress.`,
+      `UID:goalsforme-${ev.quarter}-${ev.date.getFullYear()}@goalsforme`,
+      'END:VEVENT'
+    );
+  }
+  lines.push('END:VCALENDAR');
+  return lines.join('\r\n');
+}
+
+function downloadICS(events, filename) {
+  const ics = buildICS(events);
+  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 function dayOfYear(date) {
   const start = new Date(date.getFullYear(), 0, 0);
   return Math.floor((date - start) / (1000 * 60 * 60 * 24));
@@ -101,9 +146,32 @@ export default function SeasonTimeline({ year }) {
               <span className="stl-ci-badge">
                 {isPast ? 'Done' : days === 0 ? 'Today!' : `${days}d`}
               </span>
+              {!isPast && (
+                <button
+                  className="stl-ci-cal"
+                  onClick={() => downloadICS([ci], `checkin-q${ci.quarter}.ics`)}
+                  title={`Add ${ci.label} to calendar`}
+                >
+                  <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor">
+                    <path d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h1.25A1.75 1.75 0 0118 5.75v10.5A1.75 1.75 0 0116.25 18H3.75A1.75 1.75 0 012 16.25V5.75A1.75 1.75 0 013.75 4H5V2.75A.75.75 0 015.75 2zm-2 5.5v8.75c0 .138.112.25.25.25h12.5a.25.25 0 00.25-.25V7.5H3.75zm2.5 2h2.5v2.5h-2.5v-2.5z"/>
+                  </svg>
+                </button>
+              )}
             </div>
           );
         })}
+        <button
+          className="stl-cal-all"
+          onClick={() => downloadICS(
+            checkIns.filter(ci => daysRemaining(ci.date) >= 0),
+            `goalsforme-checkins-${year}.ics`
+          )}
+        >
+          <svg viewBox="0 0 20 20" width="14" height="14" fill="currentColor">
+            <path d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h1.25A1.75 1.75 0 0118 5.75v10.5A1.75 1.75 0 0116.25 18H3.75A1.75 1.75 0 012 16.25V5.75A1.75 1.75 0 013.75 4H5V2.75A.75.75 0 015.75 2zm-2 5.5v8.75c0 .138.112.25.25.25h12.5a.25.25 0 00.25-.25V7.5H3.75zm2.5 2h2.5v2.5h-2.5v-2.5z"/>
+          </svg>
+          Add All Check-ins to Calendar
+        </button>
       </div>
     </div>
   );

@@ -729,6 +729,48 @@ input, textarea, [contenteditable] {
   color: var(--color-success);
 }
 
+.stl-ci-cal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: var(--color-border-light);
+  border-radius: 6px;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+
+.stl-ci-cal:hover { background: #EEF2FF; color: var(--color-primary); }
+.stl-ci-row.next .stl-ci-cal { color: var(--color-primary); }
+
+.stl-cal-all {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px;
+  border: 1.5px dashed var(--color-border);
+  border-radius: 8px;
+  background: none;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.stl-cal-all:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: #EEF2FF;
+}
+
 /* ====== Responsive ====== */
 @media (min-width: 600px) {
   .kpi-type-selector { flex-direction: row; }
