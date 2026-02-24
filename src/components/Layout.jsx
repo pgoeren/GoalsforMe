@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { isFirebaseConfigured } from '../firebase/config';
+import DarkModeToggle from './DarkModeToggle';
 
 export default function Layout() {
   return (
@@ -19,11 +20,14 @@ export default function Layout() {
           </svg>
           <span>GoalsForMe</span>
         </NavLink>
-        {!isFirebaseConfigured && (
-          <span className="storage-badge" title="Using browser storage. Add Firebase config for cloud sync.">
-            Local
-          </span>
-        )}
+        <div className="header-actions">
+          {!isFirebaseConfigured && (
+            <span className="storage-badge" title="Using browser storage. Add Firebase config for cloud sync.">
+              Local
+            </span>
+          )}
+          <DarkModeToggle />
+        </div>
       </header>
 
       <main className="app-main">
