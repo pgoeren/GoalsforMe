@@ -44,12 +44,20 @@ export function AuthProvider({ children }) {
 
   const logout = () => signOut(auth);
 
+  const updateDisplayName = async (displayName) => {
+    if (!auth?.currentUser) return;
+    await updateProfile(auth.currentUser, { displayName });
+    // Force a re-render with updated user object
+    setUser({ ...auth.currentUser });
+  };
+
   const value = {
     user,
     loading,
     signup,
     login,
     logout,
+    updateDisplayName,
     isAuthEnabled: isFirebaseConfigured && !!auth,
   };
 

@@ -6,7 +6,7 @@ import Dashboard from './pages/Dashboard';
 import AddGoal from './pages/AddGoal';
 import GoalDetail from './pages/GoalDetail';
 import History from './pages/History';
-import Login from './pages/Login';
+import Profile from './pages/Profile';
 
 function ProtectedRoute({ children }) {
   const { user, loading, isAuthEnabled } = useAuth();
@@ -18,23 +18,7 @@ function ProtectedRoute({ children }) {
   // If Firebase isn't configured, allow through (local-only mode)
   if (!isAuthEnabled) return children;
 
-  if (!user) return <Navigate to="/login" replace />;
-
-  return children;
-}
-
-function AuthRoute({ children }) {
-  const { user, loading, isAuthEnabled } = useAuth();
-
-  if (loading) {
-    return <div className="loading-spinner">Loading...</div>;
-  }
-
-  // Already logged in — redirect to dashboard
-  if (isAuthEnabled && user) return <Navigate to="/" replace />;
-
-  // No Firebase — skip login entirely
-  if (!isAuthEnabled) return <Navigate to="/" replace />;
+  if (!user) return <Navigate to="/profile" replace />;
 
   return children;
 }
@@ -45,25 +29,40 @@ export default function App() {
       <GoalProvider>
         <HashRouter>
           <Routes>
-            <Route
-              path="/login"
-              element={
-                <AuthRoute>
-                  <Login />
-                </AuthRoute>
-              }
-            />
-            <Route
-              element={
-                <ProtectedRoute>
-                  <Layout />
-                </ProtectedRoute>
-              }
-            >
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/add" element={<AddGoal />} />
-              <Route path="/goal/:id" element={<GoalDetail />} />
-              <Route path="/history" element={<History />} />
+            <Route element={<Layout />}>
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/add"
+                element={
+                  <ProtectedRoute>
+                    <AddGoal />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/goal/:id"
+                element={
+                  <ProtectedRoute>
+                    <GoalDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/history"
+                element={
+                  <ProtectedRoute>
+                    <History />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/profile" element={<Profile />} />
             </Route>
           </Routes>
         </HashRouter>
