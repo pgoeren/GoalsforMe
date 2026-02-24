@@ -262,10 +262,27 @@ export default function Profile() {
   return (
     <div className="profile-page">
       <h1>Profile</h1>
-      <div className="profile-section">
-        <p className="profile-local-notice">
-          Running in local-only mode. Add Firebase configuration to enable account sync across devices.
-        </p>
+      <div className="profile-auth-card">
+        <div className="profile-auth-header">
+          <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="var(--color-primary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+          <h2>Local Mode</h2>
+          <p className="profile-auth-subtitle">
+            Your goals are saved to this browser only.
+          </p>
+        </div>
+        <div className="profile-setup-steps">
+          <p className="profile-setup-heading">To enable sign-in and sync across devices:</p>
+          <ol className="profile-setup-list">
+            <li>Create a free project at <strong>console.firebase.google.com</strong></li>
+            <li>Add a Web app and enable <strong>Authentication</strong> (Email/Password)</li>
+            <li>Enable <strong>Cloud Firestore</strong></li>
+            <li>Copy your config values into a <code>.env</code> file (see <code>.env.example</code>)</li>
+            <li>Restart the dev server</li>
+          </ol>
+        </div>
       </div>
       <div className="profile-section">
         <h3 className="profile-section-title">Appearance</h3>

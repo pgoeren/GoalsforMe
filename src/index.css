@@ -1230,6 +1230,33 @@ input, textarea, [contenteditable] {
   margin-top: 4px;
 }
 
+/* Profile setup steps (local mode) */
+.profile-setup-steps {
+  margin-top: 16px;
+  padding: 16px;
+  background: var(--color-border-light);
+  border-radius: var(--radius-sm);
+}
+.profile-setup-heading {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.profile-setup-list {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.profile-setup-list code {
+  font-size: 12px;
+  background: var(--color-surface);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
 /* ====== Responsive ====== */
 @media (min-width: 600px) {
   .kpi-type-selector { flex-direction: row; }
