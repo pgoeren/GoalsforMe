@@ -524,6 +524,214 @@ input, textarea, [contenteditable] {
   font-size: 14px;
 }
 
+/* ====== Season Timeline ====== */
+.season-timeline {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.timeline-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.timeline-year {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: #EEF2FF;
+  padding: 2px 10px;
+  border-radius: 12px;
+}
+
+.timeline-track-container {
+  position: relative;
+}
+
+.timeline-track {
+  position: relative;
+  height: 12px;
+  background: var(--color-border-light);
+  border-radius: 6px;
+  overflow: visible;
+  margin: 24px 0 8px;
+}
+
+.timeline-quarter {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-radius: 0;
+}
+.timeline-quarter:first-child { border-radius: 6px 0 0 6px; }
+.timeline-quarter:last-of-type { border-radius: 0 6px 6px 0; }
+.timeline-quarter.current {
+  background: rgba(79, 70, 229, 0.08);
+}
+
+.timeline-divider {
+  position: absolute;
+  top: -4px;
+  width: 1px;
+  height: 20px;
+  background: var(--color-border);
+  z-index: 2;
+}
+
+.timeline-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-light));
+  border-radius: 6px 0 0 6px;
+  opacity: 0.25;
+  z-index: 1;
+}
+
+/* Check-in markers */
+.timeline-checkin {
+  position: absolute;
+  top: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.checkin-pin {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-warning);
+  border: 2px solid var(--color-surface);
+  box-shadow: 0 0 0 1px var(--color-warning);
+  margin-top: -5px;
+}
+
+.timeline-checkin.past .checkin-pin {
+  background: var(--color-border);
+  box-shadow: 0 0 0 1px var(--color-border);
+}
+
+.timeline-checkin.next .checkin-pin {
+  background: var(--color-primary);
+  box-shadow: 0 0 0 1px var(--color-primary), 0 0 6px rgba(79, 70, 229, 0.4);
+  width: 12px;
+  height: 12px;
+  margin-top: -6px;
+}
+
+.checkin-tooltip {
+  position: absolute;
+  top: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.checkin-tooltip strong {
+  font-size: 10px;
+  color: var(--color-text-secondary);
+}
+
+.checkin-tooltip span {
+  font-size: 9px;
+  color: var(--color-text-secondary);
+}
+
+.checkin-days {
+  font-weight: 600;
+  color: var(--color-primary) !important;
+  font-size: 10px !important;
+}
+
+.checkin-days.past-text {
+  color: var(--color-text-secondary) !important;
+}
+
+/* Today marker */
+.timeline-today {
+  position: absolute;
+  top: -8px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateX(-50%);
+}
+
+.today-line {
+  width: 2px;
+  height: 28px;
+  background: var(--color-primary);
+  border-radius: 1px;
+}
+
+.today-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  margin-top: -1px;
+}
+
+.today-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-top: 2px;
+}
+
+/* Quarter labels */
+.timeline-labels {
+  display: flex;
+  margin-top: 38px;
+}
+
+.timeline-label {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.label-quarter {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+}
+
+.timeline-label.current .label-quarter {
+  color: var(--color-primary);
+}
+
+.label-season {
+  font-size: 10px;
+  color: var(--color-text-secondary);
+  opacity: 0.7;
+}
+
+.timeline-label.current .label-season {
+  color: var(--color-primary);
+  opacity: 0.8;
+}
+
 /* ====== Responsive ====== */
 @media (min-width: 600px) {
   .kpi-type-selector { flex-direction: row; }

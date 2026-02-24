@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGoals } from '../context/GoalContext';
 import GoalCard from '../components/GoalCard';
+import SeasonTimeline from '../components/SeasonTimeline';
 import { getQuarterlyGoals } from '../firebase/goalService';
 import { getNextCheckIn, formatDate, getCurrentQuarter } from '../utils/checkInDates';
 
@@ -46,6 +47,8 @@ export default function Dashboard() {
           </div>
         </div>
       )}
+
+      <SeasonTimeline year={currentYear} />
 
       {yearlyGoals.length === 0 ? (
         <div className="empty-state">
