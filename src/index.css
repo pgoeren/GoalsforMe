@@ -1024,6 +1024,118 @@ input, textarea, [contenteditable] {
   display: inline-block;
 }
 
+/* ====== Login Page ====== */
+.login-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  background: var(--color-bg);
+}
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 32px 24px;
+  box-shadow: var(--shadow-lg);
+}
+.login-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.login-header h1 {
+  font-size: 24px;
+  margin-top: 12px;
+}
+.login-subtitle {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin-top: 4px;
+}
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.login-btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  margin-top: 8px;
+}
+.login-error {
+  font-size: 13px;
+  color: var(--color-danger);
+  background: var(--tint-red-light);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 4px;
+}
+.login-switch {
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin-top: 20px;
+}
+.login-switch-btn {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.login-switch-btn:hover {
+  text-decoration: underline;
+}
+.login-dark-toggle {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+/* ====== User Menu (header) ====== */
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.user-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.btn-logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-border-light);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-logout:hover {
+  background: var(--tint-red-light);
+  color: var(--color-danger);
+}
+
 /* ====== Responsive ====== */
 @media (min-width: 600px) {
   .kpi-type-selector { flex-direction: row; }

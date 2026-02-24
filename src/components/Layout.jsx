@@ -1,8 +1,23 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { isFirebaseConfigured } from '../firebase/config';
+import { useAuth } from '../context/AuthContext';
 import DarkModeToggle from './DarkModeToggle';
 
 export default function Layout() {
+  const { user, logout, isAuthEnabled } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch {
+      // Silently handle — auth state listener will redirect
+    }
+  };
+
+  const initials = user?.displayName
+    ? user.displayName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+    : '?';
+
   return (
     <div className="app-layout">
       <header className="app-header">
@@ -27,6 +42,20 @@ export default function Layout() {
             </span>
           )}
           <DarkModeToggle />
+          {isAuthEnabled && user && (
+            <div className="user-menu">
+              <span className="user-avatar" title={user.displayName || user.email}>
+                {initials}
+              </span>
+              <button className="btn-logout" onClick={handleLogout} title="Sign out">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+              </button>
+            </div>
+          )}
         </div>
       </header>
 

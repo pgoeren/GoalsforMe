@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import * as goalService from '../firebase/goalService';
+import { useAuth } from './AuthContext';
 
 const GoalContext = createContext(null);
 
@@ -7,6 +8,7 @@ export function GoalProvider({ children }) {
   const [yearlyGoals, setYearlyGoals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { user, isAuthEnabled } = useAuth();
 
   const loadGoals = useCallback(async () => {
     try {
@@ -21,9 +23,15 @@ export function GoalProvider({ children }) {
     }
   }, []);
 
+  // Reload goals when user changes (login/logout)
   useEffect(() => {
+    if (isAuthEnabled && !user) {
+      setYearlyGoals([]);
+      setLoading(false);
+      return;
+    }
     loadGoals();
-  }, [loadGoals]);
+  }, [user, isAuthEnabled, loadGoals]);
 
   const addYearlyGoal = async (goal) => {
     const newGoal = await goalService.addYearlyGoal(goal);

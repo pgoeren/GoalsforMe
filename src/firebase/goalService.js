@@ -1,4 +1,4 @@
-import { db, isFirebaseConfigured } from './config';
+import { db, auth, isFirebaseConfigured } from './config';
 import {
   collection,
   doc,
@@ -12,6 +12,11 @@ import {
   orderBy,
   serverTimestamp,
 } from 'firebase/firestore';
+
+// ====== HELPERS ======
+function getCurrentUserId() {
+  return auth?.currentUser?.uid || null;
+}
 
 // ====== LOCAL STORAGE HELPERS ======
 const LOCAL_KEYS = {
@@ -45,8 +50,10 @@ async function logChange(entityType, entityId, entityTitle, changes) {
   };
 
   if (isFirebaseConfigured) {
+    const userId = getCurrentUserId();
     await addDoc(collection(db, 'changeLog'), {
       ...entry,
+      userId,
       changedAt: serverTimestamp(),
     });
   } else {
@@ -59,8 +66,14 @@ async function logChange(entityType, entityId, entityTitle, changes) {
 // ====== YEARLY GOALS ======
 export async function getYearlyGoals() {
   if (isFirebaseConfigured) {
+    const userId = getCurrentUserId();
+    if (!userId) return [];
     const snapshot = await getDocs(
-      query(collection(db, 'yearlyGoals'), orderBy('createdAt', 'desc'))
+      query(
+        collection(db, 'yearlyGoals'),
+        where('userId', '==', userId),
+        orderBy('createdAt', 'desc')
+      )
     );
     return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
   }
@@ -71,7 +84,10 @@ export async function getYearlyGoal(id) {
   if (isFirebaseConfigured) {
     const docSnap = await getDoc(doc(db, 'yearlyGoals', id));
     if (!docSnap.exists()) return null;
-    return { id: docSnap.id, ...docSnap.data() };
+    const data = docSnap.data();
+    // Verify ownership
+    if (data.userId !== getCurrentUserId()) return null;
+    return { id: docSnap.id, ...data };
   }
   const goals = getLocal(LOCAL_KEYS.yearlyGoals);
   return goals.find(g => g.id === id) || null;
@@ -86,12 +102,14 @@ export async function addYearlyGoal(goal) {
   };
 
   if (isFirebaseConfigured) {
+    const userId = getCurrentUserId();
     const docRef = await addDoc(collection(db, 'yearlyGoals'), {
       ...newGoal,
+      userId,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     });
-    return { id: docRef.id, ...newGoal };
+    return { id: docRef.id, ...newGoal, userId };
   }
 
   newGoal.id = generateId();
@@ -106,6 +124,7 @@ export async function updateYearlyGoal(id, updates) {
   if (isFirebaseConfigured) {
     const docSnap = await getDoc(doc(db, 'yearlyGoals', id));
     current = docSnap.data();
+    if (current.userId !== getCurrentUserId()) throw new Error('Unauthorized');
   } else {
     const goals = getLocal(LOCAL_KEYS.yearlyGoals);
     current = goals.find(g => g.id === id);
@@ -137,6 +156,8 @@ export async function updateYearlyGoal(id, updates) {
 
 export async function deleteYearlyGoal(id) {
   if (isFirebaseConfigured) {
+    const docSnap = await getDoc(doc(db, 'yearlyGoals', id));
+    if (docSnap.data()?.userId !== getCurrentUserId()) throw new Error('Unauthorized');
     await deleteDoc(doc(db, 'yearlyGoals', id));
     const qSnap = await getDocs(
       query(collection(db, 'quarterlyGoals'), where('yearlyGoalId', '==', id))
@@ -185,12 +206,14 @@ export async function addQuarterlyGoal(goal) {
   };
 
   if (isFirebaseConfigured) {
+    const userId = getCurrentUserId();
     const docRef = await addDoc(collection(db, 'quarterlyGoals'), {
       ...newGoal,
+      userId,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     });
-    return { id: docRef.id, ...newGoal };
+    return { id: docRef.id, ...newGoal, userId };
   }
 
   newGoal.id = generateId();
@@ -205,6 +228,7 @@ export async function updateQuarterlyGoal(id, updates) {
   if (isFirebaseConfigured) {
     const docSnap = await getDoc(doc(db, 'quarterlyGoals', id));
     current = docSnap.data();
+    if (current.userId !== getCurrentUserId()) throw new Error('Unauthorized');
   } else {
     const goals = getLocal(LOCAL_KEYS.quarterlyGoals);
     current = goals.find(g => g.id === id);
@@ -236,6 +260,8 @@ export async function updateQuarterlyGoal(id, updates) {
 
 export async function deleteQuarterlyGoal(id) {
   if (isFirebaseConfigured) {
+    const docSnap = await getDoc(doc(db, 'quarterlyGoals', id));
+    if (docSnap.data()?.userId !== getCurrentUserId()) throw new Error('Unauthorized');
     await deleteDoc(doc(db, 'quarterlyGoals', id));
   } else {
     let goals = getLocal(LOCAL_KEYS.quarterlyGoals);
@@ -247,10 +273,13 @@ export async function deleteQuarterlyGoal(id) {
 // ====== CHANGE LOG ======
 export async function getChangeLog(entityId) {
   if (isFirebaseConfigured) {
+    const userId = getCurrentUserId();
+    if (!userId) return [];
     const snapshot = await getDocs(
       query(
         collection(db, 'changeLog'),
         where('entityId', '==', entityId),
+        where('userId', '==', userId),
         orderBy('changedAt', 'desc')
       )
     );
@@ -261,8 +290,14 @@ export async function getChangeLog(entityId) {
 
 export async function getAllChanges() {
   if (isFirebaseConfigured) {
+    const userId = getCurrentUserId();
+    if (!userId) return [];
     const snapshot = await getDocs(
-      query(collection(db, 'changeLog'), orderBy('changedAt', 'desc'))
+      query(
+        collection(db, 'changeLog'),
+        where('userId', '==', userId),
+        orderBy('changedAt', 'desc')
+      )
     );
     return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
   }
