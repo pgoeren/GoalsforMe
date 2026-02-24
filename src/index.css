@@ -850,6 +850,107 @@ input, textarea, [contenteditable] {
   background: #EEF2FF;
 }
 
+/* ====== Theme Picker ====== */
+.theme-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.theme-chip {
+  padding: 6px 14px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 20px;
+  background: var(--color-surface);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.theme-chip:hover {
+  border-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+.theme-chip.active {
+  border-color: var(--color-primary);
+  background: #EEF2FF;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+.theme-chip-custom {
+  border-style: dashed;
+}
+.theme-custom-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 10px;
+}
+.theme-custom-row .form-input-sm {
+  flex: 1;
+}
+
+/* ====== Theme Badge ====== */
+.goal-theme-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 12px;
+  background: #F0FDF4;
+  color: #15803D;
+  white-space: nowrap;
+}
+.goal-card-badges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* ====== View Toggle (All Goals / By Theme) ====== */
+.view-toggle {
+  display: flex;
+  background: var(--color-border-light);
+  border-radius: var(--radius-sm);
+  padding: 3px;
+  margin-bottom: 16px;
+}
+.view-toggle-btn {
+  flex: 1;
+  padding: 7px 12px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.view-toggle-btn.active {
+  background: var(--color-surface);
+  color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ====== Theme Groups ====== */
+.themed-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.theme-group-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--color-primary-light);
+  display: inline-block;
+}
+
 /* ====== Responsive ====== */
 @media (min-width: 600px) {
   .kpi-type-selector { flex-direction: row; }

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useGoals } from '../context/GoalContext';
 import { addQuarterlyGoal } from '../firebase/goalService';
 import KPIInput from '../components/KPIInput';
+import ThemePicker from '../components/ThemePicker';
 import { getMidQuarterWednesday } from '../utils/checkInDates';
 
 const STEPS = [
@@ -22,6 +23,7 @@ export default function AddGoal() {
     title: '',
     description: '',
     year: currentYear,
+    theme: '',
     kpiType: 'numeric',
     kpiTarget: '',
     kpiUnit: '',
@@ -61,6 +63,7 @@ export default function AddGoal() {
         title: form.title,
         description: form.description,
         year: form.year,
+        theme: form.theme || null,
         kpiType: form.kpiType,
         kpiTarget: form.kpiType !== 'milestone' ? Number(form.kpiTarget) : null,
         kpiUnit: form.kpiType === 'numeric' ? form.kpiUnit : null,
@@ -169,6 +172,10 @@ export default function AddGoal() {
                 ))}
               </select>
             </div>
+            <ThemePicker
+              value={form.theme}
+              onChange={theme => updateForm({ theme })}
+            />
           </div>
         )}
 

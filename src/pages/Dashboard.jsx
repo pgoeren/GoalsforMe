@@ -9,6 +9,7 @@ import { getNextCheckIn, formatDate, getCurrentQuarter } from '../utils/checkInD
 export default function Dashboard() {
   const { yearlyGoals, loading } = useGoals();
   const [quarterlyData, setQuarterlyData] = useState({});
+  const [groupByTheme, setGroupByTheme] = useState(false);
   const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
   const nextCheckIn = getNextCheckIn(currentYear);
@@ -23,6 +24,24 @@ export default function Dashboard() {
     }
     if (yearlyGoals.length > 0) loadQuarterly();
   }, [yearlyGoals]);
+
+  const hasThemes = yearlyGoals.some(g => g.theme);
+
+  const getGroupedGoals = () => {
+    const groups = {};
+    for (const goal of yearlyGoals) {
+      const key = goal.theme || 'Uncategorized';
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(goal);
+    }
+    // Sort so named themes come first, Uncategorized last
+    const sorted = Object.entries(groups).sort(([a], [b]) => {
+      if (a === 'Uncategorized') return 1;
+      if (b === 'Uncategorized') return -1;
+      return a.localeCompare(b);
+    });
+    return sorted;
+  };
 
   if (loading) {
     return <div className="loading-spinner">Loading your goals...</div>;
@@ -80,15 +99,52 @@ export default function Dashboard() {
               <span className="stat-label">Year</span>
             </div>
           </div>
-          <div className="goals-grid">
-            {yearlyGoals.map(goal => (
-              <GoalCard
-                key={goal.id}
-                goal={goal}
-                quarterlyProgress={quarterlyData[goal.id]}
-              />
-            ))}
-          </div>
+
+          {hasThemes && (
+            <div className="view-toggle">
+              <button
+                className={`view-toggle-btn ${!groupByTheme ? 'active' : ''}`}
+                onClick={() => setGroupByTheme(false)}
+              >
+                All Goals
+              </button>
+              <button
+                className={`view-toggle-btn ${groupByTheme ? 'active' : ''}`}
+                onClick={() => setGroupByTheme(true)}
+              >
+                By Theme
+              </button>
+            </div>
+          )}
+
+          {groupByTheme ? (
+            <div className="themed-groups">
+              {getGroupedGoals().map(([theme, goals]) => (
+                <div key={theme} className="theme-group">
+                  <h2 className="theme-group-title">{theme}</h2>
+                  <div className="goals-grid">
+                    {goals.map(goal => (
+                      <GoalCard
+                        key={goal.id}
+                        goal={goal}
+                        quarterlyProgress={quarterlyData[goal.id]}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="goals-grid">
+              {yearlyGoals.map(goal => (
+                <GoalCard
+                  key={goal.id}
+                  goal={goal}
+                  quarterlyProgress={quarterlyData[goal.id]}
+                />
+              ))}
+            </div>
+          )}
         </>
       )}
     </div>

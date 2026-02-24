@@ -8,6 +8,7 @@ import {
 import ProgressBar from '../components/ProgressBar';
 import CheckInReminder from '../components/CheckInReminder';
 import ChangeHistory from '../components/ChangeHistory';
+import ThemePicker from '../components/ThemePicker';
 import { getAllCheckInDatesForYear, formatDate, getCurrentQuarter } from '../utils/checkInDates';
 
 
@@ -71,6 +72,7 @@ export default function GoalDetail() {
       title: goal.title,
       description: goal.description,
       successCriteria: goal.successCriteria || '',
+      theme: goal.theme || '',
     });
     setEditing(true);
   };
@@ -116,6 +118,10 @@ export default function GoalDetail() {
               onChange={e => setEditForm(f => ({ ...f, successCriteria: e.target.value }))}
               rows={2}
             />
+            <ThemePicker
+              value={editForm.theme}
+              onChange={theme => setEditForm(f => ({ ...f, theme }))}
+            />
             <div className="edit-actions">
               <button className="btn btn-primary btn-sm" onClick={saveEdit}>Save</button>
               <button className="btn btn-outline btn-sm" onClick={() => setEditing(false)}>Cancel</button>
@@ -126,6 +132,7 @@ export default function GoalDetail() {
             <div className="goal-title-row">
               <h1>{goal.title}</h1>
               <span className="goal-year-badge">{goal.year}</span>
+              {goal.theme && <span className="goal-theme-badge">{goal.theme}</span>}
             </div>
             <p className="goal-description">{goal.description}</p>
             {goal.successCriteria && (

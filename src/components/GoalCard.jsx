@@ -27,7 +27,10 @@ export default function GoalCard({ goal, quarterlyProgress }) {
     <div className="goal-card" onClick={() => navigate(`/goal/${goal.id}`)}>
       <div className="goal-card-header">
         <h3>{goal.title}</h3>
-        <span className="goal-year">{goal.year}</span>
+        <div className="goal-card-badges">
+          {goal.theme && <span className="goal-theme-badge">{goal.theme}</span>}
+          <span className="goal-year">{goal.year}</span>
+        </div>
       </div>
 
       <p className="goal-description">{goal.description}</p>
