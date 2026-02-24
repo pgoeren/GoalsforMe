@@ -10,12 +10,6 @@ import CheckInReminder from '../components/CheckInReminder';
 import ChangeHistory from '../components/ChangeHistory';
 import { getAllCheckInDatesForYear, formatDate, getCurrentQuarter } from '../utils/checkInDates';
 
-const STATUS_OPTIONS = [
-  { value: 'not_started', label: 'Not Started' },
-  { value: 'in_progress', label: 'In Progress' },
-  { value: 'completed', label: 'Completed' },
-  { value: 'off_track', label: 'Off Track' },
-];
 
 export default function GoalDetail() {
   const { id } = useParams();
@@ -175,15 +169,6 @@ export default function GoalDetail() {
                   Q{q.quarter}
                   {q.quarter === currentQ && <span className="current-badge">Current</span>}
                 </h3>
-                <select
-                  className="status-select"
-                  value={q.status}
-                  onChange={e => handleQuarterUpdate(q.id, { status: e.target.value })}
-                >
-                  {STATUS_OPTIONS.map(opt => (
-                    <option key={opt.value} value={opt.value}>{opt.label}</option>
-                  ))}
-                </select>
               </div>
               <p className="quarter-title">{q.title}</p>
               {q.description && <p className="quarter-desc">{q.description}</p>}

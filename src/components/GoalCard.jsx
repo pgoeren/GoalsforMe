@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 import ProgressBar from './ProgressBar';
-import { getCurrentQuarter } from '../utils/checkInDates';
 
 const KPI_LABELS = {
   numeric: 'Numeric Target',
@@ -8,16 +7,8 @@ const KPI_LABELS = {
   milestone: 'Milestone',
 };
 
-const STATUS_LABELS = {
-  not_started: 'Not Started',
-  in_progress: 'In Progress',
-  completed: 'Completed',
-  off_track: 'Off Track',
-};
-
 export default function GoalCard({ goal, quarterlyProgress }) {
   const navigate = useNavigate();
-  const currentQ = getCurrentQuarter();
 
   const getProgressValue = () => {
     if (!quarterlyProgress || quarterlyProgress.length === 0) return 0;
@@ -28,8 +19,6 @@ export default function GoalCard({ goal, quarterlyProgress }) {
     const totalProgress = quarterlyProgress.reduce((sum, q) => sum + (q.kpiProgress || 0), 0);
     return goal.kpiTarget > 0 ? (totalProgress / goal.kpiTarget) * 100 : 0;
   };
-
-  const currentQuarterGoal = quarterlyProgress?.find(q => q.quarter === currentQ);
 
   return (
     <div className="goal-card" onClick={() => navigate(`/goal/${goal.id}`)}>
@@ -56,15 +45,6 @@ export default function GoalCard({ goal, quarterlyProgress }) {
       </div>
 
       <ProgressBar value={getProgressValue()} label="Overall Progress" />
-
-      {currentQuarterGoal && (
-        <div className="current-quarter-status">
-          <span className="quarter-label">Q{currentQ}</span>
-          <span className={`status-badge ${currentQuarterGoal.status}`}>
-            {STATUS_LABELS[currentQuarterGoal.status]}
-          </span>
-        </div>
-      )}
     </div>
   );
 }
