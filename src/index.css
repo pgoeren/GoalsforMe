@@ -1,22 +1,22 @@
 /* ====== Google Font: Nunito (rounded, playful) ====== */
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
 
-/* ====== CSS Variables — TwoDots-inspired flat palette ====== */
+/* ====== CSS Variables — Flat palette with indigo accent ====== */
 :root {
-  --color-primary: #E8685A;
-  --color-primary-light: #F09B93;
-  --color-primary-dark: #D14B3D;
+  --color-primary: #4F46E5;
+  --color-primary-light: #818CF8;
+  --color-primary-dark: #3730A3;
   --color-secondary: #44B7A0;
   --color-accent: #9B7ED8;
   --color-success: #5DC09F;
   --color-warning: #F5C842;
   --color-danger: #E85A71;
-  --color-bg: #FFF8F0;
+  --color-bg: #F5F3EF;
   --color-surface: #FFFFFF;
   --color-text: #2D3047;
   --color-text-secondary: #8B8BA1;
-  --color-border: #EBE6E0;
-  --color-border-light: #F5F0EA;
+  --color-border: #E4E0DA;
+  --color-border-light: #EFEBE6;
   --radius-sm: 12px;
   --radius-md: 16px;
   --radius-lg: 24px;
@@ -26,43 +26,45 @@
   --nav-height: 64px;
   --header-height: 56px;
   /* Accent tints — flat pastel fills */
-  --tint-indigo: #FDE8E5;
+  --tint-indigo: #EEF2FF;
   --tint-green: #E0F5EE;
   --tint-orange: #FFF3D6;
-  --tint-blue: #E0F0FA;
+  --tint-blue: #DBEAFE;
   --tint-red-light: #FDE8EC;
   --tint-green-light: #D6F5E8;
   --tint-theme-bg: #E0F5EE;
   --tint-theme-text: #2B9A7E;
   --tint-purple: #F0E8FA;
   /* Flat — no gradients */
-  --gradient-banner: #E8685A;
-  --gradient-track: #E8685A;
-  /* Dot decorative colors (TwoDots game dots) */
+  --gradient-banner: #4F46E5;
+  --gradient-track: #4F46E5;
+  /* Dot decorative colors */
   --dot-red: #E8685A;
   --dot-teal: #44B7A0;
   --dot-yellow: #F5C842;
   --dot-purple: #9B7ED8;
   --dot-blue: #5B9BD5;
+  /* Japanese wave background */
+  --wave-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%234F46E5' stroke-width='0.8' opacity='0.06'%3E%3Cpath d='M0 40 C0 22.3 14.3 8 32 8 C49.7 8 64 22.3 64 40'/%3E%3Cpath d='M16 40 C16 31.2 23.2 24 32 24 C40.8 24 48 31.2 48 40'/%3E%3Cpath d='M-16 40 C-16 22.3 -1.7 8 16 8 C33.7 8 48 22.3 48 40'/%3E%3Cpath d='M48 40 C48 22.3 62.3 8 80 8 C97.7 8 112 22.3 112 40'/%3E%3Cpath d='M64 40 C64 31.2 71.2 24 80 24 C88.8 24 96 31.2 96 40'/%3E%3Cpath d='M0 80 C0 62.3 14.3 48 32 48 C49.7 48 64 62.3 64 80'/%3E%3Cpath d='M16 80 C16 71.2 23.2 64 32 64 C40.8 64 48 71.2 48 80'/%3E%3Cpath d='M-16 80 C-16 62.3 -1.7 48 16 48 C33.7 48 48 62.3 48 80'/%3E%3Cpath d='M48 80 C48 62.3 62.3 48 80 48 C97.7 48 112 62.3 112 80'/%3E%3Cpath d='M64 80 C64 71.2 71.2 64 80 64 C88.8 64 96 71.2 96 80'/%3E%3Cpath d='M0 0 C0 -17.7 14.3 -32 32 -32 C49.7 -32 64 -17.7 64 0'/%3E%3Cpath d='M16 0 C16 -8.8 23.2 -16 32 -16 C40.8 -16 48 -8.8 48 0'/%3E%3Cpath d='M48 0 C48 -17.7 62.3 -32 80 -32 C97.7 -32 112 -17.7 112 0'/%3E%3Cpath d='M64 0 C64 -8.8 71.2 -16 80 -16 C88.8 -16 96 -8.8 96 0'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 /* ====== Dark Mode ====== */
 [data-theme="dark"] {
-  --color-primary: #F09B93;
-  --color-primary-light: #F5BCB7;
-  --color-primary-dark: #E8685A;
+  --color-primary: #818CF8;
+  --color-primary-light: #A5B4FC;
+  --color-primary-dark: #6366F1;
   --color-secondary: #7DDBB8;
   --color-accent: #BDA5E8;
   --color-success: #7DDBB8;
   --color-warning: #FFD970;
   --color-danger: #F58A97;
-  --color-bg: #1A1F36;
-  --color-surface: #252B45;
-  --color-text: #F0EDE8;
-  --color-text-secondary: #9B97AD;
-  --color-border: #363D5A;
-  --color-border-light: #2D3350;
-  --tint-indigo: #3D2F3A;
+  --color-bg: #0F1729;
+  --color-surface: #1A2744;
+  --color-text: #F1F5F9;
+  --color-text-secondary: #94A3B8;
+  --color-border: #2A3D5E;
+  --color-border-light: #1E3050;
+  --tint-indigo: #243356;
   --tint-green: #1E3D32;
   --tint-orange: #3D3520;
   --tint-blue: #1E2E3D;
@@ -71,8 +73,9 @@
   --tint-theme-bg: #1E3D32;
   --tint-theme-text: #7DDBB8;
   --tint-purple: #2E2640;
-  --gradient-banner: #3D2838;
-  --gradient-track: #E8685A;
+  --gradient-banner: #1E3A6E;
+  --gradient-track: #4F46E5;
+  --wave-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23818CF8' stroke-width='0.8' opacity='0.05'%3E%3Cpath d='M0 40 C0 22.3 14.3 8 32 8 C49.7 8 64 22.3 64 40'/%3E%3Cpath d='M16 40 C16 31.2 23.2 24 32 24 C40.8 24 48 31.2 48 40'/%3E%3Cpath d='M-16 40 C-16 22.3 -1.7 8 16 8 C33.7 8 48 22.3 48 40'/%3E%3Cpath d='M48 40 C48 22.3 62.3 8 80 8 C97.7 8 112 22.3 112 40'/%3E%3Cpath d='M64 40 C64 31.2 71.2 24 80 24 C88.8 24 96 31.2 96 40'/%3E%3Cpath d='M0 80 C0 62.3 14.3 48 32 48 C49.7 48 64 62.3 64 80'/%3E%3Cpath d='M16 80 C16 71.2 23.2 64 32 64 C40.8 64 48 71.2 48 80'/%3E%3Cpath d='M-16 80 C-16 62.3 -1.7 48 16 48 C33.7 48 48 62.3 48 80'/%3E%3Cpath d='M48 80 C48 62.3 62.3 48 80 48 C97.7 48 112 62.3 112 80'/%3E%3Cpath d='M64 80 C64 71.2 71.2 64 80 64 C88.8 64 96 71.2 96 80'/%3E%3Cpath d='M0 0 C0 -17.7 14.3 -32 32 -32 C49.7 -32 64 -17.7 64 0'/%3E%3Cpath d='M16 0 C16 -8.8 23.2 -16 32 -16 C40.8 -16 48 -8.8 48 0'/%3E%3Cpath d='M48 0 C48 -17.7 62.3 -32 80 -32 C97.7 -32 112 -17.7 112 0'/%3E%3Cpath d='M64 0 C64 -8.8 71.2 -16 80 -16 C88.8 -16 96 -8.8 96 0'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 /* ====== Dark Mode Toggle ====== */
@@ -100,12 +103,12 @@
   color: var(--color-primary);
 }
 [data-theme="dark"] .dark-toggle {
-  background: var(--color-border-light);
+  background: #243356;
   border-color: var(--color-border);
-  color: var(--color-warning);
+  color: #FBBF24;
 }
 [data-theme="dark"] .dark-toggle:hover {
-  border-color: var(--color-warning);
+  border-color: #FBBF24;
 }
 
 /* ====== Reset ====== */
@@ -113,7 +116,7 @@
 
 body {
   font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--color-bg);
+  background: var(--color-bg) var(--wave-pattern) repeat;
   color: var(--color-text);
   transition: background-color 0.3s, color 0.3s;
   line-height: 1.5;
@@ -307,27 +310,26 @@ input, textarea, [contenteditable] {
   position: relative;
   overflow: hidden;
 }
-/* Decorative dots on banner */
+/* Decorative wave arcs on banner */
 .next-checkin-banner::before {
   content: '';
   position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 48px;
-  height: 48px;
+  right: -10px;
+  bottom: -20px;
+  width: 80px;
+  height: 80px;
+  border: 3px solid rgba(255,255,255,0.15);
   border-radius: 50%;
-  background: rgba(255,255,255,0.15);
 }
 .next-checkin-banner::after {
   content: '';
   position: absolute;
-  right: 48px;
-  top: -8px;
-  width: 24px;
-  height: 24px;
+  right: 20px;
+  bottom: -30px;
+  width: 60px;
+  height: 60px;
+  border: 3px solid rgba(255,255,255,0.1);
   border-radius: 50%;
-  background: rgba(255,255,255,0.1);
 }
 .banner-label { font-size: 12px; font-weight: 700; opacity: 0.85; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
 .banner-date { font-size: 15px; font-weight: 600; }
@@ -413,7 +415,7 @@ input, textarea, [contenteditable] {
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-.kpi-type.numeric { background: var(--tint-indigo); color: var(--color-primary-dark); }
+.kpi-type.numeric { background: var(--tint-indigo); color: var(--color-primary); }
 .kpi-type.percentage { background: var(--tint-green); color: #2B9A7E; }
 .kpi-type.milestone { background: var(--tint-orange); color: #C49A1A; }
 .kpi-target { font-size: 13px; color: var(--color-text-secondary); }

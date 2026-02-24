@@ -47,14 +47,18 @@ function downloadICS(events, filename) {
 }
 
 function dayOfYear(date) {
-  const start = new Date(date.getFullYear(), 0, 0);
-  return Math.floor((date - start) / (1000 * 60 * 60 * 24));
+  // Use UTC to avoid DST drift
+  const start = Date.UTC(date.getFullYear(), 0, 0);
+  const current = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+  return Math.round((current - start) / (1000 * 60 * 60 * 24));
 }
 
 function daysRemaining(targetDate) {
+  // Use UTC to avoid DST drift
   const now = new Date();
-  now.setHours(0, 0, 0, 0);
-  return Math.ceil((targetDate - now) / (1000 * 60 * 60 * 24));
+  const todayUTC = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+  const targetUTC = Date.UTC(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
+  return Math.round((targetUTC - todayUTC) / (1000 * 60 * 60 * 24));
 }
 
 function formatShort(date) {

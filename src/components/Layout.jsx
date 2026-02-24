@@ -7,9 +7,9 @@ export default function Layout() {
       <header className="app-header">
         <NavLink to="/" className="app-logo">
           <svg viewBox="0 0 100 100" width="28" height="28">
-            <rect width="100" height="100" rx="24" fill="#E8685A" />
-            <circle cx="35" cy="55" r="10" fill="#44B7A0" />
-            <circle cx="65" cy="55" r="10" fill="#F5C842" />
+            <rect width="100" height="100" rx="24" fill="#4F46E5" />
+            <circle cx="35" cy="55" r="10" fill="#818CF8" />
+            <circle cx="65" cy="55" r="10" fill="#A5B4FC" />
             <circle cx="50" cy="35" r="10" fill="white" />
           </svg>
           <span>GoalsForMe</span>
