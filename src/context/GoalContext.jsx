@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import * as goalService from '../firebase/goalService';
+import { isFirestoreAvailable } from '../firebase/goalService';
 import { useAuth } from './AuthContext';
 
 const GoalContext = createContext(null);
@@ -59,6 +60,7 @@ export function GoalProvider({ children }) {
     addYearlyGoal,
     updateYearlyGoal,
     deleteYearlyGoal,
+    isCloudSync: isFirestoreAvailable(),
   };
 
   return <GoalContext.Provider value={value}>{children}</GoalContext.Provider>;
