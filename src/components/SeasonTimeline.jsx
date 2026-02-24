@@ -1,21 +1,17 @@
 import { getCheckInDatesForYear, getCurrentQuarter } from '../utils/checkInDates';
 
-const QUARTER_LABELS = ['Q1', 'Q2', 'Q3', 'Q4'];
-const QUARTER_SEASONS = ['Winter', 'Spring', 'Summer', 'Fall'];
-
-function daysRemaining(targetDate) {
-  const now = new Date();
-  now.setHours(0, 0, 0, 0);
-  const diff = Math.ceil((targetDate - now) / (1000 * 60 * 60 * 24));
-  return diff;
-}
-
 function dayOfYear(date) {
   const start = new Date(date.getFullYear(), 0, 0);
   return Math.floor((date - start) / (1000 * 60 * 60 * 24));
 }
 
-function formatShortDate(date) {
+function daysRemaining(targetDate) {
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  return Math.ceil((targetDate - now) / (1000 * 60 * 60 * 24));
+}
+
+function formatShort(date) {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
@@ -23,80 +19,91 @@ export default function SeasonTimeline({ year }) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const checkIns = getCheckInDatesForYear(year);
-  const currentQuarter = getCurrentQuarter();
-  const totalDays = (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) ? 366 : 365;
-  const todayPosition = (dayOfYear(today) / totalDays) * 100;
+  const currentQ = getCurrentQuarter();
+  const isLeap = (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0));
+  const totalDays = isLeap ? 366 : 365;
+  const todayPct = (dayOfYear(today) / totalDays) * 100;
 
-  // Quarter boundaries (approximate start of each quarter as %)
-  const quarterBounds = [0, 25, 50, 75, 100];
+  // Build the key events list: quarter starts + check-ins
+  const quarterStarts = [
+    { pct: 0, label: 'Jan 1' },
+    { pct: (dayOfYear(new Date(year, 3, 1)) / totalDays) * 100, label: 'Apr 1' },
+    { pct: (dayOfYear(new Date(year, 6, 1)) / totalDays) * 100, label: 'Jul 1' },
+    { pct: (dayOfYear(new Date(year, 9, 1)) / totalDays) * 100, label: 'Oct 1' },
+    { pct: 100, label: 'Dec 31' },
+  ];
+
+  const seasons = ['Winter', 'Spring', 'Summer', 'Fall'];
 
   return (
-    <div className="season-timeline">
-      <div className="timeline-header">
-        <span className="timeline-title">Year at a Glance</span>
-        <span className="timeline-year">{year}</span>
+    <div className="stl">
+      <div className="stl-head">
+        <span className="stl-title">{year} Season Progress</span>
+        <span className="stl-quarter">Q{currentQ} &middot; {seasons[currentQ - 1]}</span>
       </div>
 
-      <div className="timeline-track-container">
-        {/* Quarter background segments */}
-        <div className="timeline-track">
-          {QUARTER_LABELS.map((label, i) => (
-            <div
-              key={label}
-              className={`timeline-quarter ${i + 1 === currentQuarter ? 'current' : ''}`}
-              style={{ left: `${quarterBounds[i]}%`, width: '25%' }}
-            />
+      {/* The track */}
+      <div className="stl-track-wrap">
+        <div className="stl-track">
+          {/* Filled progress */}
+          <div className="stl-fill" style={{ width: `${todayPct}%` }} />
+
+          {/* Quarter boundary ticks */}
+          {quarterStarts.map((qs, i) => (
+            <div key={i} className="stl-tick" style={{ left: `${qs.pct}%` }} />
           ))}
 
-          {/* Quarter divider lines */}
-          {[25, 50, 75].map(pos => (
-            <div key={pos} className="timeline-divider" style={{ left: `${pos}%` }} />
-          ))}
-
-          {/* Check-in markers */}
-          {checkIns.map((ci, i) => {
-            const pos = (dayOfYear(ci.date) / totalDays) * 100;
+          {/* Check-in diamonds */}
+          {checkIns.map((ci) => {
+            const pct = (dayOfYear(ci.date) / totalDays) * 100;
             const days = daysRemaining(ci.date);
             const isPast = days < 0;
-            const isNext = !isPast && (i === 0 || daysRemaining(checkIns[i - 1].date) < 0);
-
+            const isNext = !isPast && checkIns.filter(c => daysRemaining(c.date) >= 0)[0]?.quarter === ci.quarter;
             return (
               <div
                 key={ci.quarter}
-                className={`timeline-checkin ${isPast ? 'past' : ''} ${isNext ? 'next' : ''}`}
-                style={{ left: `${pos}%` }}
+                className={`stl-checkin ${isPast ? 'past' : ''} ${isNext ? 'next' : ''}`}
+                style={{ left: `${pct}%` }}
               >
-                <div className="checkin-pin" />
-                <div className="checkin-tooltip">
-                  <strong>{ci.label}</strong>
-                  <span>{formatShortDate(ci.date)}</span>
-                  {!isPast && <span className="checkin-days">{days === 0 ? 'Today!' : `${days}d away`}</span>}
-                  {isPast && <span className="checkin-days past-text">Done</span>}
-                </div>
+                <div className="stl-diamond" />
               </div>
             );
           })}
 
-          {/* Today marker */}
-          <div className="timeline-today" style={{ left: `${todayPosition}%` }}>
-            <div className="today-line" />
-            <div className="today-dot" />
-            <span className="today-label">Today</span>
+          {/* Today needle */}
+          <div className="stl-needle" style={{ left: `${todayPct}%` }}>
+            <div className="stl-needle-line" />
+            <div className="stl-needle-head" />
           </div>
-
-          {/* Progress fill */}
-          <div className="timeline-progress" style={{ width: `${todayPosition}%` }} />
         </div>
 
-        {/* Quarter labels below */}
-        <div className="timeline-labels">
-          {QUARTER_LABELS.map((label, i) => (
-            <div key={label} className={`timeline-label ${i + 1 === currentQuarter ? 'current' : ''}`}>
-              <span className="label-quarter">{label}</span>
-              <span className="label-season">{QUARTER_SEASONS[i]}</span>
+        {/* Quarter labels row */}
+        <div className="stl-quarters">
+          {['Q1', 'Q2', 'Q3', 'Q4'].map((q, i) => (
+            <div key={q} className={`stl-qlabel ${i + 1 === currentQ ? 'active' : ''}`}>
+              {q}
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Check-in list below */}
+      <div className="stl-checkins">
+        {checkIns.map((ci) => {
+          const days = daysRemaining(ci.date);
+          const isPast = days < 0;
+          const isNext = !isPast && checkIns.filter(c => daysRemaining(c.date) >= 0)[0]?.quarter === ci.quarter;
+          return (
+            <div key={ci.quarter} className={`stl-ci-row ${isPast ? 'past' : ''} ${isNext ? 'next' : ''}`}>
+              <span className="stl-ci-diamond-sm">{isPast ? '✓' : '◆'}</span>
+              <span className="stl-ci-label">{ci.label}</span>
+              <span className="stl-ci-date">{formatShort(ci.date)}</span>
+              <span className="stl-ci-badge">
+                {isPast ? 'Done' : days === 0 ? 'Today!' : `${days}d`}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
