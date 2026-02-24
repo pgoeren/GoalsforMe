@@ -24,23 +24,71 @@ export function getMidQuarterWednesday(year, quarter) {
 }
 
 /**
- * Get all four check-in dates for a given year.
+ * Calculate the end-of-quarter Wednesday for a given year and quarter.
+ * Lands on the Wednesday closest to the last day of the quarter.
+ */
+export function getEndOfQuarterWednesday(year, quarter) {
+  // Last day of each quarter
+  const ends = {
+    1: new Date(year, 2, 31),   // Mar 31
+    2: new Date(year, 5, 30),   // Jun 30
+    3: new Date(year, 8, 30),   // Sep 30
+    4: new Date(year, 11, 31),  // Dec 31
+  };
+
+  const end = ends[quarter];
+  const dayOfWeek = end.getDay();
+  let diff = 3 - dayOfWeek;
+
+  if (diff > 3) diff -= 7;
+  if (diff < -3) diff += 7;
+
+  end.setDate(end.getDate() + diff);
+  return end;
+}
+
+/**
+ * Get all four mid-quarter check-in dates for a given year.
  */
 export function getCheckInDatesForYear(year) {
   return [1, 2, 3, 4].map(q => ({
     quarter: q,
     date: getMidQuarterWednesday(year, q),
     label: `Q${q} Check-in`,
+    type: 'halfway',
   }));
 }
 
 /**
- * Get the next upcoming check-in date from today.
+ * Get all check-in dates (both halfway and full) for a given year.
+ * Returns 8 dates sorted chronologically.
+ */
+export function getAllCheckInDatesForYear(year) {
+  const dates = [];
+  for (const q of [1, 2, 3, 4]) {
+    dates.push({
+      quarter: q,
+      date: getMidQuarterWednesday(year, q),
+      label: `Q${q} Halfway`,
+      type: 'halfway',
+    });
+    dates.push({
+      quarter: q,
+      date: getEndOfQuarterWednesday(year, q),
+      label: `Q${q} Full`,
+      type: 'full',
+    });
+  }
+  return dates.sort((a, b) => a.date - b.date);
+}
+
+/**
+ * Get the next upcoming check-in date from today (includes both halfway and full).
  */
 export function getNextCheckIn(year) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const dates = getCheckInDatesForYear(year);
+  const dates = getAllCheckInDatesForYear(year);
   return dates.find(d => d.date >= today) || dates[0];
 }
 

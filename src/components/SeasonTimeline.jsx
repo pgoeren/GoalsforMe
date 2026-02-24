@@ -1,4 +1,4 @@
-import { getCheckInDatesForYear, getCurrentQuarter } from '../utils/checkInDates';
+import { getAllCheckInDatesForYear, getCurrentQuarter } from '../utils/checkInDates';
 
 function formatICSDate(date) {
   const y = date.getFullYear();
@@ -24,7 +24,7 @@ function buildICS(events) {
       `DTEND;VALUE=DATE:${dtEnd}`,
       `SUMMARY:${ev.label} - Goal Review`,
       `DESCRIPTION:Time to review your quarterly goals and track progress.`,
-      `UID:goalsforme-${ev.quarter}-${ev.date.getFullYear()}@goalsforme`,
+      `UID:goalsforme-${ev.quarter}-${ev.type}-${ev.date.getFullYear()}@goalsforme`,
       'END:VEVENT'
     );
   }
@@ -63,13 +63,12 @@ function formatShort(date) {
 export default function SeasonTimeline({ year }) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const checkIns = getCheckInDatesForYear(year);
+  const checkIns = getAllCheckInDatesForYear(year);
   const currentQ = getCurrentQuarter();
   const isLeap = (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0));
   const totalDays = isLeap ? 366 : 365;
   const todayPct = (dayOfYear(today) / totalDays) * 100;
 
-  // Build the key events list: quarter starts + check-ins
   const quarterStarts = [
     { pct: 0, label: 'Jan 1' },
     { pct: (dayOfYear(new Date(year, 3, 1)) / totalDays) * 100, label: 'Apr 1' },
@@ -79,6 +78,9 @@ export default function SeasonTimeline({ year }) {
   ];
 
   const seasons = ['Winter', 'Spring', 'Summer', 'Fall'];
+
+  // Find the next upcoming check-in
+  const nextCheckIn = checkIns.find(ci => daysRemaining(ci.date) >= 0);
 
   return (
     <div className="stl">
@@ -98,19 +100,19 @@ export default function SeasonTimeline({ year }) {
             <div key={i} className="stl-tick" style={{ left: `${qs.pct}%` }} />
           ))}
 
-          {/* Check-in diamonds */}
+          {/* Check-in markers — diamonds for halfway, circles for full */}
           {checkIns.map((ci) => {
             const pct = (dayOfYear(ci.date) / totalDays) * 100;
             const days = daysRemaining(ci.date);
             const isPast = days < 0;
-            const isNext = !isPast && checkIns.filter(c => daysRemaining(c.date) >= 0)[0]?.quarter === ci.quarter;
+            const isNext = nextCheckIn && ci.quarter === nextCheckIn.quarter && ci.type === nextCheckIn.type;
             return (
               <div
-                key={ci.quarter}
-                className={`stl-checkin ${isPast ? 'past' : ''} ${isNext ? 'next' : ''}`}
+                key={`${ci.quarter}-${ci.type}`}
+                className={`stl-checkin ${isPast ? 'past' : ''} ${isNext ? 'next' : ''} stl-checkin-${ci.type}`}
                 style={{ left: `${pct}%` }}
               >
-                <div className="stl-diamond" />
+                <div className={ci.type === 'full' ? 'stl-circle' : 'stl-diamond'} />
               </div>
             );
           })}
@@ -137,10 +139,11 @@ export default function SeasonTimeline({ year }) {
         {checkIns.map((ci) => {
           const days = daysRemaining(ci.date);
           const isPast = days < 0;
-          const isNext = !isPast && checkIns.filter(c => daysRemaining(c.date) >= 0)[0]?.quarter === ci.quarter;
+          const isNext = nextCheckIn && ci.quarter === nextCheckIn.quarter && ci.type === nextCheckIn.type;
+          const icon = ci.type === 'full' ? '●' : '◆';
           return (
-            <div key={ci.quarter} className={`stl-ci-row ${isPast ? 'past' : ''} ${isNext ? 'next' : ''}`}>
-              <span className="stl-ci-diamond-sm">{isPast ? '✓' : '◆'}</span>
+            <div key={`${ci.quarter}-${ci.type}`} className={`stl-ci-row ${isPast ? 'past' : ''} ${isNext ? 'next' : ''}`}>
+              <span className={`stl-ci-diamond-sm stl-ci-icon-${ci.type}`}>{isPast ? '✓' : icon}</span>
               <span className="stl-ci-label">{ci.label}</span>
               <span className="stl-ci-date">{formatShort(ci.date)}</span>
               <span className="stl-ci-badge">
@@ -149,7 +152,7 @@ export default function SeasonTimeline({ year }) {
               {!isPast && (
                 <button
                   className="stl-ci-cal"
-                  onClick={() => downloadICS([ci], `checkin-q${ci.quarter}.ics`)}
+                  onClick={() => downloadICS([ci], `checkin-q${ci.quarter}-${ci.type}.ics`)}
                   title={`iCal — ${ci.label}`}
                 >
                   <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor">

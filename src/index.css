@@ -613,6 +613,26 @@ input, textarea, [contenteditable] {
   height: 12px;
 }
 
+/* Full check-in circle markers */
+.stl-circle {
+  width: 10px;
+  height: 10px;
+  background: var(--color-success);
+  border: 2px solid var(--color-surface);
+  border-radius: 50%;
+}
+
+.stl-checkin.past .stl-circle {
+  background: var(--color-border);
+}
+
+.stl-checkin.next .stl-circle {
+  background: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.25);
+  width: 12px;
+  height: 12px;
+}
+
 /* Today needle */
 .stl-needle {
   position: absolute;
@@ -690,6 +710,11 @@ input, textarea, [contenteditable] {
   width: 16px;
   text-align: center;
   color: var(--color-warning);
+}
+
+.stl-ci-icon-full {
+  color: var(--color-success);
+  font-size: 9px;
 }
 
 .stl-ci-row.past .stl-ci-diamond-sm {

@@ -8,7 +8,7 @@ import {
 import ProgressBar from '../components/ProgressBar';
 import CheckInReminder from '../components/CheckInReminder';
 import ChangeHistory from '../components/ChangeHistory';
-import { getCheckInDatesForYear, formatDate, getCurrentQuarter } from '../utils/checkInDates';
+import { getAllCheckInDatesForYear, formatDate, getCurrentQuarter } from '../utils/checkInDates';
 
 const STATUS_OPTIONS = [
   { value: 'not_started', label: 'Not Started' },
@@ -49,7 +49,7 @@ export default function GoalDetail() {
     );
   }
 
-  const checkInDates = getCheckInDatesForYear(goal.year);
+  const checkInDates = getAllCheckInDatesForYear(goal.year);
   const currentQ = getCurrentQuarter();
 
   const getOverallProgress = () => {
@@ -229,13 +229,14 @@ export default function GoalDetail() {
           <p className="checkin-info">
             Set a calendar reminder so you don't miss your strategic check-in days.
           </p>
-          {checkInDates.map(ci => (
+          {checkInDates.map((ci, i) => (
             <CheckInReminder
-              key={ci.quarter}
+              key={`${ci.quarter}-${ci.type}`}
               year={goal.year}
               quarter={ci.quarter}
               goalTitle={goal.title}
               checkInDate={ci.date}
+              type={ci.type}
             />
           ))}
         </div>
