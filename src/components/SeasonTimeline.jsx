@@ -150,7 +150,7 @@ export default function SeasonTimeline({ year }) {
                 <button
                   className="stl-ci-cal"
                   onClick={() => downloadICS([ci], `checkin-q${ci.quarter}.ics`)}
-                  title={`Add ${ci.label} to calendar`}
+                  title={`iCal — ${ci.label}`}
                 >
                   <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor">
                     <path d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h1.25A1.75 1.75 0 0118 5.75v10.5A1.75 1.75 0 0116.25 18H3.75A1.75 1.75 0 012 16.25V5.75A1.75 1.75 0 013.75 4H5V2.75A.75.75 0 015.75 2zm-2 5.5v8.75c0 .138.112.25.25.25h12.5a.25.25 0 00.25-.25V7.5H3.75zm2.5 2h2.5v2.5h-2.5v-2.5z"/>
@@ -170,7 +170,7 @@ export default function SeasonTimeline({ year }) {
           <svg viewBox="0 0 20 20" width="14" height="14" fill="currentColor">
             <path d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h1.25A1.75 1.75 0 0118 5.75v10.5A1.75 1.75 0 0116.25 18H3.75A1.75 1.75 0 012 16.25V5.75A1.75 1.75 0 013.75 4H5V2.75A.75.75 0 015.75 2zm-2 5.5v8.75c0 .138.112.25.25.25h12.5a.25.25 0 00.25-.25V7.5H3.75zm2.5 2h2.5v2.5h-2.5v-2.5z"/>
           </svg>
-          Add All Check-ins to Calendar
+          iCal — Add All Check-ins
         </button>
       </div>
     </div>
