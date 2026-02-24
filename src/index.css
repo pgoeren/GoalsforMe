@@ -461,9 +461,19 @@ input, textarea, [contenteditable] {
 }
 .quarter-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
 .quarter-desc { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 12px; }
-.quarter-progress { margin: 12px 0; }
+.quarter-inputs-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+.quarter-inputs-row > * { flex: 1; min-width: 0; }
+.quarter-progress { margin: 0; }
 .quarter-progress .form-input-sm { margin-bottom: 6px; }
-.quarter-checkin { margin-top: 12px; }
+.quarter-checkin { margin: 0; }
+
+@media (max-width: 600px) {
+  .quarter-inputs-row { flex-direction: column; }
+}
 
 /* ====== Check-in Reminder ====== */
 .checkins-list { display: flex; flex-direction: column; gap: 12px; }

@@ -173,36 +173,51 @@ export default function GoalDetail() {
               <p className="quarter-title">{q.title}</p>
               {q.description && <p className="quarter-desc">{q.description}</p>}
 
-              {goal.kpiType !== 'milestone' && (
-                <div className="quarter-progress">
-                  <label className="form-label">
-                    Progress {q.kpiTarget ? `(Target: ${q.kpiTarget})` : ''}
-                  </label>
-                  <input
-                    type="number"
-                    className="form-input form-input-sm"
-                    value={q.kpiProgress || 0}
+              <div className="quarter-inputs-row">
+                {goal.kpiType !== 'milestone' && (
+                  <div className="quarter-progress">
+                    <label className="form-label">
+                      Progress {q.kpiTarget ? `(Target: ${q.kpiTarget})` : ''}
+                    </label>
+                    <input
+                      type="number"
+                      className="form-input form-input-sm"
+                      value={q.kpiProgress || 0}
+                      onChange={e =>
+                        handleQuarterUpdate(q.id, { kpiProgress: Number(e.target.value) })
+                      }
+                    />
+                    {q.kpiTarget > 0 && (
+                      <ProgressBar value={q.kpiProgress || 0} max={q.kpiTarget} size="small" />
+                    )}
+                  </div>
+                )}
+
+                <div className="quarter-checkin">
+                  <label className="form-label">Halfway Check-in</label>
+                  <textarea
+                    className="form-input form-textarea"
+                    placeholder="Mid-quarter thoughts..."
+                    value={q.halfwayNotes || ''}
+                    rows={2}
                     onChange={e =>
-                      handleQuarterUpdate(q.id, { kpiProgress: Number(e.target.value) })
+                      handleQuarterUpdate(q.id, { halfwayNotes: e.target.value })
                     }
                   />
-                  {q.kpiTarget > 0 && (
-                    <ProgressBar value={q.kpiProgress || 0} max={q.kpiTarget} size="small" />
-                  )}
                 </div>
-              )}
 
-              <div className="quarter-checkin">
-                <label className="form-label">Check-in Notes</label>
-                <textarea
-                  className="form-input form-textarea"
-                  placeholder="Record your check-in thoughts..."
-                  value={q.checkInNotes || ''}
-                  rows={2}
-                  onChange={e =>
-                    handleQuarterUpdate(q.id, { checkInNotes: e.target.value })
-                  }
-                />
+                <div className="quarter-checkin">
+                  <label className="form-label">Full Check-in</label>
+                  <textarea
+                    className="form-input form-textarea"
+                    placeholder="End-of-quarter review..."
+                    value={q.fullNotes || ''}
+                    rows={2}
+                    onChange={e =>
+                      handleQuarterUpdate(q.id, { fullNotes: e.target.value })
+                    }
+                  />
+                </div>
               </div>
             </div>
           ))}
