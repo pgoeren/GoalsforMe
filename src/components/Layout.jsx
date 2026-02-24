@@ -7,15 +7,10 @@ export default function Layout() {
       <header className="app-header">
         <NavLink to="/" className="app-logo">
           <svg viewBox="0 0 100 100" width="28" height="28">
-            <rect width="100" height="100" rx="20" fill="#4F46E5" />
-            <path
-              d="M25 52 L42 68 L75 35"
-              stroke="white"
-              strokeWidth="10"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              fill="none"
-            />
+            <rect width="100" height="100" rx="24" fill="#E8685A" />
+            <circle cx="35" cy="55" r="10" fill="#44B7A0" />
+            <circle cx="65" cy="55" r="10" fill="#F5C842" />
+            <circle cx="50" cy="35" r="10" fill="white" />
           </svg>
           <span>GoalsForMe</span>
         </NavLink>

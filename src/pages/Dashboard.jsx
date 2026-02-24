@@ -72,9 +72,11 @@ export default function Dashboard() {
       {yearlyGoals.length === 0 ? (
         <div className="empty-state">
           <div className="empty-icon">
-            <svg viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="#CBD5E1" strokeWidth="1.5">
-              <circle cx="12" cy="12" r="10" />
-              <path d="M8 12l2 2 4-4" />
+            <svg viewBox="0 0 64 64" width="64" height="64" fill="none">
+              <circle cx="20" cy="32" r="8" fill="#E8685A" opacity="0.3" />
+              <circle cx="44" cy="32" r="8" fill="#44B7A0" opacity="0.3" />
+              <circle cx="32" cy="18" r="8" fill="#F5C842" opacity="0.3" />
+              <circle cx="32" cy="46" r="8" fill="#9B7ED8" opacity="0.3" />
             </svg>
           </div>
           <h2>No goals yet</h2>
