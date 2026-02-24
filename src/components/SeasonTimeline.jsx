@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { getAllCheckInDatesForYear, getCurrentQuarter } from '../utils/checkInDates';
 
 function formatICSDate(date) {
@@ -79,103 +80,116 @@ export default function SeasonTimeline({ year }) {
 
   const seasons = ['Winter', 'Spring', 'Summer', 'Fall'];
 
+  const [open, setOpen] = useState(false);
+
   // Find the next upcoming check-in
   const nextCheckIn = checkIns.find(ci => daysRemaining(ci.date) >= 0);
 
   return (
-    <div className="stl">
-      <div className="stl-head">
+    <div className={`stl ${open ? 'stl-open' : ''}`}>
+      <button className="stl-head" onClick={() => setOpen(o => !o)} type="button">
         <span className="stl-title">{year} Season Progress</span>
-        <span className="stl-quarter">Q{currentQ} &middot; {seasons[currentQ - 1]}</span>
-      </div>
+        <div className="stl-head-right">
+          <span className="stl-quarter">Q{currentQ} &middot; {seasons[currentQ - 1]}</span>
+          <span className={`stl-chevron ${open ? 'stl-chevron-open' : ''}`}>
+            <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor">
+              <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+            </svg>
+          </span>
+        </div>
+      </button>
 
-      {/* The track */}
-      <div className="stl-track-wrap">
-        <div className="stl-track">
-          {/* Filled progress */}
-          <div className="stl-fill" style={{ width: `${todayPct}%` }} />
+      {open && (
+        <div className="stl-body">
+          {/* The track */}
+          <div className="stl-track-wrap">
+            <div className="stl-track">
+              {/* Filled progress */}
+              <div className="stl-fill" style={{ width: `${todayPct}%` }} />
 
-          {/* Quarter boundary ticks */}
-          {quarterStarts.map((qs, i) => (
-            <div key={i} className="stl-tick" style={{ left: `${qs.pct}%` }} />
-          ))}
+              {/* Quarter boundary ticks */}
+              {quarterStarts.map((qs, i) => (
+                <div key={i} className="stl-tick" style={{ left: `${qs.pct}%` }} />
+              ))}
 
-          {/* Check-in markers — diamonds for halfway, circles for full */}
-          {checkIns.map((ci) => {
-            const pct = (dayOfYear(ci.date) / totalDays) * 100;
-            const days = daysRemaining(ci.date);
-            const isPast = days < 0;
-            const isNext = nextCheckIn && ci.quarter === nextCheckIn.quarter && ci.type === nextCheckIn.type;
-            return (
-              <div
-                key={`${ci.quarter}-${ci.type}`}
-                className={`stl-checkin ${isPast ? 'past' : ''} ${isNext ? 'next' : ''} stl-checkin-${ci.type}`}
-                style={{ left: `${pct}%` }}
-              >
-                <div className={ci.type === 'full' ? 'stl-circle' : 'stl-diamond'} />
+              {/* Check-in markers — diamonds for halfway, circles for full */}
+              {checkIns.map((ci) => {
+                const pct = (dayOfYear(ci.date) / totalDays) * 100;
+                const days = daysRemaining(ci.date);
+                const isPast = days < 0;
+                const isNext = nextCheckIn && ci.quarter === nextCheckIn.quarter && ci.type === nextCheckIn.type;
+                return (
+                  <div
+                    key={`${ci.quarter}-${ci.type}`}
+                    className={`stl-checkin ${isPast ? 'past' : ''} ${isNext ? 'next' : ''} stl-checkin-${ci.type}`}
+                    style={{ left: `${pct}%` }}
+                  >
+                    <div className={ci.type === 'full' ? 'stl-circle' : 'stl-diamond'} />
+                  </div>
+                );
+              })}
+
+              {/* Today needle */}
+              <div className="stl-needle" style={{ left: `${todayPct}%` }}>
+                <div className="stl-needle-line" />
+                <div className="stl-needle-head" />
               </div>
-            );
-          })}
+            </div>
 
-          {/* Today needle */}
-          <div className="stl-needle" style={{ left: `${todayPct}%` }}>
-            <div className="stl-needle-line" />
-            <div className="stl-needle-head" />
+            {/* Quarter labels row */}
+            <div className="stl-quarters">
+              {['Q1', 'Q2', 'Q3', 'Q4'].map((q, i) => (
+                <div key={q} className={`stl-qlabel ${i + 1 === currentQ ? 'active' : ''}`}>
+                  {q}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Check-in list below */}
+          <div className="stl-checkins">
+            {checkIns.map((ci) => {
+              const days = daysRemaining(ci.date);
+              const isPast = days < 0;
+              const isNext = nextCheckIn && ci.quarter === nextCheckIn.quarter && ci.type === nextCheckIn.type;
+              const icon = ci.type === 'full' ? '●' : '◆';
+              return (
+                <div key={`${ci.quarter}-${ci.type}`} className={`stl-ci-row ${isPast ? 'past' : ''} ${isNext ? 'next' : ''}`}>
+                  <span className={`stl-ci-diamond-sm stl-ci-icon-${ci.type}`}>{isPast ? '✓' : icon}</span>
+                  <span className="stl-ci-label">{ci.label}</span>
+                  <span className="stl-ci-date">{formatShort(ci.date)}</span>
+                  <span className="stl-ci-badge">
+                    {isPast ? 'Done' : days === 0 ? 'Today!' : `${days}d`}
+                  </span>
+                  {!isPast && (
+                    <button
+                      className="stl-ci-cal"
+                      onClick={() => downloadICS([ci], `checkin-q${ci.quarter}-${ci.type}.ics`)}
+                      title={`iCal — ${ci.label}`}
+                    >
+                      <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor">
+                        <path d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h1.25A1.75 1.75 0 0118 5.75v10.5A1.75 1.75 0 0116.25 18H3.75A1.75 1.75 0 012 16.25V5.75A1.75 1.75 0 013.75 4H5V2.75A.75.75 0 015.75 2zm-2 5.5v8.75c0 .138.112.25.25.25h12.5a.25.25 0 00.25-.25V7.5H3.75zm2.5 2h2.5v2.5h-2.5v-2.5z"/>
+                      </svg>
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+            <button
+              className="stl-cal-all"
+              onClick={() => downloadICS(
+                checkIns.filter(ci => daysRemaining(ci.date) >= 0),
+                `goalsforme-checkins-${year}.ics`
+              )}
+            >
+              <svg viewBox="0 0 20 20" width="14" height="14" fill="currentColor">
+                <path d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h1.25A1.75 1.75 0 0118 5.75v10.5A1.75 1.75 0 0116.25 18H3.75A1.75 1.75 0 012 16.25V5.75A1.75 1.75 0 013.75 4H5V2.75A.75.75 0 015.75 2zm-2 5.5v8.75c0 .138.112.25.25.25h12.5a.25.25 0 00.25-.25V7.5H3.75zm2.5 2h2.5v2.5h-2.5v-2.5z"/>
+              </svg>
+              iCal — Add All Check-ins
+            </button>
           </div>
         </div>
-
-        {/* Quarter labels row */}
-        <div className="stl-quarters">
-          {['Q1', 'Q2', 'Q3', 'Q4'].map((q, i) => (
-            <div key={q} className={`stl-qlabel ${i + 1 === currentQ ? 'active' : ''}`}>
-              {q}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Check-in list below */}
-      <div className="stl-checkins">
-        {checkIns.map((ci) => {
-          const days = daysRemaining(ci.date);
-          const isPast = days < 0;
-          const isNext = nextCheckIn && ci.quarter === nextCheckIn.quarter && ci.type === nextCheckIn.type;
-          const icon = ci.type === 'full' ? '●' : '◆';
-          return (
-            <div key={`${ci.quarter}-${ci.type}`} className={`stl-ci-row ${isPast ? 'past' : ''} ${isNext ? 'next' : ''}`}>
-              <span className={`stl-ci-diamond-sm stl-ci-icon-${ci.type}`}>{isPast ? '✓' : icon}</span>
-              <span className="stl-ci-label">{ci.label}</span>
-              <span className="stl-ci-date">{formatShort(ci.date)}</span>
-              <span className="stl-ci-badge">
-                {isPast ? 'Done' : days === 0 ? 'Today!' : `${days}d`}
-              </span>
-              {!isPast && (
-                <button
-                  className="stl-ci-cal"
-                  onClick={() => downloadICS([ci], `checkin-q${ci.quarter}-${ci.type}.ics`)}
-                  title={`iCal — ${ci.label}`}
-                >
-                  <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor">
-                    <path d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h1.25A1.75 1.75 0 0118 5.75v10.5A1.75 1.75 0 0116.25 18H3.75A1.75 1.75 0 012 16.25V5.75A1.75 1.75 0 013.75 4H5V2.75A.75.75 0 015.75 2zm-2 5.5v8.75c0 .138.112.25.25.25h12.5a.25.25 0 00.25-.25V7.5H3.75zm2.5 2h2.5v2.5h-2.5v-2.5z"/>
-                  </svg>
-                </button>
-              )}
-            </div>
-          );
-        })}
-        <button
-          className="stl-cal-all"
-          onClick={() => downloadICS(
-            checkIns.filter(ci => daysRemaining(ci.date) >= 0),
-            `goalsforme-checkins-${year}.ics`
-          )}
-        >
-          <svg viewBox="0 0 20 20" width="14" height="14" fill="currentColor">
-            <path d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h1.25A1.75 1.75 0 0118 5.75v10.5A1.75 1.75 0 0116.25 18H3.75A1.75 1.75 0 012 16.25V5.75A1.75 1.75 0 013.75 4H5V2.75A.75.75 0 015.75 2zm-2 5.5v8.75c0 .138.112.25.25.25h12.5a.25.25 0 00.25-.25V7.5H3.75zm2.5 2h2.5v2.5h-2.5v-2.5z"/>
-          </svg>
-          iCal — Add All Check-ins
-        </button>
-      </div>
+      )}
     </div>
   );
 }

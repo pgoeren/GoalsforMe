@@ -537,7 +537,36 @@ input, textarea, [contenteditable] {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  color: inherit;
+}
+
+.stl-open .stl-head {
   margin-bottom: 16px;
+}
+
+.stl-head-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stl-chevron {
+  display: flex;
+  align-items: center;
+  color: var(--color-text-secondary);
+  transition: transform 0.2s ease;
+}
+
+.stl-chevron-open {
+  transform: rotate(180deg);
 }
 
 .stl-title {
