@@ -464,15 +464,25 @@ input, textarea, [contenteditable] {
 .quarter-inputs-row {
   display: flex;
   gap: 12px;
+  align-items: flex-end;
   margin-top: 12px;
 }
 .quarter-inputs-row > * { flex: 1; min-width: 0; }
-.quarter-progress { margin: 0; }
-.quarter-progress .form-input-sm { margin-bottom: 6px; }
-.quarter-checkin { margin: 0; }
+.quarter-checkin-input { }
+.quarter-checkin-total {
+  display: flex;
+  flex-direction: column;
+}
+.checkin-total-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-primary);
+  padding: 6px 0;
+  line-height: 1;
+}
 
 @media (max-width: 600px) {
-  .quarter-inputs-row { flex-direction: column; }
+  .quarter-inputs-row { flex-direction: column; align-items: stretch; }
 }
 
 /* ====== Check-in Reminder ====== */

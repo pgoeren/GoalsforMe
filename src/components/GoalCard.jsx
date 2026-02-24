@@ -16,7 +16,10 @@ export default function GoalCard({ goal, quarterlyProgress }) {
       const completed = quarterlyProgress.filter(q => q.status === 'completed').length;
       return (completed / quarterlyProgress.length) * 100;
     }
-    const totalProgress = quarterlyProgress.reduce((sum, q) => sum + (q.kpiProgress || 0), 0);
+    const totalProgress = quarterlyProgress.reduce(
+      (sum, q) => sum + (q.halfwayProgress || 0) + (q.fullProgress || 0),
+      0
+    );
     return goal.kpiTarget > 0 ? (totalProgress / goal.kpiTarget) * 100 : 0;
   };
 

@@ -49,9 +49,13 @@ export default function GoalDetail() {
   const getOverallProgress = () => {
     if (quarterly.length === 0) return 0;
     if (goal.kpiType === 'milestone') {
-      return (quarterly.filter(q => q.status === 'completed').length / quarterly.length) * 100;
+      const completed = quarterly.filter(q => q.status === 'completed').length;
+      return (completed / quarterly.length) * 100;
     }
-    const total = quarterly.reduce((sum, q) => sum + (q.kpiProgress || 0), 0);
+    const total = quarterly.reduce(
+      (sum, q) => sum + (q.halfwayProgress || 0) + (q.fullProgress || 0),
+      0
+    );
     return goal.kpiTarget > 0 ? Math.min(100, (total / goal.kpiTarget) * 100) : 0;
   };
 
@@ -173,52 +177,40 @@ export default function GoalDetail() {
               <p className="quarter-title">{q.title}</p>
               {q.description && <p className="quarter-desc">{q.description}</p>}
 
-              <div className="quarter-inputs-row">
-                {goal.kpiType !== 'milestone' && (
-                  <div className="quarter-progress">
-                    <label className="form-label">
-                      Progress {q.kpiTarget ? `(Target: ${q.kpiTarget})` : ''}
-                    </label>
+              {goal.kpiType !== 'milestone' && (
+                <div className="quarter-inputs-row">
+                  <div className="quarter-checkin-input">
+                    <label className="form-label">Halfway Check-in</label>
                     <input
                       type="number"
                       className="form-input form-input-sm"
-                      value={q.kpiProgress || 0}
+                      value={q.halfwayProgress || 0}
                       onChange={e =>
-                        handleQuarterUpdate(q.id, { kpiProgress: Number(e.target.value) })
+                        handleQuarterUpdate(q.id, { halfwayProgress: Number(e.target.value) })
                       }
                     />
-                    {q.kpiTarget > 0 && (
-                      <ProgressBar value={q.kpiProgress || 0} max={q.kpiTarget} size="small" />
-                    )}
                   </div>
-                )}
 
-                <div className="quarter-checkin">
-                  <label className="form-label">Halfway Check-in</label>
-                  <textarea
-                    className="form-input form-textarea"
-                    placeholder="Mid-quarter thoughts..."
-                    value={q.halfwayNotes || ''}
-                    rows={2}
-                    onChange={e =>
-                      handleQuarterUpdate(q.id, { halfwayNotes: e.target.value })
-                    }
-                  />
-                </div>
+                  <div className="quarter-checkin-input">
+                    <label className="form-label">Full Check-in</label>
+                    <input
+                      type="number"
+                      className="form-input form-input-sm"
+                      value={q.fullProgress || 0}
+                      onChange={e =>
+                        handleQuarterUpdate(q.id, { fullProgress: Number(e.target.value) })
+                      }
+                    />
+                  </div>
 
-                <div className="quarter-checkin">
-                  <label className="form-label">Full Check-in</label>
-                  <textarea
-                    className="form-input form-textarea"
-                    placeholder="End-of-quarter review..."
-                    value={q.fullNotes || ''}
-                    rows={2}
-                    onChange={e =>
-                      handleQuarterUpdate(q.id, { fullNotes: e.target.value })
-                    }
-                  />
+                  <div className="quarter-checkin-total">
+                    <label className="form-label">Q{q.quarter} Total</label>
+                    <span className="checkin-total-value">
+                      {(q.halfwayProgress || 0) + (q.fullProgress || 0)}
+                    </span>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           ))}
         </div>
