@@ -32,6 +32,18 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* iOS PWA: prevent overscroll bounce */
+  overscroll-behavior: none;
+  -webkit-user-select: none;
+  user-select: none;
+  /* iOS PWA: prevent text resize on orientation change */
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Allow text selection in inputs and textareas */
+input, textarea, [contenteditable] {
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 #root {
@@ -55,7 +67,8 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
-  height: var(--header-height);
+  padding-top: env(safe-area-inset-top, 0);
+  height: calc(var(--header-height) + env(safe-area-inset-top, 0));
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
 }
@@ -81,7 +94,7 @@ body {
 .app-main {
   flex: 1;
   padding: 16px;
-  padding-bottom: calc(var(--nav-height) + 16px);
+  padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom, 0) + 16px);
   max-width: 800px;
   width: 100%;
   margin: 0 auto;
@@ -96,10 +109,12 @@ body {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  height: var(--nav-height);
+  height: calc(var(--nav-height) + env(safe-area-inset-bottom, 0));
   background: var(--color-surface);
   border-top: 1px solid var(--color-border);
   padding-bottom: env(safe-area-inset-bottom, 0);
+  /* iOS PWA: smooth tap response */
+  -webkit-tap-highlight-color: transparent;
 }
 
 .nav-item {
@@ -113,6 +128,7 @@ body {
   color: var(--color-text-secondary);
   text-decoration: none;
   transition: color 0.2s;
+  -webkit-tap-highlight-color: transparent;
 }
 .nav-item.active { color: var(--color-primary); }
 .nav-item svg { transition: color 0.2s; }
@@ -131,6 +147,7 @@ body {
   cursor: pointer;
   transition: all 0.2s;
   text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
 }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn-primary { background: var(--color-primary); color: white; }
@@ -237,6 +254,7 @@ body {
   box-shadow: var(--shadow-md);
   cursor: pointer;
   transition: box-shadow 0.2s, transform 0.15s;
+  -webkit-tap-highlight-color: transparent;
 }
 .goal-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
 .goal-card:active { transform: translateY(0); }
