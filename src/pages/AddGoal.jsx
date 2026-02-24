@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGoals } from '../context/GoalContext';
+import { useAuth } from '../context/AuthContext';
 import { addQuarterlyGoal } from '../firebase/goalService';
 import KPIInput from '../components/KPIInput';
 import ThemePicker from '../components/ThemePicker';
@@ -15,6 +16,7 @@ const STEPS = [
 export default function AddGoal() {
   const navigate = useNavigate();
   const { addYearlyGoal } = useGoals();
+  const { user, isAuthEnabled } = useAuth();
   const [step, setStep] = useState(1);
   const [saving, setSaving] = useState(false);
 
@@ -57,6 +59,10 @@ export default function AddGoal() {
 
   const handleSubmit = async () => {
     if (saving) return;
+    if (isAuthEnabled && !user) {
+      alert('You must be logged in to create a goal.');
+      return;
+    }
     setSaving(true);
     try {
       const yearlyGoal = await addYearlyGoal({

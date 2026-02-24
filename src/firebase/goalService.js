@@ -18,6 +18,15 @@ function getCurrentUserId() {
   return auth?.currentUser?.uid || null;
 }
 
+/** Require an authenticated user — throws if not logged in. */
+function requireUserId() {
+  const uid = getCurrentUserId();
+  if (!uid) {
+    throw new Error('Not authenticated — please log in and try again.');
+  }
+  return uid;
+}
+
 // ====== LOCAL STORAGE HELPERS ======
 const LOCAL_KEYS = {
   yearlyGoals: 'gfm_yearlyGoals',
@@ -50,7 +59,7 @@ async function logChange(entityType, entityId, entityTitle, changes) {
   };
 
   if (isFirebaseConfigured) {
-    const userId = getCurrentUserId();
+    const userId = requireUserId();
     await addDoc(collection(db, 'changeLog'), {
       ...entry,
       userId,
@@ -95,14 +104,15 @@ export async function getYearlyGoal(id) {
 
 export async function addYearlyGoal(goal) {
   const now = new Date().toISOString();
+  const { email, ...safeGoal } = goal; // strip email if present (Firestore rules reject it)
   const newGoal = {
-    ...goal,
+    ...safeGoal,
     createdAt: now,
     updatedAt: now,
   };
 
   if (isFirebaseConfigured) {
-    const userId = getCurrentUserId();
+    const userId = requireUserId();
     const docRef = await addDoc(collection(db, 'yearlyGoals'), {
       ...newGoal,
       userId,
@@ -195,8 +205,9 @@ export async function getQuarterlyGoals(yearlyGoalId) {
 
 export async function addQuarterlyGoal(goal) {
   const now = new Date().toISOString();
+  const { email, ...safeGoal } = goal; // strip email if present (Firestore rules reject it)
   const newGoal = {
-    ...goal,
+    ...safeGoal,
     status: 'not_started',
     kpiProgress: 0,
     checkInCompleted: false,
@@ -206,7 +217,7 @@ export async function addQuarterlyGoal(goal) {
   };
 
   if (isFirebaseConfigured) {
-    const userId = getCurrentUserId();
+    const userId = requireUserId();
     const docRef = await addDoc(collection(db, 'quarterlyGoals'), {
       ...newGoal,
       userId,
