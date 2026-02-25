@@ -11,7 +11,7 @@ const PRESET_THEMES = [
   'Community',
 ];
 
-export default function ThemePicker({ value, onChange }) {
+export default function ThemePicker({ value, onChange, color, onColorChange }) {
   const [custom, setCustom] = useState('');
   const [showCustom, setShowCustom] = useState(false);
 
@@ -72,6 +72,29 @@ export default function ThemePicker({ value, onChange }) {
           >
             Cancel
           </button>
+        </div>
+      )}
+      {onColorChange && (
+        <div className="theme-color-row">
+          <label className="form-label theme-color-label">Badge Color</label>
+          <div className="theme-color-controls">
+            <input
+              type="color"
+              className="theme-color-input"
+              value={color || '#2B9A7E'}
+              onChange={e => onColorChange(e.target.value)}
+              title="Choose badge color"
+            />
+            {color && (
+              <button
+                type="button"
+                className="btn btn-outline btn-sm"
+                onClick={() => onColorChange('')}
+              >
+                Reset
+              </button>
+            )}
+          </div>
         </div>
       )}
     </div>

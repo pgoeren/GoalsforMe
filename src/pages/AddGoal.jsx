@@ -26,6 +26,7 @@ export default function AddGoal() {
     description: '',
     year: currentYear,
     theme: '',
+    themeColor: '',
     kpiType: 'numeric',
     kpiTarget: '',
     kpiUnit: '',
@@ -70,6 +71,7 @@ export default function AddGoal() {
         description: form.description,
         year: form.year,
         theme: form.theme || null,
+        themeColor: form.themeColor || null,
         kpiType: form.kpiType,
         kpiTarget: form.kpiType !== 'milestone' ? Number(form.kpiTarget) : null,
         kpiUnit: form.kpiType === 'numeric' ? form.kpiUnit : null,
@@ -181,6 +183,8 @@ export default function AddGoal() {
             <ThemePicker
               value={form.theme}
               onChange={theme => updateForm({ theme })}
+              color={form.themeColor}
+              onColorChange={themeColor => updateForm({ themeColor })}
             />
           </div>
         )}
