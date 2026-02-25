@@ -1024,6 +1024,30 @@ input, textarea, [contenteditable] {
 .theme-custom-row .form-input-sm {
   flex: 1;
 }
+.theme-color-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+.theme-color-label {
+  margin: 0;
+  white-space: nowrap;
+}
+.theme-color-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.theme-color-input {
+  width: 2.5rem;
+  height: 2rem;
+  padding: 0.1rem 0.15rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  background: none;
+}
 
 /* ====== Theme Badge ====== */
 .goal-theme-badge {

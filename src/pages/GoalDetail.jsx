@@ -73,6 +73,7 @@ export default function GoalDetail() {
       description: goal.description,
       successCriteria: goal.successCriteria || '',
       theme: goal.theme || '',
+      themeColor: goal.themeColor || '',
     });
     setEditing(true);
   };
@@ -121,6 +122,8 @@ export default function GoalDetail() {
             <ThemePicker
               value={editForm.theme}
               onChange={theme => setEditForm(f => ({ ...f, theme }))}
+              color={editForm.themeColor}
+              onColorChange={themeColor => setEditForm(f => ({ ...f, themeColor }))}
             />
             <div className="edit-actions">
               <button className="btn btn-primary btn-sm" onClick={saveEdit}>Save</button>
@@ -132,7 +135,14 @@ export default function GoalDetail() {
             <div className="goal-title-row">
               <h1>{goal.title}</h1>
               <span className="goal-year-badge">{goal.year}</span>
-              {goal.theme && <span className="goal-theme-badge">{goal.theme}</span>}
+              {goal.theme && (
+                <span
+                  className="goal-theme-badge"
+                  style={goal.themeColor ? { backgroundColor: goal.themeColor, color: '#fff' } : undefined}
+                >
+                  {goal.theme}
+                </span>
+              )}
             </div>
             <p className="goal-description">{goal.description}</p>
             {goal.successCriteria && (

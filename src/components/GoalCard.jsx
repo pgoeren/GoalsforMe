@@ -28,7 +28,14 @@ export default function GoalCard({ goal, quarterlyProgress }) {
       <div className="goal-card-header">
         <h3>{goal.title}</h3>
         <div className="goal-card-badges">
-          {goal.theme && <span className="goal-theme-badge">{goal.theme}</span>}
+          {goal.theme && (
+            <span
+              className="goal-theme-badge"
+              style={goal.themeColor ? { backgroundColor: goal.themeColor, color: '#fff' } : undefined}
+            >
+              {goal.theme}
+            </span>
+          )}
           <span className="goal-year">{goal.year}</span>
         </div>
       </div>
