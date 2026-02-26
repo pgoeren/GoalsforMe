@@ -15,6 +15,7 @@ export default function Dashboard() {
   const nextCheckIn = getNextCheckIn(currentYear);
   const unsubscribesRef = useRef([]);
 
+  // Real-time subscriptions for quarterly goals of each yearly goal
   useEffect(() => {
     // Clean up previous subscriptions
     unsubscribesRef.current.forEach((fn) => fn());
