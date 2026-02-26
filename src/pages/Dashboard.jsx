@@ -18,45 +18,40 @@ export default function Dashboard() {
   // Real-time subscriptions for quarterly goals of each yearly goal
   useEffect(() => {
     // Clean up previous subscriptions
-    unsubscribesRef.current.forEach(fn => fn());
+    unsubscribesRef.current.forEach((fn) => fn());
     unsubscribesRef.current = [];
 
-    if (yearlyGoals.length === 0) {
-      setQuarterlyData({});
-      return;
-    }
+    if (yearlyGoals.length === 0) return;
 
     for (const goal of yearlyGoals) {
       const unsub = subscribeToQuarterlyGoals(
         goal.id,
-        (goals) => {
-          setQuarterlyData(prev => ({ ...prev, [goal.id]: goals }));
-        },
+        (goals) => setQuarterlyData((prev) => ({ ...prev, [goal.id]: goals })),
         () => {
-          // Fallback: one-time fetch if Firestore unavailable
-          getQuarterlyGoals(goal.id).then(goals => {
-            setQuarterlyData(prev => ({ ...prev, [goal.id]: goals }));
-          });
+          // Fallback: one-time fetch
+          getQuarterlyGoals(goal.id).then((goals) =>
+            setQuarterlyData((prev) => ({ ...prev, [goal.id]: goals }))
+          );
         }
       );
 
       if (unsub) {
         unsubscribesRef.current.push(unsub);
       } else {
-        // Firestore not available, one-time fetch
-        getQuarterlyGoals(goal.id).then(goals => {
-          setQuarterlyData(prev => ({ ...prev, [goal.id]: goals }));
-        });
+        // Firestore not available — one-time fetch
+        getQuarterlyGoals(goal.id).then((goals) =>
+          setQuarterlyData((prev) => ({ ...prev, [goal.id]: goals }))
+        );
       }
     }
 
     return () => {
-      unsubscribesRef.current.forEach(fn => fn());
+      unsubscribesRef.current.forEach((fn) => fn());
       unsubscribesRef.current = [];
     };
   }, [yearlyGoals]);
 
-  const hasThemes = yearlyGoals.some(g => g.theme);
+  const hasThemes = yearlyGoals.some((g) => g.theme);
 
   const getGroupedGoals = () => {
     const groups = {};
@@ -65,7 +60,6 @@ export default function Dashboard() {
       if (!groups[key]) groups[key] = [];
       groups[key].push(goal);
     }
-    // Sort so named themes come first, Uncategorized last
     const sorted = Object.entries(groups).sort(([a], [b]) => {
       if (a === 'Uncategorized') return 1;
       if (b === 'Uncategorized') return -1;
@@ -156,7 +150,7 @@ export default function Dashboard() {
                 <div key={theme} className="theme-group">
                   <h2 className="theme-group-title">{theme}</h2>
                   <div className="goals-grid">
-                    {goals.map(goal => (
+                    {goals.map((goal) => (
                       <GoalCard
                         key={goal.id}
                         goal={goal}
@@ -169,7 +163,7 @@ export default function Dashboard() {
             </div>
           ) : (
             <div className="goals-grid">
-              {yearlyGoals.map(goal => (
+              {yearlyGoals.map((goal) => (
                 <GoalCard
                   key={goal.id}
                   goal={goal}
