@@ -200,24 +200,16 @@ export async function addYearlyGoal(goal) {
 export async function updateYearlyGoal(id, updates) {
   if (useFirestore()) {
     try {
-      const docSnap = await getDoc(doc(db, 'yearlyGoals', id));
-      const current = docSnap.data();
-      if (current.userId !== getCurrentUserId()) throw new Error('Unauthorized');
-
-      const changes = [];
-      for (const [key, value] of Object.entries(updates)) {
-        if (JSON.stringify(current[key]) !== JSON.stringify(value) && key !== 'updatedAt') {
-          changes.push({ field: key, oldValue: current[key], newValue: value });
-        }
-      }
-      if (changes.length > 0) {
-        await logChange('yearly_goal', id, current.title, changes);
-      }
-
+      // Write first, then log — security rules enforce ownership so no getDoc needed
       await updateDoc(doc(db, 'yearlyGoals', id), {
         ...updates,
         updatedAt: serverTimestamp(),
       });
+
+      // Best-effort change log (don't block the save on this)
+      logChange('yearly_goal', id, updates.title || '',
+        Object.keys(updates).filter(k => k !== 'updatedAt').map(k => ({ field: k, newValue: updates[k] }))
+      ).catch(() => {});
       return;
     } catch (err) {
       if (!handleFirestoreError(err)) throw err;
@@ -227,12 +219,9 @@ export async function updateYearlyGoal(id, updates) {
   const goals = getLocal(LOCAL_KEYS.yearlyGoals);
   const current = goals.find(g => g.id === id);
   if (current) {
-    const changes = [];
-    for (const [key, value] of Object.entries(updates)) {
-      if (JSON.stringify(current[key]) !== JSON.stringify(value) && key !== 'updatedAt') {
-        changes.push({ field: key, oldValue: current[key], newValue: value });
-      }
-    }
+    const changes = Object.keys(updates)
+      .filter(k => k !== 'updatedAt' && JSON.stringify(current[k]) !== JSON.stringify(updates[k]))
+      .map(k => ({ field: k, oldValue: current[k], newValue: updates[k] }));
     if (changes.length > 0) {
       await logChange('yearly_goal', id, current.title, changes);
     }
@@ -324,24 +313,14 @@ export async function addQuarterlyGoal(goal) {
 export async function updateQuarterlyGoal(id, updates) {
   if (useFirestore()) {
     try {
-      const docSnap = await getDoc(doc(db, 'quarterlyGoals', id));
-      const current = docSnap.data();
-      if (current.userId !== getCurrentUserId()) throw new Error('Unauthorized');
-
-      const changes = [];
-      for (const [key, value] of Object.entries(updates)) {
-        if (JSON.stringify(current[key]) !== JSON.stringify(value) && key !== 'updatedAt') {
-          changes.push({ field: key, oldValue: current[key], newValue: value });
-        }
-      }
-      if (changes.length > 0) {
-        await logChange('quarterly_goal', id, current.title || `Q${current.quarter}`, changes);
-      }
-
       await updateDoc(doc(db, 'quarterlyGoals', id), {
         ...updates,
         updatedAt: serverTimestamp(),
       });
+
+      logChange('quarterly_goal', id, updates.title || '',
+        Object.keys(updates).filter(k => k !== 'updatedAt').map(k => ({ field: k, newValue: updates[k] }))
+      ).catch(() => {});
       return;
     } catch (err) {
       if (!handleFirestoreError(err)) throw err;
@@ -351,12 +330,9 @@ export async function updateQuarterlyGoal(id, updates) {
   const goals = getLocal(LOCAL_KEYS.quarterlyGoals);
   const current = goals.find(g => g.id === id);
   if (current) {
-    const changes = [];
-    for (const [key, value] of Object.entries(updates)) {
-      if (JSON.stringify(current[key]) !== JSON.stringify(value) && key !== 'updatedAt') {
-        changes.push({ field: key, oldValue: current[key], newValue: value });
-      }
-    }
+    const changes = Object.keys(updates)
+      .filter(k => k !== 'updatedAt' && JSON.stringify(current[k]) !== JSON.stringify(updates[k]))
+      .map(k => ({ field: k, oldValue: current[k], newValue: updates[k] }));
     if (changes.length > 0) {
       await logChange('quarterly_goal', id, current.title || `Q${current.quarter}`, changes);
     }

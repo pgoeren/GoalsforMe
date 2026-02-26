@@ -67,10 +67,17 @@ export function GoalProvider({ children }) {
   };
 
   const updateYearlyGoal = async (id, updates) => {
-    await goalService.updateYearlyGoal(id, updates);
+    // Optimistic update — show the change instantly, roll back on failure
+    const previous = yearlyGoals;
     setYearlyGoals(prev =>
       prev.map(g => (g.id === id ? { ...g, ...updates, updatedAt: new Date().toISOString() } : g))
     );
+    try {
+      await goalService.updateYearlyGoal(id, updates);
+    } catch (err) {
+      setYearlyGoals(previous);
+      throw err;
+    }
   };
 
   const deleteYearlyGoal = async (id) => {
