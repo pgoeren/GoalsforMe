@@ -418,6 +418,7 @@ input, textarea, [contenteditable] {
 .kpi-type.numeric { background: var(--tint-indigo); color: var(--color-primary); }
 .kpi-type.percentage { background: var(--tint-green); color: #2B9A7E; }
 .kpi-type.milestone { background: var(--tint-orange); color: #C49A1A; }
+.kpi-type.debt_payoff { background: #fef3c7; color: #92400e; }
 .kpi-target { font-size: 13px; color: var(--color-text-secondary); }
 
 .current-quarter-status {
@@ -474,6 +475,37 @@ input, textarea, [contenteditable] {
   border-top: 1px solid var(--color-border-light);
 }
 .quarterly-progress-section .progress-label { min-width: 22px; }
+
+/* ====== Debt Payoff ====== */
+.debt-summary-preview {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: #fef3c7;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #92400e;
+}
+.debt-card-summary {
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+.debt-paid-off { font-weight: 700; color: var(--color-success); }
+.debt-paid { color: var(--color-success); font-weight: 700; }
+.debt-overview-banner {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  padding: 14px;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+}
+.debt-overview-stat { display: flex; flex-direction: column; gap: 2px; }
+.debt-overview-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--color-text-secondary); }
+.debt-overview-value { font-size: 16px; font-weight: 700; }
+.debt-overview-value.debt-paid { color: var(--color-success); }
+.quarter-target-badge { font-size: 12px; color: var(--color-text-secondary); background: var(--color-border-light); padding: 2px 8px; border-radius: 12px; }
 
 /* ====== KPI Input ====== */
 .kpi-type-selector { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }

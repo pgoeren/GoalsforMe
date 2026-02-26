@@ -87,6 +87,19 @@ export default function GoalDetail() {
       const completed = quarterly.filter((q) => q.status === 'completed').length;
       return (completed / quarterly.length) * 100;
     }
+    if (goal.kpiType === 'debt_payoff') {
+      const start = goal.kpiStartValue || 0;
+      const target = goal.kpiTarget || 0;
+      const totalToPayOff = start - target;
+      if (totalToPayOff <= 0) return 0;
+      // Find the latest entered balance
+      let latest = start;
+      for (let i = quarterly.length - 1; i >= 0; i--) {
+        if (quarterly[i].fullProgress > 0) { latest = quarterly[i].fullProgress; break; }
+        if (quarterly[i].halfwayProgress > 0) { latest = quarterly[i].halfwayProgress; break; }
+      }
+      return Math.min(100, Math.max(0, ((start - latest) / totalToPayOff) * 100));
+    }
     const total = quarterly.reduce(
       (sum, q) => sum + (q.halfwayProgress || 0) + (q.fullProgress || 0),
       0
@@ -225,6 +238,36 @@ export default function GoalDetail() {
 
       {activeTab === 'quarters' && (
         <div className="quarters-list">
+          {goal.kpiType === 'debt_payoff' && (
+            <div className="debt-overview-banner">
+              <div className="debt-overview-stat">
+                <span className="debt-overview-label">Starting Debt</span>
+                <span className="debt-overview-value">{(goal.kpiStartValue || 0).toLocaleString()} {goal.kpiUnit || ''}</span>
+              </div>
+              <div className="debt-overview-stat">
+                <span className="debt-overview-label">Target</span>
+                <span className="debt-overview-value">{(goal.kpiTarget || 0).toLocaleString()} {goal.kpiUnit || ''}</span>
+              </div>
+              <div className="debt-overview-stat">
+                <span className="debt-overview-label">To Pay Off</span>
+                <span className="debt-overview-value">{((goal.kpiStartValue || 0) - (goal.kpiTarget || 0)).toLocaleString()} {goal.kpiUnit || ''}</span>
+              </div>
+              <div className="debt-overview-stat">
+                <span className="debt-overview-label">Paid Off So Far</span>
+                <span className="debt-overview-value debt-paid">
+                  {(() => {
+                    const start = goal.kpiStartValue || 0;
+                    let latest = start;
+                    for (let i = quarterly.length - 1; i >= 0; i--) {
+                      if (quarterly[i].fullProgress > 0) { latest = quarterly[i].fullProgress; break; }
+                      if (quarterly[i].halfwayProgress > 0) { latest = quarterly[i].halfwayProgress; break; }
+                    }
+                    return (start - latest).toLocaleString();
+                  })()} {goal.kpiUnit || ''}
+                </span>
+              </div>
+            </div>
+          )}
           {quarterly.map((q) => (
             <div key={q.id} className={`quarter-card ${q.quarter === currentQ ? 'current' : ''}`}>
               <div className="quarter-card-header">
@@ -232,11 +275,61 @@ export default function GoalDetail() {
                   Q{q.quarter}
                   {q.quarter === currentQ && <span className="current-badge">Current</span>}
                 </h3>
+                {goal.kpiType === 'debt_payoff' && q.kpiTarget != null && (
+                  <span className="quarter-target-badge">Target balance: {Number(q.kpiTarget).toLocaleString()} {goal.kpiUnit || ''}</span>
+                )}
               </div>
               <p className="quarter-title">{q.title}</p>
               {q.description && <p className="quarter-desc">{q.description}</p>}
 
-              {goal.kpiType !== 'milestone' && (
+              {goal.kpiType === 'debt_payoff' && (
+                <div className="quarter-inputs-row">
+                  <div className="quarter-checkin-input">
+                    <label className="form-label">Mid-Quarter Balance</label>
+                    <input
+                      type="number"
+                      className="form-input form-input-sm"
+                      placeholder="Enter current balance"
+                      value={q.halfwayProgress || ''}
+                      onChange={(e) =>
+                        handleQuarterUpdate(q.id, { halfwayProgress: Number(e.target.value) })
+                      }
+                    />
+                  </div>
+
+                  <div className="quarter-checkin-input">
+                    <label className="form-label">End-of-Quarter Balance</label>
+                    <input
+                      type="number"
+                      className="form-input form-input-sm"
+                      placeholder="Enter current balance"
+                      value={q.fullProgress || ''}
+                      onChange={(e) =>
+                        handleQuarterUpdate(q.id, { fullProgress: Number(e.target.value) })
+                      }
+                    />
+                  </div>
+
+                  <div className="quarter-checkin-total">
+                    <label className="form-label">Q{q.quarter} Paid Off</label>
+                    <span className="checkin-total-value debt-paid">
+                      {(() => {
+                        const start = goal.kpiStartValue || 0;
+                        const balance = q.fullProgress || q.halfwayProgress || start;
+                        // Find the previous quarter's latest balance or use the start value
+                        let prevBalance = start;
+                        if (q.quarter > 1) {
+                          const prevQ = quarterly.find((x) => x.quarter === q.quarter - 1);
+                          if (prevQ) prevBalance = prevQ.fullProgress || prevQ.halfwayProgress || start;
+                        }
+                        return (prevBalance - balance).toLocaleString();
+                      })()}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {goal.kpiType !== 'milestone' && goal.kpiType !== 'debt_payoff' && (
                 <div className="quarter-inputs-row">
                   <div className="quarter-checkin-input">
                     <label className="form-label">Halfway Check-in</label>

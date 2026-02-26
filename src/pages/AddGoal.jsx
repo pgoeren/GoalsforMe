@@ -31,6 +31,7 @@ export default function AddGoal() {
     kpiTarget: '',
     kpiUnit: '',
     kpiMilestone: '',
+    kpiStartValue: '',
     successCriteria: '',
   });
 
@@ -53,6 +54,7 @@ export default function AddGoal() {
       if (form.kpiType === 'numeric') return form.kpiTarget && form.kpiUnit;
       if (form.kpiType === 'percentage') return form.kpiTarget;
       if (form.kpiType === 'milestone') return form.kpiMilestone;
+      if (form.kpiType === 'debt_payoff') return form.kpiStartValue && form.kpiTarget >= 0 && form.kpiStartValue > form.kpiTarget;
     }
     if (step === 3) return quarters.every(q => q.title.trim());
     return false;
@@ -74,8 +76,9 @@ export default function AddGoal() {
         themeColor: form.themeColor || null,
         kpiType: form.kpiType,
         kpiTarget: form.kpiType !== 'milestone' ? Number(form.kpiTarget) : null,
-        kpiUnit: form.kpiType === 'numeric' ? form.kpiUnit : null,
+        kpiUnit: (form.kpiType === 'numeric' || form.kpiType === 'debt_payoff') ? form.kpiUnit : null,
         kpiMilestone: form.kpiType === 'milestone' ? form.kpiMilestone : null,
+        kpiStartValue: form.kpiType === 'debt_payoff' ? Number(form.kpiStartValue) : null,
         successCriteria: form.successCriteria,
       });
 
@@ -115,6 +118,17 @@ export default function AddGoal() {
           ...q,
           title: q.title || `Q${q.quarter}: ${form.title}`,
           kpiTarget: q.kpiTarget || perQ * q.quarter,
+        }))
+      );
+    } else if (form.kpiType === 'debt_payoff' && form.kpiStartValue && form.kpiTarget >= 0) {
+      const start = Number(form.kpiStartValue);
+      const target = Number(form.kpiTarget);
+      const reductionPerQ = Math.round((start - target) / 4);
+      setQuarters(prev =>
+        prev.map(q => ({
+          ...q,
+          title: q.title || `Q${q.quarter}: Reduce balance`,
+          kpiTarget: q.kpiTarget || Math.max(target, start - reductionPerQ * q.quarter),
         }))
       );
     } else {
@@ -196,6 +210,7 @@ export default function AddGoal() {
               kpiTarget={form.kpiTarget}
               kpiUnit={form.kpiUnit}
               kpiMilestone={form.kpiMilestone}
+              kpiStartValue={form.kpiStartValue}
               onChange={updateForm}
             />
             <div className="form-field">
@@ -246,12 +261,15 @@ export default function AddGoal() {
                 {form.kpiType !== 'milestone' && (
                   <div className="form-field">
                     <label className="form-label">
-                      Quarter Target {form.kpiType === 'percentage' ? '(%)' : `(${form.kpiUnit || 'units'})`}
+                      {form.kpiType === 'debt_payoff'
+                        ? `Target Balance by End of Q${q.quarter} (${form.kpiUnit || 'dollars'})`
+                        : `Quarter Target ${form.kpiType === 'percentage' ? '(%)' : `(${form.kpiUnit || 'units'})`}`
+                      }
                     </label>
                     <input
                       type="number"
                       className="form-input"
-                      placeholder="Target for this quarter"
+                      placeholder={form.kpiType === 'debt_payoff' ? 'Expected balance at end of quarter' : 'Target for this quarter'}
                       value={q.kpiTarget}
                       onChange={e => updateQuarter(idx, { kpiTarget: e.target.value })}
                     />
