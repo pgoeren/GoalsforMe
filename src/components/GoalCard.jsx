@@ -8,6 +8,8 @@ const KPI_LABELS = {
   milestone: 'Milestone',
 };
 
+const MILESTONE_STATUS_PCT = { completed: 100, on_track: 75, in_progress: 50, off_track: 25, not_started: 0 };
+
 export default function GoalCard({ goal, quarterlyProgress }) {
   const navigate = useNavigate();
 
@@ -23,6 +25,18 @@ export default function GoalCard({ goal, quarterlyProgress }) {
     );
     return goal.kpiTarget > 0 ? (totalProgress / goal.kpiTarget) * 100 : 0;
   };
+
+  const getQuarterProgressValue = (q) => {
+    if (!q) return 0;
+    if (goal.kpiType === 'milestone') {
+      return MILESTONE_STATUS_PCT[q.status] ?? 0;
+    }
+    const qTarget = q.kpiTarget || (goal.kpiTarget ? goal.kpiTarget / 4 : 0);
+    if (!qTarget) return 0;
+    return ((q.halfwayProgress || 0) + (q.fullProgress || 0)) / qTarget * 100;
+  };
+
+  const hasQuarterlyData = quarterlyProgress && quarterlyProgress.length > 0;
 
   return (
     <div className="goal-card" onClick={() => navigate(`/goal/${goal.id}`)}>
@@ -59,6 +73,22 @@ export default function GoalCard({ goal, quarterlyProgress }) {
       </div>
 
       <ProgressBar value={getProgressValue()} label="Overall Progress" />
+
+      {hasQuarterlyData && (
+        <div className="quarterly-progress-section">
+          {[1, 2, 3, 4].map((q) => {
+            const qData = quarterlyProgress.find((qp) => qp.quarter === q);
+            return (
+              <ProgressBar
+                key={q}
+                value={getQuarterProgressValue(qData)}
+                label={`Q${q}`}
+                size="small"
+              />
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
