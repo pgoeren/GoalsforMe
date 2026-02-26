@@ -31,7 +31,7 @@ jobs:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
           if [ -n "$FIREBASE_SERVICE_ACCOUNT" ]; then
-            echo "{$FIREBASE_SERVICE_ACCOUNT}" > /tmp/firebase-sa.json
+            echo "$FIREBASE_SERVICE_ACCOUNT" > /tmp/firebase-sa.json
             GOOGLE_APPLICATION_CREDENTIALS=/tmp/firebase-sa.json ./node_modules/.bin/firebase deploy --only firestore:rules,firestore:indexes
             rm /tmp/firebase-sa.json
           else

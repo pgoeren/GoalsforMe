@@ -232,19 +232,7 @@ export async function updateYearlyGoal(id, updates) {
 }
 
 export async function deleteYearlyGoal(id) {
-  if (useFirestore()) {
-    try {
-      await deleteDoc(doc(db, 'yearlyGoals', id));
-      const qSnap = await getDocs(
-        query(collection(db, 'quarterlyGoals'), where('yearlyGoalId', '==', id))
-      );
-      await Promise.all(qSnap.docs.map(d => deleteDoc(d.ref)));
-      return;
-    } catch (err) {
-      if (!handleFirestoreError(err)) throw err;
-    }
-  }
-
+  // Always clean localStorage immediately so refreshes never resurrect the goal
   let goals = getLocal(LOCAL_KEYS.yearlyGoals);
   goals = goals.filter(g => g.id !== id);
   setLocal(LOCAL_KEYS.yearlyGoals, goals);
@@ -252,6 +240,16 @@ export async function deleteYearlyGoal(id) {
   let qGoals = getLocal(LOCAL_KEYS.quarterlyGoals);
   qGoals = qGoals.filter(g => g.yearlyGoalId !== id);
   setLocal(LOCAL_KEYS.quarterlyGoals, qGoals);
+
+  if (useFirestore()) {
+    // Firestore delete must succeed — don't silently fall back to localStorage
+    // or the goal will reappear from Firestore on next refresh.
+    await deleteDoc(doc(db, 'yearlyGoals', id));
+    const qSnap = await getDocs(
+      query(collection(db, 'quarterlyGoals'), where('yearlyGoalId', '==', id))
+    );
+    await Promise.all(qSnap.docs.map(d => deleteDoc(d.ref)));
+  }
 }
 
 // ====== QUARTERLY GOALS ======
