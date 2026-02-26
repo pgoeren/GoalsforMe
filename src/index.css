@@ -464,6 +464,17 @@ input, textarea, [contenteditable] {
 .progress-fill.progress-high { background: var(--color-success); }
 .progress-text { font-size: 12px; font-weight: 700; color: var(--color-text-secondary); min-width: 36px; text-align: right; }
 
+/* ====== Quarterly Progress Bars (inside GoalCard) ====== */
+.quarterly-progress-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-border-light);
+}
+.quarterly-progress-section .progress-label { min-width: 22px; }
+
 /* ====== KPI Input ====== */
 .kpi-type-selector { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
 .kpi-option {
