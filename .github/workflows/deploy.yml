@@ -28,12 +28,14 @@ jobs:
           VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
       - name: Deploy Firestore Rules and Indexes
         env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
-          if [ -n "$FIREBASE_TOKEN" ]; then
-            ./node_modules/.bin/firebase deploy --only firestore:rules,firestore:indexes --token "$FIREBASE_TOKEN"
+          if [ -n "$FIREBASE_SERVICE_ACCOUNT" ]; then
+            echo "$FIREBASE_SERVICE_ACCOUNT" > /tmp/firebase-sa.json
+            GOOGLE_APPLICATION_CREDENTIALS=/tmp/firebase-sa.json ./node_modules/.bin/firebase deploy --only firestore:rules,firestore:indexes
+            rm /tmp/firebase-sa.json
           else
-            echo "FIREBASE_TOKEN not set — skipping Firestore deployment"
+            echo "FIREBASE_SERVICE_ACCOUNT not set — skipping Firestore deployment"
           fi
 
       - name: Deploy to gh-pages branch
