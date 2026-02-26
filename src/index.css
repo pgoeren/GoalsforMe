@@ -111,6 +111,42 @@
   border-color: #FBBF24;
 }
 
+/* ====== Background Upload ====== */
+.bg-upload { margin-top: 8px; }
+.bg-upload-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-border-light);
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.bg-upload-btn:hover {
+  border-color: var(--color-primary-light);
+  background: var(--tint-indigo);
+  color: var(--color-primary);
+}
+.bg-upload-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.bg-upload-thumb {
+  width: 80px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid var(--color-border);
+}
+.bg-upload-actions { display: flex; gap: 6px; }
+
 /* ====== Reset ====== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -126,6 +162,30 @@ body {
   -webkit-user-select: none;
   user-select: none;
   -webkit-text-size-adjust: 100%;
+}
+
+/* Custom background image with tint overlay */
+[data-custom-bg="true"] body {
+  background-image: var(--user-bg);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+[data-custom-bg="true"] body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: rgba(245, 243, 239, 0.82);
+  pointer-events: none;
+}
+[data-custom-bg="true"][data-theme="dark"] body::before {
+  background: rgba(15, 23, 41, 0.85);
+}
+[data-custom-bg="true"] #root {
+  position: relative;
+  z-index: 1;
 }
 
 input, textarea, [contenteditable] {
@@ -1309,6 +1369,12 @@ input, textarea, [contenteditable] {
   align-items: center;
   font-size: 15px;
   font-weight: 600;
+}
+.profile-row.profile-row-stack {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  margin-top: 12px;
 }
 .profile-stats {
   display: flex;
