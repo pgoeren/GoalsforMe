@@ -61,10 +61,16 @@ export default function GoalDetail() {
   };
 
   const handleQuarterUpdate = async (qId, updates) => {
-    await updateQuarterlyGoal(qId, updates);
+    // Optimistic update — show the change instantly so inputs don't revert
+    const previous = quarterly;
     setQuarterly(prev =>
       prev.map(q => (q.id === qId ? { ...q, ...updates } : q))
     );
+    try {
+      await updateQuarterlyGoal(qId, updates);
+    } catch {
+      setQuarterly(previous);
+    }
   };
 
   const startEdit = () => {
