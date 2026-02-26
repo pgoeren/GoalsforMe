@@ -74,8 +74,13 @@ export function GoalProvider({ children }) {
   };
 
   const deleteYearlyGoal = async (id) => {
-    await goalService.deleteYearlyGoal(id);
     setYearlyGoals(prev => prev.filter(g => g.id !== id));
+    try {
+      await goalService.deleteYearlyGoal(id);
+    } catch (err) {
+      loadGoals();
+      throw err;
+    }
   };
 
   const value = {

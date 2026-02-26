@@ -25,7 +25,15 @@ function getCurrentUserId() {
  * Resets on page reload so it retries after rules are deployed.
  */
 let _firestoreOk = isFirebaseConfigured;
-export function isFirestoreAvailable() { return _firestoreOk; }
+let _firestoreRetryAt = 0;
+const FIRESTORE_RETRY_MS = 30_000;
+
+export function isFirestoreAvailable() {
+  if (!_firestoreOk && Date.now() >= _firestoreRetryAt) {
+    _firestoreOk = true;
+  }
+  return _firestoreOk;
+}
 
 function useFirestore() {
   return isFirebaseConfigured && _firestoreOk && !!getCurrentUserId();
@@ -36,11 +44,11 @@ function handleFirestoreError(err) {
   if (err?.code === 'permission-denied' ||
       err?.message?.includes('Missing or insufficient permissions')) {
     console.warn(
-      '[GoalsForMe] Firestore permissions denied — falling back to localStorage.\n' +
-      'To enable cloud sync, deploy your security rules:\n' +
-      '  npx firebase login && npx firebase deploy --only firestore:rules'
+      '[GoalsForMe] Firestore permissions denied — falling back to localStorage. ' +
+      'Will retry in 30 seconds.'
     );
     _firestoreOk = false;
+    _firestoreRetryAt = Date.now() + FIRESTORE_RETRY_MS;
     return true; // handled — caller should fall back
   }
   return false; // not a permission error — rethrow
@@ -131,7 +139,9 @@ export function subscribeToYearlyGoals(onData, onErr) {
   return onSnapshot(
     q,
     (snapshot) => {
-      onData(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
+      const goals = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      setLocal(LOCAL_KEYS.yearlyGoals, goals);
+      onData(goals);
     },
     (err) => {
       handleFirestoreError(err);
@@ -235,15 +245,11 @@ export async function updateYearlyGoal(id, updates) {
 export async function deleteYearlyGoal(id) {
   if (useFirestore()) {
     try {
-      const docSnap = await getDoc(doc(db, 'yearlyGoals', id));
-      if (docSnap.data()?.userId !== getCurrentUserId()) throw new Error('Unauthorized');
       await deleteDoc(doc(db, 'yearlyGoals', id));
       const qSnap = await getDocs(
         query(collection(db, 'quarterlyGoals'), where('yearlyGoalId', '==', id))
       );
-      for (const d of qSnap.docs) {
-        await deleteDoc(d.ref);
-      }
+      await Promise.all(qSnap.docs.map(d => deleteDoc(d.ref)));
       return;
     } catch (err) {
       if (!handleFirestoreError(err)) throw err;
@@ -363,8 +369,6 @@ export async function updateQuarterlyGoal(id, updates) {
 export async function deleteQuarterlyGoal(id) {
   if (useFirestore()) {
     try {
-      const docSnap = await getDoc(doc(db, 'quarterlyGoals', id));
-      if (docSnap.data()?.userId !== getCurrentUserId()) throw new Error('Unauthorized');
       await deleteDoc(doc(db, 'quarterlyGoals', id));
       return;
     } catch (err) {
