@@ -32,10 +32,14 @@ jobs:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         if: env.FIREBASE_SERVICE_ACCOUNT != ''
         run: |
-          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > /tmp/firebase-sa.json
-          export GOOGLE_APPLICATION_CREDENTIALS=/tmp/firebase-sa.json
-          ./node_modules/.bin/firebase deploy --only firestore:rules,firestore:indexes --project goalsforme
-          rm /tmp/firebase-sa.json
+          if [ -n "$FIREBASE_SERVICE_ACCOUNT" ]; then
+            printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > /tmp/firebase-sa.json
+            export GOOGLE_APPLICATION_CREDENTIALS=/tmp/firebase-sa.json
+            ./node_modules/.bin/firebase deploy --only firestore:rules,firestore:indexes --project goalsforme
+            rm /tmp/firebase-sa.json
+          else
+            echo "FIREBASE_SERVICE_ACCOUNT not set — skipping Firestore deployment"
+          fi
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
