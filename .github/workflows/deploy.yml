@@ -27,16 +27,14 @@ jobs:
           VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
           VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
       - name: Deploy Firestore Rules and Indexes
+        if: ${{ secrets.FIREBASE_SERVICE_ACCOUNT != '' }}
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
-          if [ -n "$FIREBASE_SERVICE_ACCOUNT" ]; then
-            echo "$FIREBASE_SERVICE_ACCOUNT" > /tmp/firebase-sa.json
-            GOOGLE_APPLICATION_CREDENTIALS=/tmp/firebase-sa.json ./node_modules/.bin/firebase deploy --only firestore:rules,firestore:indexes
-            rm /tmp/firebase-sa.json
-          else
-            echo "FIREBASE_SERVICE_ACCOUNT not set — skipping Firestore deployment"
-          fi
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > /tmp/firebase-sa.json
+          export GOOGLE_APPLICATION_CREDENTIALS=/tmp/firebase-sa.json
+          ./node_modules/.bin/firebase deploy --only firestore:rules,firestore:indexes --project goalsforme
+          rm /tmp/firebase-sa.json
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
