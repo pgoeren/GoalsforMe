@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main, master, claude/goal-tracking-app-GSTkc, claude/add-theme-color-picker-cbaR1]
+    branches: [main, master]
   workflow_dispatch:
 
 permissions:
