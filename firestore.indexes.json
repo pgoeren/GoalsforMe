@@ -12,6 +12,7 @@
       "collectionGroup": "quarterlyGoals",
       "queryScope": "COLLECTION",
       "fields": [
+        { "fieldPath": "userId", "order": "ASCENDING" },
         { "fieldPath": "yearlyGoalId", "order": "ASCENDING" },
         { "fieldPath": "quarter", "order": "ASCENDING" }
       ]

@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGoals } from '../context/GoalContext';
 import GoalCard from '../components/GoalCard';
 import SeasonTimeline from '../components/SeasonTimeline';
-import { getQuarterlyGoals } from '../firebase/goalService';
+import { getQuarterlyGoals, subscribeToQuarterlyGoals } from '../firebase/goalService';
 import { getNextCheckIn, formatDate, getCurrentQuarter } from '../utils/checkInDates';
 
 export default function Dashboard() {
@@ -13,16 +13,47 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
   const nextCheckIn = getNextCheckIn(currentYear);
+  const unsubscribesRef = useRef([]);
 
+  // Real-time subscriptions for quarterly goals of each yearly goal
   useEffect(() => {
-    async function loadQuarterly() {
-      const data = {};
-      for (const goal of yearlyGoals) {
-        data[goal.id] = await getQuarterlyGoals(goal.id);
-      }
-      setQuarterlyData(data);
+    // Clean up previous subscriptions
+    unsubscribesRef.current.forEach(fn => fn());
+    unsubscribesRef.current = [];
+
+    if (yearlyGoals.length === 0) {
+      setQuarterlyData({});
+      return;
     }
-    if (yearlyGoals.length > 0) loadQuarterly();
+
+    for (const goal of yearlyGoals) {
+      const unsub = subscribeToQuarterlyGoals(
+        goal.id,
+        (goals) => {
+          setQuarterlyData(prev => ({ ...prev, [goal.id]: goals }));
+        },
+        () => {
+          // Fallback: one-time fetch if Firestore unavailable
+          getQuarterlyGoals(goal.id).then(goals => {
+            setQuarterlyData(prev => ({ ...prev, [goal.id]: goals }));
+          });
+        }
+      );
+
+      if (unsub) {
+        unsubscribesRef.current.push(unsub);
+      } else {
+        // Firestore not available, one-time fetch
+        getQuarterlyGoals(goal.id).then(goals => {
+          setQuarterlyData(prev => ({ ...prev, [goal.id]: goals }));
+        });
+      }
+    }
+
+    return () => {
+      unsubscribesRef.current.forEach(fn => fn());
+      unsubscribesRef.current = [];
+    };
   }, [yearlyGoals]);
 
   const hasThemes = yearlyGoals.some(g => g.theme);
