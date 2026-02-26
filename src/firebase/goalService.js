@@ -3,7 +3,6 @@ import {
   collection,
   doc,
   getDocs,
-  getDoc,
   addDoc,
   updateDoc,
   deleteDoc,
@@ -15,38 +14,35 @@ import {
 } from 'firebase/firestore';
 
 // ====== HELPERS ======
+
 function getCurrentUserId() {
   return auth?.currentUser?.uid || null;
 }
 
-/**
- * Track whether Firestore is reachable.
- * Starts true when Firebase is configured; flips false on first permission error.
- * Resets on page reload so it retries after rules are deployed.
- */
 let _firestoreOk = isFirebaseConfigured;
-export function isFirestoreAvailable() { return _firestoreOk; }
 
-function useFirestore() {
+export function isFirestoreAvailable() {
+  return _firestoreOk;
+}
+
+function canUseFirestore() {
   return isFirebaseConfigured && _firestoreOk && !!getCurrentUserId();
 }
 
-/** If a Firestore call fails with permission-denied, disable Firestore for this session. */
 function handleFirestoreError(err) {
-  if (err?.code === 'permission-denied' ||
-      err?.message?.includes('Missing or insufficient permissions')) {
-    console.warn(
-      '[GoalsForMe] Firestore permissions denied — falling back to localStorage.\n' +
-      'To enable cloud sync, deploy your security rules:\n' +
-      '  npx firebase login && npx firebase deploy --only firestore:rules'
-    );
+  if (
+    err?.code === 'permission-denied' ||
+    err?.message?.includes('Missing or insufficient permissions')
+  ) {
+    console.warn('[GoalsForMe] Firestore permission denied — falling back to localStorage.');
     _firestoreOk = false;
-    return true; // handled — caller should fall back
+    return true;
   }
-  return false; // not a permission error — rethrow
+  return false;
 }
 
-// ====== LOCAL STORAGE HELPERS ======
+// ====== LOCAL STORAGE ======
+
 const LOCAL_KEYS = {
   yearlyGoals: 'gfm_yearlyGoals',
   quarterlyGoals: 'gfm_quarterlyGoals',
@@ -67,6 +63,7 @@ function generateId() {
 }
 
 // ====== CHANGE LOG ======
+
 async function logChange(entityType, entityId, entityTitle, changes) {
   const entry = {
     id: generateId(),
@@ -77,7 +74,7 @@ async function logChange(entityType, entityId, entityTitle, changes) {
     changedAt: new Date().toISOString(),
   };
 
-  if (useFirestore()) {
+  if (canUseFirestore()) {
     try {
       const userId = getCurrentUserId();
       await addDoc(collection(db, 'changeLog'), {
@@ -97,8 +94,9 @@ async function logChange(entityType, entityId, entityTitle, changes) {
 }
 
 // ====== YEARLY GOALS ======
+
 export async function getYearlyGoals() {
-  if (useFirestore()) {
+  if (canUseFirestore()) {
     try {
       const userId = getCurrentUserId();
       const snapshot = await getDocs(
@@ -108,7 +106,7 @@ export async function getYearlyGoals() {
           orderBy('createdAt', 'desc')
         )
       );
-      return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
     } catch (err) {
       if (!handleFirestoreError(err)) throw err;
     }
@@ -116,12 +114,8 @@ export async function getYearlyGoals() {
   return getLocal(LOCAL_KEYS.yearlyGoals);
 }
 
-/**
- * Subscribe to real-time updates for the current user's yearly goals.
- * Returns an unsubscribe function, or null if Firestore is unavailable.
- */
 export function subscribeToYearlyGoals(onData, onErr) {
-  if (!useFirestore()) return null;
+  if (!canUseFirestore()) return null;
   const userId = getCurrentUserId();
   const q = query(
     collection(db, 'yearlyGoals'),
@@ -130,9 +124,7 @@ export function subscribeToYearlyGoals(onData, onErr) {
   );
   return onSnapshot(
     q,
-    (snapshot) => {
-      onData(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
-    },
+    (snapshot) => onData(snapshot.docs.map((d) => ({ id: d.id, ...d.data() }))),
     (err) => {
       handleFirestoreError(err);
       if (onErr) onErr(err);
@@ -140,32 +132,12 @@ export function subscribeToYearlyGoals(onData, onErr) {
   );
 }
 
-export async function getYearlyGoal(id) {
-  if (useFirestore()) {
-    try {
-      const docSnap = await getDoc(doc(db, 'yearlyGoals', id));
-      if (!docSnap.exists()) return null;
-      const data = docSnap.data();
-      if (data.userId !== getCurrentUserId()) return null;
-      return { id: docSnap.id, ...data };
-    } catch (err) {
-      if (!handleFirestoreError(err)) throw err;
-    }
-  }
-  const goals = getLocal(LOCAL_KEYS.yearlyGoals);
-  return goals.find(g => g.id === id) || null;
-}
-
 export async function addYearlyGoal(goal) {
   const now = new Date().toISOString();
   const { email, ...safeGoal } = goal;
-  const newGoal = {
-    ...safeGoal,
-    createdAt: now,
-    updatedAt: now,
-  };
+  const newGoal = { ...safeGoal, createdAt: now, updatedAt: now };
 
-  if (useFirestore()) {
+  if (canUseFirestore()) {
     try {
       const userId = getCurrentUserId();
       const docRef = await addDoc(collection(db, 'yearlyGoals'), {
@@ -188,26 +160,16 @@ export async function addYearlyGoal(goal) {
 }
 
 export async function updateYearlyGoal(id, updates) {
-  if (useFirestore()) {
+  if (canUseFirestore()) {
     try {
-      const docSnap = await getDoc(doc(db, 'yearlyGoals', id));
-      const current = docSnap.data();
-      if (current.userId !== getCurrentUserId()) throw new Error('Unauthorized');
-
-      const changes = [];
-      for (const [key, value] of Object.entries(updates)) {
-        if (JSON.stringify(current[key]) !== JSON.stringify(value) && key !== 'updatedAt') {
-          changes.push({ field: key, oldValue: current[key], newValue: value });
-        }
-      }
-      if (changes.length > 0) {
-        await logChange('yearly_goal', id, current.title, changes);
-      }
-
       await updateDoc(doc(db, 'yearlyGoals', id), {
         ...updates,
         updatedAt: serverTimestamp(),
       });
+      logChange(
+        'yearly_goal', id, updates.title || '',
+        Object.keys(updates).filter((k) => k !== 'updatedAt').map((k) => ({ field: k, newValue: updates[k] }))
+      ).catch(() => {});
       return;
     } catch (err) {
       if (!handleFirestoreError(err)) throw err;
@@ -215,68 +177,82 @@ export async function updateYearlyGoal(id, updates) {
   }
 
   const goals = getLocal(LOCAL_KEYS.yearlyGoals);
-  const current = goals.find(g => g.id === id);
+  const current = goals.find((g) => g.id === id);
   if (current) {
-    const changes = [];
-    for (const [key, value] of Object.entries(updates)) {
-      if (JSON.stringify(current[key]) !== JSON.stringify(value) && key !== 'updatedAt') {
-        changes.push({ field: key, oldValue: current[key], newValue: value });
-      }
-    }
+    const changes = Object.keys(updates)
+      .filter((k) => k !== 'updatedAt' && JSON.stringify(current[k]) !== JSON.stringify(updates[k]))
+      .map((k) => ({ field: k, oldValue: current[k], newValue: updates[k] }));
     if (changes.length > 0) {
       await logChange('yearly_goal', id, current.title, changes);
     }
   }
-  const idx = goals.findIndex(g => g.id === id);
+  const idx = goals.findIndex((g) => g.id === id);
   goals[idx] = { ...goals[idx], ...updates, updatedAt: new Date().toISOString() };
   setLocal(LOCAL_KEYS.yearlyGoals, goals);
 }
 
 export async function deleteYearlyGoal(id) {
-  if (useFirestore()) {
-    try {
-      const docSnap = await getDoc(doc(db, 'yearlyGoals', id));
-      if (docSnap.data()?.userId !== getCurrentUserId()) throw new Error('Unauthorized');
-      await deleteDoc(doc(db, 'yearlyGoals', id));
-      const qSnap = await getDocs(
-        query(collection(db, 'quarterlyGoals'), where('yearlyGoalId', '==', id))
-      );
-      for (const d of qSnap.docs) {
-        await deleteDoc(d.ref);
-      }
-      return;
-    } catch (err) {
-      if (!handleFirestoreError(err)) throw err;
-    }
-  }
-
+  // Always clear localStorage immediately so deleted goals never come back
   let goals = getLocal(LOCAL_KEYS.yearlyGoals);
-  goals = goals.filter(g => g.id !== id);
-  setLocal(LOCAL_KEYS.yearlyGoals, goals);
+  setLocal(LOCAL_KEYS.yearlyGoals, goals.filter((g) => g.id !== id));
 
   let qGoals = getLocal(LOCAL_KEYS.quarterlyGoals);
-  qGoals = qGoals.filter(g => g.yearlyGoalId !== id);
-  setLocal(LOCAL_KEYS.quarterlyGoals, qGoals);
+  setLocal(LOCAL_KEYS.quarterlyGoals, qGoals.filter((g) => g.yearlyGoalId !== id));
+
+  if (canUseFirestore()) {
+    const userId = getCurrentUserId();
+    await deleteDoc(doc(db, 'yearlyGoals', id));
+    const qSnap = await getDocs(
+      query(
+        collection(db, 'quarterlyGoals'),
+        where('userId', '==', userId),
+        where('yearlyGoalId', '==', id)
+      )
+    );
+    await Promise.all(qSnap.docs.map((d) => deleteDoc(d.ref)));
+  }
 }
 
 // ====== QUARTERLY GOALS ======
+
+export function subscribeToQuarterlyGoals(yearlyGoalId, onData, onErr) {
+  if (!canUseFirestore()) return null;
+  const userId = getCurrentUserId();
+  const q = query(
+    collection(db, 'quarterlyGoals'),
+    where('userId', '==', userId),
+    where('yearlyGoalId', '==', yearlyGoalId),
+    orderBy('quarter')
+  );
+  return onSnapshot(
+    q,
+    (snapshot) => onData(snapshot.docs.map((d) => ({ id: d.id, ...d.data() }))),
+    (err) => {
+      handleFirestoreError(err);
+      if (onErr) onErr(err);
+    }
+  );
+}
+
 export async function getQuarterlyGoals(yearlyGoalId) {
-  if (useFirestore()) {
+  if (canUseFirestore()) {
     try {
+      const userId = getCurrentUserId();
       const snapshot = await getDocs(
         query(
           collection(db, 'quarterlyGoals'),
+          where('userId', '==', userId),
           where('yearlyGoalId', '==', yearlyGoalId),
           orderBy('quarter')
         )
       );
-      return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
     } catch (err) {
       if (!handleFirestoreError(err)) throw err;
     }
   }
   return getLocal(LOCAL_KEYS.quarterlyGoals)
-    .filter(g => g.yearlyGoalId === yearlyGoalId)
+    .filter((g) => g.yearlyGoalId === yearlyGoalId)
     .sort((a, b) => a.quarter - b.quarter);
 }
 
@@ -293,7 +269,7 @@ export async function addQuarterlyGoal(goal) {
     updatedAt: now,
   };
 
-  if (useFirestore()) {
+  if (canUseFirestore()) {
     try {
       const userId = getCurrentUserId();
       const docRef = await addDoc(collection(db, 'quarterlyGoals'), {
@@ -316,26 +292,16 @@ export async function addQuarterlyGoal(goal) {
 }
 
 export async function updateQuarterlyGoal(id, updates) {
-  if (useFirestore()) {
+  if (canUseFirestore()) {
     try {
-      const docSnap = await getDoc(doc(db, 'quarterlyGoals', id));
-      const current = docSnap.data();
-      if (current.userId !== getCurrentUserId()) throw new Error('Unauthorized');
-
-      const changes = [];
-      for (const [key, value] of Object.entries(updates)) {
-        if (JSON.stringify(current[key]) !== JSON.stringify(value) && key !== 'updatedAt') {
-          changes.push({ field: key, oldValue: current[key], newValue: value });
-        }
-      }
-      if (changes.length > 0) {
-        await logChange('quarterly_goal', id, current.title || `Q${current.quarter}`, changes);
-      }
-
       await updateDoc(doc(db, 'quarterlyGoals', id), {
         ...updates,
         updatedAt: serverTimestamp(),
       });
+      logChange(
+        'quarterly_goal', id, updates.title || '',
+        Object.keys(updates).filter((k) => k !== 'updatedAt').map((k) => ({ field: k, newValue: updates[k] }))
+      ).catch(() => {});
       return;
     } catch (err) {
       if (!handleFirestoreError(err)) throw err;
@@ -343,28 +309,23 @@ export async function updateQuarterlyGoal(id, updates) {
   }
 
   const goals = getLocal(LOCAL_KEYS.quarterlyGoals);
-  const current = goals.find(g => g.id === id);
+  const current = goals.find((g) => g.id === id);
   if (current) {
-    const changes = [];
-    for (const [key, value] of Object.entries(updates)) {
-      if (JSON.stringify(current[key]) !== JSON.stringify(value) && key !== 'updatedAt') {
-        changes.push({ field: key, oldValue: current[key], newValue: value });
-      }
-    }
+    const changes = Object.keys(updates)
+      .filter((k) => k !== 'updatedAt' && JSON.stringify(current[k]) !== JSON.stringify(updates[k]))
+      .map((k) => ({ field: k, oldValue: current[k], newValue: updates[k] }));
     if (changes.length > 0) {
       await logChange('quarterly_goal', id, current.title || `Q${current.quarter}`, changes);
     }
   }
-  const idx = goals.findIndex(g => g.id === id);
+  const idx = goals.findIndex((g) => g.id === id);
   goals[idx] = { ...goals[idx], ...updates, updatedAt: new Date().toISOString() };
   setLocal(LOCAL_KEYS.quarterlyGoals, goals);
 }
 
 export async function deleteQuarterlyGoal(id) {
-  if (useFirestore()) {
+  if (canUseFirestore()) {
     try {
-      const docSnap = await getDoc(doc(db, 'quarterlyGoals', id));
-      if (docSnap.data()?.userId !== getCurrentUserId()) throw new Error('Unauthorized');
       await deleteDoc(doc(db, 'quarterlyGoals', id));
       return;
     } catch (err) {
@@ -373,13 +334,13 @@ export async function deleteQuarterlyGoal(id) {
   }
 
   let goals = getLocal(LOCAL_KEYS.quarterlyGoals);
-  goals = goals.filter(g => g.id !== id);
-  setLocal(LOCAL_KEYS.quarterlyGoals, goals);
+  setLocal(LOCAL_KEYS.quarterlyGoals, goals.filter((g) => g.id !== id));
 }
 
 // ====== CHANGE LOG ======
+
 export async function getChangeLog(entityId) {
-  if (useFirestore()) {
+  if (canUseFirestore()) {
     try {
       const userId = getCurrentUserId();
       const snapshot = await getDocs(
@@ -390,16 +351,16 @@ export async function getChangeLog(entityId) {
           orderBy('changedAt', 'desc')
         )
       );
-      return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
     } catch (err) {
       if (!handleFirestoreError(err)) throw err;
     }
   }
-  return getLocal(LOCAL_KEYS.changeLog).filter(e => e.entityId === entityId);
+  return getLocal(LOCAL_KEYS.changeLog).filter((e) => e.entityId === entityId);
 }
 
 export async function getAllChanges() {
-  if (useFirestore()) {
+  if (canUseFirestore()) {
     try {
       const userId = getCurrentUserId();
       const snapshot = await getDocs(
@@ -409,7 +370,7 @@ export async function getAllChanges() {
           orderBy('changedAt', 'desc')
         )
       );
-      return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
     } catch (err) {
       if (!handleFirestoreError(err)) throw err;
     }

@@ -1,15 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useGoals } from '../context/GoalContext';
 import {
   getQuarterlyGoals,
+  subscribeToQuarterlyGoals,
   updateQuarterlyGoal,
 } from '../firebase/goalService';
 import ProgressBar from '../components/ProgressBar';
 import CheckInReminder from '../components/CheckInReminder';
 import ChangeHistory from '../components/ChangeHistory';
 import ThemePicker, { THEME_COLORS } from '../components/ThemePicker';
-import { getAllCheckInDatesForYear, formatDate, getCurrentQuarter } from '../utils/checkInDates';
+import { getAllCheckInDatesForYear, getCurrentQuarter } from '../utils/checkInDates';
 
 
 export default function GoalDetail() {
@@ -21,19 +22,52 @@ export default function GoalDetail() {
   const [activeTab, setActiveTab] = useState('quarters');
   const [editing, setEditing] = useState(false);
   const [editForm, setEditForm] = useState({});
+  const pendingUpdatesRef = useRef(new Set());
 
-  const goal = yearlyGoals.find(g => g.id === id);
+  const goal = yearlyGoals.find((g) => g.id === id);
 
+  // Real-time subscription for quarterly goals — syncs across devices
   useEffect(() => {
-    async function load() {
-      if (!goal) return;
-      setLoading(true);
-      const qGoals = await getQuarterlyGoals(id);
-      setQuarterly(qGoals);
-      setLoading(false);
+    if (!goal) return;
+    setLoading(true);
+
+    const unsubscribe = subscribeToQuarterlyGoals(
+      id,
+      (goals) => {
+        // Don't overwrite fields that have pending optimistic updates
+        if (pendingUpdatesRef.current.size > 0) {
+          setQuarterly((prev) => {
+            const prevMap = new Map(prev.map((q) => [q.id, q]));
+            return goals.map((g) =>
+              pendingUpdatesRef.current.has(g.id) ? prevMap.get(g.id) || g : g
+            );
+          });
+        } else {
+          setQuarterly(goals);
+        }
+        setLoading(false);
+      },
+      () => {
+        // Firestore error — fall back to one-time fetch
+        getQuarterlyGoals(id).then((goals) => {
+          setQuarterly(goals);
+          setLoading(false);
+        });
+      }
+    );
+
+    if (!unsubscribe) {
+      // Firestore not available — one-time fetch
+      getQuarterlyGoals(id).then((goals) => {
+        setQuarterly(goals);
+        setLoading(false);
+      });
     }
-    load();
-  }, [id, goal]);
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [id, goal?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!goal) {
     return (
@@ -50,7 +84,7 @@ export default function GoalDetail() {
   const getOverallProgress = () => {
     if (quarterly.length === 0) return 0;
     if (goal.kpiType === 'milestone') {
-      const completed = quarterly.filter(q => q.status === 'completed').length;
+      const completed = quarterly.filter((q) => q.status === 'completed').length;
       return (completed / quarterly.length) * 100;
     }
     const total = quarterly.reduce(
@@ -61,10 +95,18 @@ export default function GoalDetail() {
   };
 
   const handleQuarterUpdate = async (qId, updates) => {
-    await updateQuarterlyGoal(qId, updates);
-    setQuarterly(prev =>
-      prev.map(q => (q.id === qId ? { ...q, ...updates } : q))
+    const previous = quarterly;
+    pendingUpdatesRef.current.add(qId);
+    setQuarterly((prev) =>
+      prev.map((q) => (q.id === qId ? { ...q, ...updates } : q))
     );
+    try {
+      await updateQuarterlyGoal(qId, updates);
+    } catch {
+      setQuarterly(previous);
+    } finally {
+      pendingUpdatesRef.current.delete(qId);
+    }
   };
 
   const startEdit = () => {
@@ -104,26 +146,26 @@ export default function GoalDetail() {
             <input
               className="form-input"
               value={editForm.title}
-              onChange={e => setEditForm(f => ({ ...f, title: e.target.value }))}
+              onChange={(e) => setEditForm((f) => ({ ...f, title: e.target.value }))}
             />
             <textarea
               className="form-input form-textarea"
               value={editForm.description}
-              onChange={e => setEditForm(f => ({ ...f, description: e.target.value }))}
+              onChange={(e) => setEditForm((f) => ({ ...f, description: e.target.value }))}
               rows={3}
             />
             <textarea
               className="form-input form-textarea"
               placeholder="Success criteria..."
               value={editForm.successCriteria}
-              onChange={e => setEditForm(f => ({ ...f, successCriteria: e.target.value }))}
+              onChange={(e) => setEditForm((f) => ({ ...f, successCriteria: e.target.value }))}
               rows={2}
             />
             <ThemePicker
               value={editForm.theme}
-              onChange={theme => setEditForm(f => ({ ...f, theme }))}
+              onChange={(theme) => setEditForm((f) => ({ ...f, theme }))}
               color={editForm.themeColor}
-              onColorChange={themeColor => setEditForm(f => ({ ...f, themeColor }))}
+              onColorChange={(themeColor) => setEditForm((f) => ({ ...f, themeColor }))}
             />
             <div className="edit-actions">
               <button className="btn btn-primary btn-sm" onClick={saveEdit}>Save</button>
@@ -183,7 +225,7 @@ export default function GoalDetail() {
 
       {activeTab === 'quarters' && (
         <div className="quarters-list">
-          {quarterly.map(q => (
+          {quarterly.map((q) => (
             <div key={q.id} className={`quarter-card ${q.quarter === currentQ ? 'current' : ''}`}>
               <div className="quarter-card-header">
                 <h3>
@@ -202,7 +244,7 @@ export default function GoalDetail() {
                       type="number"
                       className="form-input form-input-sm"
                       value={q.halfwayProgress || 0}
-                      onChange={e =>
+                      onChange={(e) =>
                         handleQuarterUpdate(q.id, { halfwayProgress: Number(e.target.value) })
                       }
                     />
@@ -214,7 +256,7 @@ export default function GoalDetail() {
                       type="number"
                       className="form-input form-input-sm"
                       value={q.fullProgress || 0}
-                      onChange={e =>
+                      onChange={(e) =>
                         handleQuarterUpdate(q.id, { fullProgress: Number(e.target.value) })
                       }
                     />
@@ -238,7 +280,7 @@ export default function GoalDetail() {
           <p className="checkin-info">
             Set a calendar reminder so you don't miss your strategic check-in days.
           </p>
-          {checkInDates.map((ci, i) => (
+          {checkInDates.map((ci) => (
             <CheckInReminder
               key={`${ci.quarter}-${ci.type}`}
               year={goal.year}
