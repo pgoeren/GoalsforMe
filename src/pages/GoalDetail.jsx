@@ -8,7 +8,7 @@ import {
 import ProgressBar from '../components/ProgressBar';
 import CheckInReminder from '../components/CheckInReminder';
 import ChangeHistory from '../components/ChangeHistory';
-import ThemePicker from '../components/ThemePicker';
+import ThemePicker, { THEME_COLORS } from '../components/ThemePicker';
 import { getAllCheckInDatesForYear, formatDate, getCurrentQuarter } from '../utils/checkInDates';
 
 
@@ -138,7 +138,7 @@ export default function GoalDetail() {
               {goal.theme && (
                 <span
                   className="goal-theme-badge"
-                  style={goal.themeColor ? { backgroundColor: goal.themeColor, color: '#fff' } : undefined}
+                  style={{ backgroundColor: goal.themeColor || THEME_COLORS[goal.theme] || undefined, color: (goal.themeColor || THEME_COLORS[goal.theme]) ? '#fff' : undefined }}
                 >
                   {goal.theme}
                 </span>

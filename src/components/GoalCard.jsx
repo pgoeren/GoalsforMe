@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import ProgressBar from './ProgressBar';
+import { THEME_COLORS } from './ThemePicker';
 
 const KPI_LABELS = {
   numeric: 'Numeric Target',
@@ -31,7 +32,7 @@ export default function GoalCard({ goal, quarterlyProgress }) {
           {goal.theme && (
             <span
               className="goal-theme-badge"
-              style={goal.themeColor ? { backgroundColor: goal.themeColor, color: '#fff' } : undefined}
+              style={{ backgroundColor: goal.themeColor || THEME_COLORS[goal.theme] || undefined, color: (goal.themeColor || THEME_COLORS[goal.theme]) ? '#fff' : undefined }}
             >
               {goal.theme}
             </span>

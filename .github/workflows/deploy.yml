@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main, claude/goal-tracking-app-GSTkc]
+    branches: [main, master, claude/goal-tracking-app-GSTkc]
   workflow_dispatch:
 
 permissions:

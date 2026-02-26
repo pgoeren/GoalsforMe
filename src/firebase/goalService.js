@@ -11,6 +11,7 @@ import {
   where,
   orderBy,
   serverTimestamp,
+  onSnapshot,
 } from 'firebase/firestore';
 
 // ====== HELPERS ======
@@ -113,6 +114,30 @@ export async function getYearlyGoals() {
     }
   }
   return getLocal(LOCAL_KEYS.yearlyGoals);
+}
+
+/**
+ * Subscribe to real-time updates for the current user's yearly goals.
+ * Returns an unsubscribe function, or null if Firestore is unavailable.
+ */
+export function subscribeToYearlyGoals(onData, onErr) {
+  if (!useFirestore()) return null;
+  const userId = getCurrentUserId();
+  const q = query(
+    collection(db, 'yearlyGoals'),
+    where('userId', '==', userId),
+    orderBy('createdAt', 'desc')
+  );
+  return onSnapshot(
+    q,
+    (snapshot) => {
+      onData(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
+    },
+    (err) => {
+      handleFirestoreError(err);
+      if (onErr) onErr(err);
+    }
+  );
 }
 
 export async function getYearlyGoal(id) {

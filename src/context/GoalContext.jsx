@@ -24,14 +24,36 @@ export function GoalProvider({ children }) {
     }
   }, []);
 
-  // Reload goals when user changes (login/logout)
+  // Set up real-time listener for cross-device sync, fallback to localStorage
   useEffect(() => {
     if (isAuthEnabled && !user) {
       setYearlyGoals([]);
       setLoading(false);
       return;
     }
-    loadGoals();
+
+    setLoading(true);
+
+    const unsubscribe = goalService.subscribeToYearlyGoals(
+      (goals) => {
+        setYearlyGoals(goals);
+        setLoading(false);
+        setError(null);
+      },
+      (err) => {
+        setError(err.message);
+        loadGoals(); // fall back to localStorage
+      }
+    );
+
+    if (!unsubscribe) {
+      // Firestore unavailable — load from localStorage
+      loadGoals();
+    }
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
   }, [user, isAuthEnabled, loadGoals]);
 
   const addYearlyGoal = async (goal) => {

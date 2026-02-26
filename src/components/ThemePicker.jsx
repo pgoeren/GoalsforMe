@@ -11,14 +11,42 @@ const PRESET_THEMES = [
   'Community',
 ];
 
+export const THEME_COLORS = {
+  'Health & Fitness': '#22c55e',
+  'Finance':          '#3b82f6',
+  'Career':           '#f97316',
+  'Education':        '#8b5cf6',
+  'Relationships':    '#ec4899',
+  'Personal Growth':  '#2B9A7E',
+  'Creative':         '#f59e0b',
+  'Community':        '#ef4444',
+};
+
+const DEFAULT_CUSTOM_COLOR = '#2B9A7E';
+
 export default function ThemePicker({ value, onChange, color, onColorChange }) {
   const [custom, setCustom] = useState('');
   const [showCustom, setShowCustom] = useState(false);
 
+  const isCustom = value && !PRESET_THEMES.includes(value);
+
   const handlePreset = (theme) => {
-    onChange(value === theme ? '' : theme);
-    setShowCustom(false);
-    setCustom('');
+    if (value === theme) {
+      onChange('');
+      if (onColorChange) onColorChange('');
+    } else {
+      onChange(theme);
+      setShowCustom(false);
+      setCustom('');
+      if (onColorChange) onColorChange(THEME_COLORS[theme]);
+    }
+  };
+
+  const handleCustomClick = () => {
+    setShowCustom(true);
+    if (!isCustom && onColorChange && !color) {
+      onColorChange(DEFAULT_CUSTOM_COLOR);
+    }
   };
 
   const handleCustomSubmit = () => {
@@ -26,6 +54,7 @@ export default function ThemePicker({ value, onChange, color, onColorChange }) {
     if (trimmed) {
       onChange(trimmed);
       setShowCustom(false);
+      if (onColorChange && !color) onColorChange(DEFAULT_CUSTOM_COLOR);
     }
   };
 
@@ -45,10 +74,10 @@ export default function ThemePicker({ value, onChange, color, onColorChange }) {
         ))}
         <button
           type="button"
-          className={`theme-chip theme-chip-custom ${showCustom || (value && !PRESET_THEMES.includes(value)) ? 'active' : ''}`}
-          onClick={() => setShowCustom(true)}
+          className={`theme-chip theme-chip-custom ${showCustom || isCustom ? 'active' : ''}`}
+          onClick={handleCustomClick}
         >
-          {value && !PRESET_THEMES.includes(value) ? value : 'Custom...'}
+          {isCustom ? value : 'Custom...'}
         </button>
       </div>
       {showCustom && (
@@ -74,14 +103,14 @@ export default function ThemePicker({ value, onChange, color, onColorChange }) {
           </button>
         </div>
       )}
-      {onColorChange && (
+      {onColorChange && isCustom && (
         <div className="theme-color-row">
           <label className="form-label theme-color-label">Badge Color</label>
           <div className="theme-color-controls">
             <input
               type="color"
               className="theme-color-input"
-              value={color || '#2B9A7E'}
+              value={color || DEFAULT_CUSTOM_COLOR}
               onChange={e => onColorChange(e.target.value)}
               title="Choose badge color"
             />
