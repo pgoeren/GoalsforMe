@@ -27,10 +27,14 @@ jobs:
           VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
           VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
       - name: Deploy Firestore Rules and Indexes
-        if: ${{ secrets.FIREBASE_TOKEN != '' }}
-        run: npx firebase deploy --only firestore:rules,firestore:indexes --token "$FIREBASE_TOKEN" --project goalsforme
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          if [ -n "$FIREBASE_TOKEN" ]; then
+            ./node_modules/.bin/firebase deploy --only firestore:rules,firestore:indexes --token "$FIREBASE_TOKEN"
+          else
+            echo "FIREBASE_TOKEN not set — skipping Firestore deployment"
+          fi
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
