@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useGoals } from '../context/GoalContext';
 import DarkModeToggle from '../components/DarkModeToggle';
+import BackgroundUpload from '../components/BackgroundUpload';
 
 function SignedInProfile() {
   const { user, logout, updateDisplayName } = useAuth();
@@ -100,6 +101,10 @@ function SignedInProfile() {
         <div className="profile-row">
           <span>Dark Mode</span>
           <DarkModeToggle />
+        </div>
+        <div className="profile-row profile-row-stack">
+          <span>Background Image</span>
+          <BackgroundUpload />
         </div>
       </div>
 
@@ -242,6 +247,10 @@ function SignedOutProfile() {
           <span>Dark Mode</span>
           <DarkModeToggle />
         </div>
+        <div className="profile-row profile-row-stack">
+          <span>Background Image</span>
+          <BackgroundUpload />
+        </div>
       </div>
     </div>
   );
@@ -289,6 +298,10 @@ export default function Profile() {
         <div className="profile-row">
           <span>Dark Mode</span>
           <DarkModeToggle />
+        </div>
+        <div className="profile-row profile-row-stack">
+          <span>Background Image</span>
+          <BackgroundUpload />
         </div>
       </div>
     </div>
