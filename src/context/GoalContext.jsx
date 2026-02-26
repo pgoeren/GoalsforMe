@@ -58,11 +58,11 @@ export function GoalProvider({ children }) {
 
   const addYearlyGoal = async (goal) => {
     const newGoal = await goalService.addYearlyGoal(goal);
-    // If Firestore is active, onSnapshot handles the state update automatically.
-    // Only update manually when using localStorage (no real-time listener).
-    if (!isFirestoreAvailable()) {
-      setYearlyGoals(prev => [newGoal, ...prev]);
-    }
+    // Always update state immediately for a responsive UI.
+    // When Firestore is active, onSnapshot may also fire — deduplicate by id to avoid doubles.
+    setYearlyGoals(prev =>
+      prev.some(g => g.id === newGoal.id) ? prev : [newGoal, ...prev]
+    );
     return newGoal;
   };
 
