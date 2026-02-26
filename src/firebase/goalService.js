@@ -245,20 +245,50 @@ export async function deleteYearlyGoal(id) {
     // Firestore delete must succeed — don't silently fall back to localStorage
     // or the goal will reappear from Firestore on next refresh.
     await deleteDoc(doc(db, 'yearlyGoals', id));
+    const userId = getCurrentUserId();
     const qSnap = await getDocs(
-      query(collection(db, 'quarterlyGoals'), where('yearlyGoalId', '==', id))
+      query(collection(db, 'quarterlyGoals'), where('userId', '==', userId), where('yearlyGoalId', '==', id))
     );
     await Promise.all(qSnap.docs.map(d => deleteDoc(d.ref)));
   }
 }
 
 // ====== QUARTERLY GOALS ======
+
+/**
+ * Subscribe to real-time updates for quarterly goals of a yearly goal.
+ * Returns an unsubscribe function, or null if Firestore is unavailable.
+ */
+export function subscribeToQuarterlyGoals(yearlyGoalId, onData, onErr) {
+  if (!useFirestore()) return null;
+  const userId = getCurrentUserId();
+  const q = query(
+    collection(db, 'quarterlyGoals'),
+    where('userId', '==', userId),
+    where('yearlyGoalId', '==', yearlyGoalId),
+    orderBy('quarter')
+  );
+  return onSnapshot(
+    q,
+    (snapshot) => {
+      const goals = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      onData(goals);
+    },
+    (err) => {
+      handleFirestoreError(err);
+      if (onErr) onErr(err);
+    }
+  );
+}
+
 export async function getQuarterlyGoals(yearlyGoalId) {
   if (useFirestore()) {
     try {
+      const userId = getCurrentUserId();
       const snapshot = await getDocs(
         query(
           collection(db, 'quarterlyGoals'),
+          where('userId', '==', userId),
           where('yearlyGoalId', '==', yearlyGoalId),
           orderBy('quarter')
         )

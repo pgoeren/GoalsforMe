@@ -1,15 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useGoals } from '../context/GoalContext';
 import {
   getQuarterlyGoals,
+  subscribeToQuarterlyGoals,
   updateQuarterlyGoal,
 } from '../firebase/goalService';
 import ProgressBar from '../components/ProgressBar';
 import CheckInReminder from '../components/CheckInReminder';
 import ChangeHistory from '../components/ChangeHistory';
 import ThemePicker, { THEME_COLORS } from '../components/ThemePicker';
-import { getAllCheckInDatesForYear, formatDate, getCurrentQuarter } from '../utils/checkInDates';
+import { getAllCheckInDatesForYear, getCurrentQuarter } from '../utils/checkInDates';
 
 
 export default function GoalDetail() {
@@ -21,19 +22,56 @@ export default function GoalDetail() {
   const [activeTab, setActiveTab] = useState('quarters');
   const [editing, setEditing] = useState(false);
   const [editForm, setEditForm] = useState({});
+  const pendingUpdatesRef = useRef(new Set());
 
   const goal = yearlyGoals.find(g => g.id === id);
 
+  // Real-time subscription for quarterly goals — syncs across devices
   useEffect(() => {
-    async function load() {
-      if (!goal) return;
-      setLoading(true);
-      const qGoals = await getQuarterlyGoals(id);
-      setQuarterly(qGoals);
-      setLoading(false);
+    if (!goal) return;
+    setLoading(true);
+
+    const unsubscribe = subscribeToQuarterlyGoals(
+      id,
+      (goals) => {
+        // Don't overwrite fields that have pending optimistic updates
+        if (pendingUpdatesRef.current.size > 0) {
+          setQuarterly(prev => {
+            const prevMap = new Map(prev.map(q => [q.id, q]));
+            return goals.map(g => {
+              if (pendingUpdatesRef.current.has(g.id)) {
+                // Keep the optimistic version for in-flight updates
+                return prevMap.get(g.id) || g;
+              }
+              return g;
+            });
+          });
+        } else {
+          setQuarterly(goals);
+        }
+        setLoading(false);
+      },
+      () => {
+        // Firestore unavailable — fall back to one-time fetch
+        getQuarterlyGoals(id).then(goals => {
+          setQuarterly(goals);
+          setLoading(false);
+        });
+      }
+    );
+
+    if (!unsubscribe) {
+      // Firestore not available, one-time fetch
+      getQuarterlyGoals(id).then(goals => {
+        setQuarterly(goals);
+        setLoading(false);
+      });
     }
-    load();
-  }, [id, goal]);
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [id, goal?.id]);
 
   if (!goal) {
     return (
@@ -63,6 +101,7 @@ export default function GoalDetail() {
   const handleQuarterUpdate = async (qId, updates) => {
     // Optimistic update — show the change instantly so inputs don't revert
     const previous = quarterly;
+    pendingUpdatesRef.current.add(qId);
     setQuarterly(prev =>
       prev.map(q => (q.id === qId ? { ...q, ...updates } : q))
     );
@@ -70,6 +109,8 @@ export default function GoalDetail() {
       await updateQuarterlyGoal(qId, updates);
     } catch {
       setQuarterly(previous);
+    } finally {
+      pendingUpdatesRef.current.delete(qId);
     }
   };
 
@@ -244,7 +285,7 @@ export default function GoalDetail() {
           <p className="checkin-info">
             Set a calendar reminder so you don't miss your strategic check-in days.
           </p>
-          {checkInDates.map((ci, i) => (
+          {checkInDates.map((ci) => (
             <CheckInReminder
               key={`${ci.quarter}-${ci.type}`}
               year={goal.year}
