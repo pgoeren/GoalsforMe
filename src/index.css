@@ -177,11 +177,11 @@ body {
   position: fixed;
   inset: 0;
   z-index: 0;
-  background: rgba(245, 243, 239, 0.82);
+  background: rgba(245, 243, 239, 0.88);
   pointer-events: none;
 }
 [data-custom-bg="true"][data-theme="dark"] body::before {
-  background: rgba(15, 23, 41, 0.85);
+  background: rgba(15, 23, 41, 0.90);
 }
 [data-custom-bg="true"] #root {
   position: relative;
