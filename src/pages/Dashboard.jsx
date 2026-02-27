@@ -4,7 +4,7 @@ import { useGoals } from '../context/GoalContext';
 import GoalCard from '../components/GoalCard';
 import SeasonTimeline from '../components/SeasonTimeline';
 import { getQuarterlyGoals, subscribeToQuarterlyGoals } from '../firebase/goalService';
-import { getNextCheckIn, formatDate, getCurrentQuarter } from '../utils/checkInDates';
+import { getNextCheckIn, formatDate, getCurrentQuarter, getEndOfQuarterWednesday } from '../utils/checkInDates';
 
 export default function Dashboard() {
   const { yearlyGoals, loading } = useGoals();
@@ -51,6 +51,32 @@ export default function Dashboard() {
     };
   }, [yearlyGoals]);
 
+  // Countdown calculations
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const daysUntil = (target) => {
+    const t = new Date(target);
+    t.setHours(0, 0, 0, 0);
+    return Math.max(0, Math.ceil((t - today) / (1000 * 60 * 60 * 24)));
+  };
+
+  const currentQuarter = getCurrentQuarter();
+  const quarterEnd = getEndOfQuarterWednesday(currentYear, currentQuarter);
+  const yearEnd = new Date(currentYear, 11, 31);
+
+  const daysToCheckIn = nextCheckIn ? daysUntil(nextCheckIn.date) : null;
+  const daysToQuarterEnd = daysUntil(quarterEnd);
+  const daysToYearEnd = daysUntil(yearEnd);
+
+  const formatCountdown = (days) => {
+    const weeks = Math.floor(days / 7);
+    const rem = days % 7;
+    if (weeks === 0) return `${days}d`;
+    if (rem === 0) return `${weeks}w`;
+    return `${weeks}w ${rem}d`;
+  };
+
   const hasThemes = yearlyGoals.some((g) => g.theme);
 
   const getGroupedGoals = () => {
@@ -91,6 +117,23 @@ export default function Dashboard() {
           </div>
         </div>
       )}
+
+      <div className="countdown-strip">
+        {daysToCheckIn !== null && (
+          <div className="countdown-item">
+            <span className="countdown-value">{formatCountdown(daysToCheckIn)}</span>
+            <span className="countdown-label">to check-in</span>
+          </div>
+        )}
+        <div className="countdown-item">
+          <span className="countdown-value">{formatCountdown(daysToQuarterEnd)}</span>
+          <span className="countdown-label">left in Q{currentQuarter}</span>
+        </div>
+        <div className="countdown-item">
+          <span className="countdown-value">{formatCountdown(daysToYearEnd)}</span>
+          <span className="countdown-label">left in {currentYear}</span>
+        </div>
+      </div>
 
       <SeasonTimeline year={currentYear} />
 

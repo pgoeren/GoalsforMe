@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useGoals } from '../context/GoalContext';
 import DarkModeToggle from '../components/DarkModeToggle';
 import BackgroundUpload from '../components/BackgroundUpload';
+import ThemeSwatch from '../components/ThemeSwatch';
 
 function SignedInProfile() {
   const { user, logout, updateDisplayName } = useAuth();
@@ -101,6 +102,10 @@ function SignedInProfile() {
         <div className="profile-row">
           <span>Dark Mode</span>
           <DarkModeToggle />
+        </div>
+        <div className="profile-row profile-row-stack">
+          <span>Accent Color</span>
+          <ThemeSwatch />
         </div>
         <div className="profile-row profile-row-stack">
           <span>Background Image</span>
@@ -248,6 +253,10 @@ function SignedOutProfile() {
           <DarkModeToggle />
         </div>
         <div className="profile-row profile-row-stack">
+          <span>Accent Color</span>
+          <ThemeSwatch />
+        </div>
+        <div className="profile-row profile-row-stack">
           <span>Background Image</span>
           <BackgroundUpload />
         </div>
@@ -298,6 +307,10 @@ export default function Profile() {
         <div className="profile-row">
           <span>Dark Mode</span>
           <DarkModeToggle />
+        </div>
+        <div className="profile-row profile-row-stack">
+          <span>Accent Color</span>
+          <ThemeSwatch />
         </div>
         <div className="profile-row profile-row-stack">
           <span>Background Image</span>

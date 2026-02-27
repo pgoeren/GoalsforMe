@@ -89,6 +89,7 @@ export default function BackgroundUpload() {
         onChange={handleFile}
         style={{ display: 'none' }}
       />
+      <p className="bg-upload-hint">Best results: 1920x1080 or larger, JPG or PNG</p>
     </div>
   );
 }
