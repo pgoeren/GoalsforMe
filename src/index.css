@@ -448,6 +448,46 @@ input, textarea, [contenteditable] {
   letter-spacing: 0.3px;
 }
 
+/* ====== At a Glance ====== */
+.goals-glance {
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  margin-bottom: 16px;
+}
+.goals-glance-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-secondary);
+  margin-bottom: 8px;
+}
+.glance-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.12s;
+}
+.glance-row:hover { background: var(--color-border-light); margin: 0 -6px; padding: 6px 6px; }
+.glance-row + .glance-row { border-top: 1px solid var(--color-border-light); }
+.glance-row:hover + .glance-row { border-top-color: transparent; }
+.glance-name {
+  flex-shrink: 0;
+  max-width: 45%;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.glance-row .progress-bar-wrapper { flex: 1; }
+
 .goals-summary {
   display: flex;
   gap: 10px;

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGoals } from '../context/GoalContext';
 import GoalCard from '../components/GoalCard';
+import ProgressBar from '../components/ProgressBar';
 import SeasonTimeline from '../components/SeasonTimeline';
 import { getQuarterlyGoals, subscribeToQuarterlyGoals } from '../firebase/goalService';
 import { getNextCheckIn, formatDate, getCurrentQuarter, getEndOfQuarterWednesday } from '../utils/checkInDates';
@@ -77,6 +78,28 @@ export default function Dashboard() {
     return `${weeks}w ${rem}d`;
   };
 
+  const getGoalProgress = (goal) => {
+    const qp = quarterlyData[goal.id];
+    if (!qp || qp.length === 0) return 0;
+    if (goal.kpiType === 'milestone') {
+      return (qp.filter((q) => q.status === 'completed').length / qp.length) * 100;
+    }
+    if (goal.kpiType === 'debt_payoff') {
+      const start = goal.kpiStartValue || 0;
+      const target = goal.kpiTarget || 0;
+      const total = start - target;
+      if (total <= 0) return 0;
+      let latest = start;
+      for (let i = qp.length - 1; i >= 0; i--) {
+        if (qp[i].fullProgress > 0) { latest = qp[i].fullProgress; break; }
+        if (qp[i].halfwayProgress > 0) { latest = qp[i].halfwayProgress; break; }
+      }
+      return Math.min(100, Math.max(0, ((start - latest) / total) * 100));
+    }
+    const sum = qp.reduce((s, q) => s + (q.halfwayProgress || 0) + (q.fullProgress || 0), 0);
+    return goal.kpiTarget > 0 ? (sum / goal.kpiTarget) * 100 : 0;
+  };
+
   const hasThemes = yearlyGoals.some((g) => g.theme);
 
   const getGroupedGoals = () => {
@@ -134,6 +157,22 @@ export default function Dashboard() {
           <span className="countdown-label">left in {currentYear}</span>
         </div>
       </div>
+
+      {yearlyGoals.length > 0 && (
+        <div className="goals-glance">
+          <h3 className="goals-glance-title">At a Glance</h3>
+          {yearlyGoals.map((goal) => (
+            <div
+              key={goal.id}
+              className="glance-row"
+              onClick={() => navigate(`/goal/${goal.id}`)}
+            >
+              <span className="glance-name">{goal.title}</span>
+              <ProgressBar value={getGoalProgress(goal)} size="small" />
+            </div>
+          ))}
+        </div>
+      )}
 
       <SeasonTimeline year={currentYear} />
 
