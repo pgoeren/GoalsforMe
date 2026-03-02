@@ -1083,10 +1083,11 @@ input, textarea, [contenteditable] {
   gap: 6px;
 }
 
+/* Dashed bracket — a guide, not a hard container */
 .week-block {
   flex: 1;
   min-width: 0;
-  border: 2px solid var(--color-border);
+  border: 1.5px dashed var(--color-border);
   border-radius: var(--radius-sm);
   overflow: hidden;
 }
@@ -1095,8 +1096,9 @@ input, textarea, [contenteditable] {
   font-size: 9px;
   font-weight: 700;
   color: var(--color-primary);
+  opacity: 0.7;
   padding: 4px 6px;
-  border-bottom: 1px solid var(--color-border-light);
+  border-bottom: 1px dashed var(--color-border-light);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1106,63 +1108,32 @@ input, textarea, [contenteditable] {
 
 .week-days {
   display: flex;
-  padding: 5px 2px 3px;
+  padding: 5px 0 4px;
 }
 
+/* Days sit flush — separated by a thin rule, no gap */
 .day-cell {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  padding: 3px 1px;
-  border-radius: 5px;
+  padding: 4px 0;
+  border-right: 1px solid var(--color-border-light);
 }
+.day-cell:last-child { border-right: none; }
 
+/* Today: small square outline around the column */
 .day-cell.today {
-  background: var(--tint-indigo);
-  border-radius: 5px;
+  box-shadow: inset 0 0 0 1.5px var(--color-primary);
+  border-radius: 3px;
 }
 
 .day-label {
   font-size: 9px;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-text-secondary);
   line-height: 1;
-}
-
-.day-cell.today .day-label {
-  color: var(--color-primary);
-}
-
-.day-marker {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 9px;
-}
-
-.day-dot {
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: var(--color-border);
-}
-
-.day-checkin-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-}
-
-.day-checkin-dot.halfway {
-  background: var(--color-warning);
-  border-radius: 2px;
-  transform: rotate(45deg);
-}
-
-.day-checkin-dot.full {
-  background: var(--color-success);
 }
 
 .day-num {
@@ -1172,8 +1143,24 @@ input, textarea, [contenteditable] {
   line-height: 1;
 }
 
+/* Today: bold primary text */
+.day-cell.today .day-label,
 .day-cell.today .day-num {
   color: var(--color-primary);
+  font-weight: 800;
+}
+
+/* Halfway check-in day: bold amber */
+.day-cell.checkin-halfway .day-label,
+.day-cell.checkin-halfway .day-num {
+  color: var(--color-warning);
+  font-weight: 800;
+}
+
+/* Full check-in day: bold teal */
+.day-cell.checkin-full .day-label,
+.day-cell.checkin-full .day-num {
+  color: var(--color-success);
   font-weight: 800;
 }
 

@@ -118,13 +118,8 @@ export default function SeasonTimeline({ year }) {
               <div className="week-block-header">{getWeekHeader(weekDays)}</div>
               <div className="week-days">
                 {weekDays.map((day, di) => (
-                  <div key={di} className={`day-cell${day.isToday ? ' today' : ''}`}>
+                  <div key={di} className={`day-cell${day.isToday ? ' today' : ''}${day.checkIn ? ` checkin-${day.checkIn.type}` : ''}`}>
                     <span className="day-label">{day.dayLabel}</span>
-                    <div className="day-marker">
-                      {day.checkIn
-                        ? <span className={`day-checkin-dot ${day.checkIn.type}`} />
-                        : <span className="day-dot" />}
-                    </div>
                     <span className="day-num">{day.dayNum}</span>
                   </div>
                 ))}
