@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGoals } from '../context/GoalContext';
-import GoalCard from '../components/GoalCard';
+import GoalRow from '../components/GoalRow';
 import ProgressBar from '../components/ProgressBar';
 import Collapsible from '../components/Collapsible';
 import SeasonTimeline from '../components/SeasonTimeline';
@@ -11,7 +11,6 @@ import { getNextCheckIn, formatDate, getCurrentQuarter, getEndOfQuarterWednesday
 export default function Dashboard() {
   const { yearlyGoals, loading } = useGoals();
   const [quarterlyData, setQuarterlyData] = useState({});
-  const [groupByTheme, setGroupByTheme] = useState(false);
   const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
   const nextCheckIn = getNextCheckIn(currentYear);
@@ -100,8 +99,6 @@ export default function Dashboard() {
     const sum = qp.reduce((s, q) => s + (q.halfwayProgress || 0) + (q.fullProgress || 0), 0);
     return goal.kpiTarget > 0 ? (sum / goal.kpiTarget) * 100 : 0;
   };
-
-  const hasThemes = yearlyGoals.some((g) => g.theme);
 
   const getGroupedGoals = () => {
     const groups = {};
@@ -217,31 +214,22 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {hasThemes && (
-            <div className="view-toggle">
-              <button
-                className={`view-toggle-btn ${!groupByTheme ? 'active' : ''}`}
-                onClick={() => setGroupByTheme(false)}
-              >
-                All Goals
-              </button>
-              <button
-                className={`view-toggle-btn ${groupByTheme ? 'active' : ''}`}
-                onClick={() => setGroupByTheme(true)}
-              >
-                By Theme
-              </button>
-            </div>
-          )}
-
-          {groupByTheme ? (
-            <div className="themed-groups">
-              {getGroupedGoals().map(([theme, goals]) => (
-                <div key={theme} className="theme-group">
-                  <h2 className="theme-group-title">{theme}</h2>
-                  <div className="goals-grid">
+          <div className="themed-groups">
+            {getGroupedGoals().map(([theme, goals]) => {
+              const themeAvg =
+                goals.reduce((sum, g) => sum + getGoalProgress(g), 0) / goals.length;
+              return (
+                <div key={theme} className="theme-section">
+                  <div className="theme-section-header">
+                    <h2 className="theme-section-title">{theme}</h2>
+                    <span className="theme-section-count">{goals.length} goal{goals.length !== 1 ? 's' : ''}</span>
+                  </div>
+                  <div className="theme-section-progress">
+                    <ProgressBar value={themeAvg} label="Overall" />
+                  </div>
+                  <div className="goal-rows-list">
                     {goals.map((goal) => (
-                      <GoalCard
+                      <GoalRow
                         key={goal.id}
                         goal={goal}
                         quarterlyProgress={quarterlyData[goal.id]}
@@ -249,19 +237,9 @@ export default function Dashboard() {
                     ))}
                   </div>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="goals-grid">
-              {yearlyGoals.map((goal) => (
-                <GoalCard
-                  key={goal.id}
-                  goal={goal}
-                  quarterlyProgress={quarterlyData[goal.id]}
-                />
-              ))}
-            </div>
-          )}
+              );
+            })}
+          </div>
         </Collapsible>
       )}
     </div>
