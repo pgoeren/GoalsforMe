@@ -1,22 +1,22 @@
 /* ====== Google Font: Nunito (rounded, playful) ====== */
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
 
-/* ====== CSS Variables — Jade Pebble Morning palette ====== */
+/* ====== CSS Variables — Frosted Aura palette ====== */
 :root {
-  --color-primary: #315E59;
-  --color-primary-light: #4E8B85;
-  --color-primary-dark: #244943;
-  --color-secondary: #404E3B;
-  --color-accent: #A4835B;
-  --color-success: #4E8B7A;
+  --color-primary: #5C7E8F;
+  --color-primary-light: #7A9AAA;
+  --color-primary-dark: #3E5E6E;
+  --color-secondary: #05AD98;
+  --color-accent: #7A9AAA;
+  --color-success: #05AD98;
   --color-warning: #C49A1A;
-  --color-danger: #DA5F71;
-  --color-bg: #F2F0EB;
+  --color-danger: #D05E6E;
+  --color-bg: #EEF3F6;
   --color-surface: #FFFFFF;
-  --color-text: #2C3528;
-  --color-text-secondary: #7B7F73;
-  --color-border: #DDDAD3;
-  --color-border-light: #ECEAE4;
+  --color-text: #2C3B44;
+  --color-text-secondary: #8A9FA7;
+  --color-border: #C8D0D4;
+  --color-border-light: #DDE4E8;
   --radius-sm: 12px;
   --radius-md: 16px;
   --radius-lg: 24px;
@@ -25,57 +25,57 @@
   --shadow-lg: none;
   --nav-height: 64px;
   --header-height: 56px;
-  /* Accent tints — earthy pastel fills */
-  --tint-indigo: #E0EDEC;
-  --tint-green: #E3EBE0;
-  --tint-orange: #F0E9DF;
-  --tint-blue: #DCE8E7;
+  /* Accent tints — frosted cool fills */
+  --tint-indigo: #E8EEF1;
+  --tint-green: #D0F5F1;
+  --tint-orange: #FFF3D6;
+  --tint-blue: #DBE9EE;
   --tint-red-light: #FAE0E4;
-  --tint-green-light: #D8EBE4;
-  --tint-theme-bg: #E3EBE0;
-  --tint-theme-text: #315E59;
-  --tint-purple: #EDE8DF;
+  --tint-green-light: #C8EEE9;
+  --tint-theme-bg: #D0F5F1;
+  --tint-theme-text: #05AD98;
+  --tint-purple: #EDE8E2;
   /* Flat — no gradients */
-  --gradient-banner: #315E59;
-  --gradient-track: #315E59;
+  --gradient-banner: #5C7E8F;
+  --gradient-track: #5C7E8F;
   /* Dot decorative colors */
-  --dot-red: #DA5F71;
-  --dot-teal: #315E59;
+  --dot-red: #D05E6E;
+  --dot-teal: #05AD98;
   --dot-yellow: #C49A1A;
-  --dot-purple: #A4835B;
-  --dot-blue: #4E8B85;
+  --dot-purple: #7A9AAA;
+  --dot-blue: #5C7E8F;
   /* Japanese wave background */
-  --wave-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23315E59' stroke-width='0.8' opacity='0.07'%3E%3Cpath d='M0 40 C0 22.3 14.3 8 32 8 C49.7 8 64 22.3 64 40'/%3E%3Cpath d='M16 40 C16 31.2 23.2 24 32 24 C40.8 24 48 31.2 48 40'/%3E%3Cpath d='M-16 40 C-16 22.3 -1.7 8 16 8 C33.7 8 48 22.3 48 40'/%3E%3Cpath d='M48 40 C48 22.3 62.3 8 80 8 C97.7 8 112 22.3 112 40'/%3E%3Cpath d='M64 40 C64 31.2 71.2 24 80 24 C88.8 24 96 31.2 96 40'/%3E%3Cpath d='M0 80 C0 62.3 14.3 48 32 48 C49.7 48 64 62.3 64 80'/%3E%3Cpath d='M16 80 C16 71.2 23.2 64 32 64 C40.8 64 48 71.2 48 80'/%3E%3Cpath d='M-16 80 C-16 62.3 -1.7 48 16 48 C33.7 48 48 62.3 48 80'/%3E%3Cpath d='M48 80 C48 62.3 62.3 48 80 48 C97.7 48 112 62.3 112 80'/%3E%3Cpath d='M64 80 C64 71.2 71.2 64 80 64 C88.8 64 96 71.2 96 80'/%3E%3Cpath d='M0 0 C0 -17.7 14.3 -32 32 -32 C49.7 -32 64 -17.7 64 0'/%3E%3Cpath d='M16 0 C16 -8.8 23.2 -16 32 -16 C40.8 -16 48 -8.8 48 0'/%3E%3Cpath d='M48 0 C48 -17.7 62.3 -32 80 -32 C97.7 -32 112 -17.7 112 0'/%3E%3Cpath d='M64 0 C64 -8.8 71.2 -16 80 -16 C88.8 -16 96 -8.8 96 0'/%3E%3C/g%3E%3C/svg%3E");
+  --wave-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%235C7E8F' stroke-width='0.8' opacity='0.07'%3E%3Cpath d='M0 40 C0 22.3 14.3 8 32 8 C49.7 8 64 22.3 64 40'/%3E%3Cpath d='M16 40 C16 31.2 23.2 24 32 24 C40.8 24 48 31.2 48 40'/%3E%3Cpath d='M-16 40 C-16 22.3 -1.7 8 16 8 C33.7 8 48 22.3 48 40'/%3E%3Cpath d='M48 40 C48 22.3 62.3 8 80 8 C97.7 8 112 22.3 112 40'/%3E%3Cpath d='M64 40 C64 31.2 71.2 24 80 24 C88.8 24 96 31.2 96 40'/%3E%3Cpath d='M0 80 C0 62.3 14.3 48 32 48 C49.7 48 64 62.3 64 80'/%3E%3Cpath d='M16 80 C16 71.2 23.2 64 32 64 C40.8 64 48 71.2 48 80'/%3E%3Cpath d='M-16 80 C-16 62.3 -1.7 48 16 48 C33.7 48 48 62.3 48 80'/%3E%3Cpath d='M48 80 C48 62.3 62.3 48 80 48 C97.7 48 112 62.3 112 80'/%3E%3Cpath d='M64 80 C64 71.2 71.2 64 80 64 C88.8 64 96 71.2 96 80'/%3E%3Cpath d='M0 0 C0 -17.7 14.3 -32 32 -32 C49.7 -32 64 -17.7 64 0'/%3E%3Cpath d='M16 0 C16 -8.8 23.2 -16 32 -16 C40.8 -16 48 -8.8 48 0'/%3E%3Cpath d='M48 0 C48 -17.7 62.3 -32 80 -32 C97.7 -32 112 -17.7 112 0'/%3E%3Cpath d='M64 0 C64 -8.8 71.2 -16 80 -16 C88.8 -16 96 -8.8 96 0'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 /* ====== Dark Mode ====== */
 [data-theme="dark"] {
-  --color-primary: #6B9E99;
-  --color-primary-light: #8AB5B1;
-  --color-primary-dark: #4E8B85;
-  --color-secondary: #7A9E74;
-  --color-accent: #C4A580;
-  --color-success: #7DDBB8;
+  --color-primary: #7AAABB;
+  --color-primary-light: #9ABBC9;
+  --color-primary-dark: #5C8E9E;
+  --color-secondary: #1DBFAB;
+  --color-accent: #9ABBC9;
+  --color-success: #1DBFAB;
   --color-warning: #FFD970;
   --color-danger: #F08090;
-  --color-bg: #0E1A14;
-  --color-surface: #172019;
-  --color-text: #E8EDE6;
-  --color-text-secondary: #8A9A85;
-  --color-border: #2A3B28;
-  --color-border-light: #1E2D1C;
-  --tint-indigo: #1E322F;
-  --tint-green: #1E2D1C;
+  --color-bg: #0D1A1F;
+  --color-surface: #152028;
+  --color-text: #E0E8EC;
+  --color-text-secondary: #8A9FA7;
+  --color-border: #2A3D47;
+  --color-border-light: #1E2F38;
+  --tint-indigo: #1C2E38;
+  --tint-green: #0E2A27;
   --tint-orange: #2E2518;
-  --tint-blue: #1E2E2D;
-  --tint-red-light: #3D2328;
-  --tint-green-light: #1E2D1C;
-  --tint-theme-bg: #1E2D1C;
-  --tint-theme-text: #6B9E99;
+  --tint-blue: #1C2E38;
+  --tint-red-light: #2E1A1E;
+  --tint-green-light: #0E2A27;
+  --tint-theme-bg: #0E2A27;
+  --tint-theme-text: #1DBFAB;
   --tint-purple: #2A2318;
-  --gradient-banner: #1E322F;
-  --gradient-track: #315E59;
-  --wave-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%236B9E99' stroke-width='0.8' opacity='0.06'%3E%3Cpath d='M0 40 C0 22.3 14.3 8 32 8 C49.7 8 64 22.3 64 40'/%3E%3Cpath d='M16 40 C16 31.2 23.2 24 32 24 C40.8 24 48 31.2 48 40'/%3E%3Cpath d='M-16 40 C-16 22.3 -1.7 8 16 8 C33.7 8 48 22.3 48 40'/%3E%3Cpath d='M48 40 C48 22.3 62.3 8 80 8 C97.7 8 112 22.3 112 40'/%3E%3Cpath d='M64 40 C64 31.2 71.2 24 80 24 C88.8 24 96 31.2 96 40'/%3E%3Cpath d='M0 80 C0 62.3 14.3 48 32 48 C49.7 48 64 62.3 64 80'/%3E%3Cpath d='M16 80 C16 71.2 23.2 64 32 64 C40.8 64 48 71.2 48 80'/%3E%3Cpath d='M-16 80 C-16 62.3 -1.7 48 16 48 C33.7 48 48 62.3 48 80'/%3E%3Cpath d='M48 80 C48 62.3 62.3 48 80 48 C97.7 48 112 62.3 112 80'/%3E%3Cpath d='M64 80 C64 71.2 71.2 64 80 64 C88.8 64 96 71.2 96 80'/%3E%3Cpath d='M0 0 C0 -17.7 14.3 -32 32 -32 C49.7 -32 64 -17.7 64 0'/%3E%3Cpath d='M16 0 C16 -8.8 23.2 -16 32 -16 C40.8 -16 48 -8.8 48 0'/%3E%3Cpath d='M48 0 C48 -17.7 62.3 -32 80 -32 C97.7 -32 112 -17.7 112 0'/%3E%3Cpath d='M64 0 C64 -8.8 71.2 -16 80 -16 C88.8 -16 96 -8.8 96 0'/%3E%3C/g%3E%3C/svg%3E");
+  --gradient-banner: #1C2E38;
+  --gradient-track: #5C7E8F;
+  --wave-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%237AAABB' stroke-width='0.8' opacity='0.06'%3E%3Cpath d='M0 40 C0 22.3 14.3 8 32 8 C49.7 8 64 22.3 64 40'/%3E%3Cpath d='M16 40 C16 31.2 23.2 24 32 24 C40.8 24 48 31.2 48 40'/%3E%3Cpath d='M-16 40 C-16 22.3 -1.7 8 16 8 C33.7 8 48 22.3 48 40'/%3E%3Cpath d='M48 40 C48 22.3 62.3 8 80 8 C97.7 8 112 22.3 112 40'/%3E%3Cpath d='M64 40 C64 31.2 71.2 24 80 24 C88.8 24 96 31.2 96 40'/%3E%3Cpath d='M0 80 C0 62.3 14.3 48 32 48 C49.7 48 64 62.3 64 80'/%3E%3Cpath d='M16 80 C16 71.2 23.2 64 32 64 C40.8 64 48 71.2 48 80'/%3E%3Cpath d='M-16 80 C-16 62.3 -1.7 48 16 48 C33.7 48 48 62.3 48 80'/%3E%3Cpath d='M48 80 C48 62.3 62.3 48 80 48 C97.7 48 112 62.3 112 80'/%3E%3Cpath d='M64 80 C64 71.2 71.2 64 80 64 C88.8 64 96 71.2 96 80'/%3E%3Cpath d='M0 0 C0 -17.7 14.3 -32 32 -32 C49.7 -32 64 -17.7 64 0'/%3E%3Cpath d='M16 0 C16 -8.8 23.2 -16 32 -16 C40.8 -16 48 -8.8 48 0'/%3E%3Cpath d='M48 0 C48 -17.7 62.3 -32 80 -32 C97.7 -32 112 -17.7 112 0'/%3E%3Cpath d='M64 0 C64 -8.8 71.2 -16 80 -16 C88.8 -16 96 -8.8 96 0'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 /* ====== Dark Mode Toggle ====== */
@@ -103,9 +103,9 @@
   color: var(--color-primary);
 }
 [data-theme="dark"] .dark-toggle {
-  background: #1E322F;
+  background: #1C2E38;
   border-color: var(--color-border);
-  color: #C49A1A;
+  color: #FFD970;
 }
 [data-theme="dark"] .dark-toggle:hover {
   border-color: #FBBF24;
@@ -554,15 +554,15 @@ input, textarea, [contenteditable] {
 
 .hero-stat--goals {
   background: var(--tint-indigo);
-  border-color: rgba(49, 94, 89, 0.2);
+  border-color: rgba(92, 126, 143, 0.2);
 }
 .hero-stat--quarter {
   background: var(--tint-green);
-  border-color: rgba(64, 78, 59, 0.2);
+  border-color: rgba(5, 173, 152, 0.2);
 }
 .hero-stat--year {
   background: var(--tint-orange);
-  border-color: rgba(164, 131, 91, 0.25);
+  border-color: rgba(196, 154, 26, 0.25);
 }
 
 .hero-stat-icon {
@@ -572,8 +572,8 @@ input, textarea, [contenteditable] {
 }
 .hero-stat-icon svg { width: 100%; height: 100%; }
 .hero-stat--goals .hero-stat-icon { color: var(--color-primary); }
-.hero-stat--quarter .hero-stat-icon { color: #404E3B; }
-.hero-stat--year .hero-stat-icon { color: #A4835B; }
+.hero-stat--quarter .hero-stat-icon { color: #05AD98; }
+.hero-stat--year .hero-stat-icon { color: #C49A1A; }
 
 .hero-stat-value {
   display: block;
@@ -583,8 +583,8 @@ input, textarea, [contenteditable] {
   margin-bottom: 3px;
 }
 .hero-stat--goals .hero-stat-value { color: var(--color-primary); }
-.hero-stat--quarter .hero-stat-value { color: #404E3B; }
-.hero-stat--year .hero-stat-value { color: #A4835B; }
+.hero-stat--quarter .hero-stat-value { color: #05AD98; }
+.hero-stat--year .hero-stat-value { color: #C49A1A; }
 
 .hero-stat-label {
   display: block;
