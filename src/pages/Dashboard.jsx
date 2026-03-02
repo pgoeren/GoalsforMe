@@ -1,17 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGoals } from '../context/GoalContext';
-import GoalCard from '../components/GoalCard';
+import GoalRow, { getGoalProgressValue } from '../components/GoalRow';
 import ProgressBar from '../components/ProgressBar';
 import Collapsible from '../components/Collapsible';
 import SeasonTimeline from '../components/SeasonTimeline';
+import { THEME_COLORS } from '../components/ThemePicker';
 import { getQuarterlyGoals, subscribeToQuarterlyGoals } from '../firebase/goalService';
 import { getNextCheckIn, formatDate, getCurrentQuarter, getEndOfQuarterWednesday } from '../utils/checkInDates';
 
 export default function Dashboard() {
   const { yearlyGoals, loading } = useGoals();
   const [quarterlyData, setQuarterlyData] = useState({});
-  const [groupByTheme, setGroupByTheme] = useState(false);
   const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
   const nextCheckIn = getNextCheckIn(currentYear);
@@ -79,29 +79,7 @@ export default function Dashboard() {
     return `${weeks}w ${rem}d`;
   };
 
-  const getGoalProgress = (goal) => {
-    const qp = quarterlyData[goal.id];
-    if (!qp || qp.length === 0) return 0;
-    if (goal.kpiType === 'milestone') {
-      return (qp.filter((q) => q.status === 'completed').length / qp.length) * 100;
-    }
-    if (goal.kpiType === 'debt_payoff') {
-      const start = goal.kpiStartValue || 0;
-      const target = goal.kpiTarget || 0;
-      const total = start - target;
-      if (total <= 0) return 0;
-      let latest = start;
-      for (let i = qp.length - 1; i >= 0; i--) {
-        if (qp[i].fullProgress > 0) { latest = qp[i].fullProgress; break; }
-        if (qp[i].halfwayProgress > 0) { latest = qp[i].halfwayProgress; break; }
-      }
-      return Math.min(100, Math.max(0, ((start - latest) / total) * 100));
-    }
-    const sum = qp.reduce((s, q) => s + (q.halfwayProgress || 0) + (q.fullProgress || 0), 0);
-    return goal.kpiTarget > 0 ? (sum / goal.kpiTarget) * 100 : 0;
-  };
-
-  const hasThemes = yearlyGoals.some((g) => g.theme);
+  const getGoalProgress = (goal) => getGoalProgressValue(goal, quarterlyData[goal.id]);
 
   const getGroupedGoals = () => {
     const groups = {};
@@ -116,6 +94,12 @@ export default function Dashboard() {
       return a.localeCompare(b);
     });
     return sorted;
+  };
+
+  const getThemeProgress = (goals) => {
+    if (!goals.length) return 0;
+    const total = goals.reduce((sum, g) => sum + getGoalProgress(g), 0);
+    return total / goals.length;
   };
 
   if (loading) {
@@ -173,7 +157,7 @@ export default function Dashboard() {
                 onClick={() => navigate(`/goal/${goal.id}`)}
               >
                 <span className="glance-name">{goal.title}</span>
-                <ProgressBar value={getGoalProgress(goal)} size="small" />
+                <ProgressBar value={getGoalProgressValue(goal, quarterlyData[goal.id])} size="small" />
               </div>
             ))}
           </div>
@@ -217,31 +201,27 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {hasThemes && (
-            <div className="view-toggle">
-              <button
-                className={`view-toggle-btn ${!groupByTheme ? 'active' : ''}`}
-                onClick={() => setGroupByTheme(false)}
-              >
-                All Goals
-              </button>
-              <button
-                className={`view-toggle-btn ${groupByTheme ? 'active' : ''}`}
-                onClick={() => setGroupByTheme(true)}
-              >
-                By Theme
-              </button>
-            </div>
-          )}
-
-          {groupByTheme ? (
-            <div className="themed-groups">
-              {getGroupedGoals().map(([theme, goals]) => (
+          <div className="themed-groups">
+            {getGroupedGoals().map(([theme, goals]) => {
+              const themeColor = goals[0]?.themeColor || THEME_COLORS[theme] || null;
+              const themeProgress = getThemeProgress(goals);
+              return (
                 <div key={theme} className="theme-group">
-                  <h2 className="theme-group-title">{theme}</h2>
-                  <div className="goals-grid">
+                  <div className="theme-group-header">
+                    {themeColor && (
+                      <span
+                        className="theme-group-dot"
+                        style={{ backgroundColor: themeColor }}
+                      />
+                    )}
+                    <span className="theme-group-name">{theme}</span>
+                    <div className="theme-group-bar">
+                      <ProgressBar value={themeProgress} size="small" />
+                    </div>
+                  </div>
+                  <div className="goal-rows">
                     {goals.map((goal) => (
-                      <GoalCard
+                      <GoalRow
                         key={goal.id}
                         goal={goal}
                         quarterlyProgress={quarterlyData[goal.id]}
@@ -249,19 +229,9 @@ export default function Dashboard() {
                     ))}
                   </div>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="goals-grid">
-              {yearlyGoals.map((goal) => (
-                <GoalCard
-                  key={goal.id}
-                  goal={goal}
-                  quarterlyProgress={quarterlyData[goal.id]}
-                />
-              ))}
-            </div>
-          )}
+              );
+            })}
+          </div>
         </Collapsible>
       )}
     </div>
