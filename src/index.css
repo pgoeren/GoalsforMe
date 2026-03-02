@@ -528,6 +528,174 @@ input, textarea, [contenteditable] {
 .stat-value { font-size: 22px; font-weight: 800; color: var(--color-primary); }
 .stat-label { font-size: 12px; font-weight: 600; color: var(--color-text-secondary); }
 
+/* ====== Dashboard Overview: hero stats + check-in grouped ====== */
+.dashboard-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.overview-hero-stats {
+  display: flex;
+  gap: 10px;
+}
+
+.hero-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 10px 14px;
+  border-radius: var(--radius-md);
+  border: 2px solid transparent;
+  text-align: center;
+}
+
+.hero-stat--goals {
+  background: var(--tint-indigo);
+  border-color: rgba(79, 70, 229, 0.15);
+}
+.hero-stat--quarter {
+  background: var(--tint-green);
+  border-color: rgba(68, 183, 160, 0.15);
+}
+.hero-stat--year {
+  background: var(--tint-orange);
+  border-color: rgba(245, 200, 66, 0.2);
+}
+
+.hero-stat-icon {
+  width: 26px;
+  height: 26px;
+  margin-bottom: 8px;
+}
+.hero-stat-icon svg { width: 100%; height: 100%; }
+.hero-stat--goals .hero-stat-icon { color: var(--color-primary); }
+.hero-stat--quarter .hero-stat-icon { color: #2B9A7E; }
+.hero-stat--year .hero-stat-icon { color: #C49A1A; }
+
+.hero-stat-value {
+  display: block;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 3px;
+}
+.hero-stat--goals .hero-stat-value { color: var(--color-primary); }
+.hero-stat--quarter .hero-stat-value { color: #2B9A7E; }
+.hero-stat--year .hero-stat-value { color: #C49A1A; }
+
+.hero-stat-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-secondary);
+  margin-bottom: 4px;
+}
+
+.hero-stat-sub {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  opacity: 0.8;
+}
+
+/* Check-in row within overview */
+.overview-checkin {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--color-primary);
+  color: white;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--color-primary-dark);
+  position: relative;
+  overflow: hidden;
+}
+.overview-checkin::before {
+  content: '';
+  position: absolute;
+  right: -15px;
+  top: -15px;
+  width: 80px;
+  height: 80px;
+  border: 3px solid rgba(255,255,255,0.1);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.overview-checkin::after {
+  content: '';
+  position: absolute;
+  right: 30px;
+  top: -30px;
+  width: 60px;
+  height: 60px;
+  border: 3px solid rgba(255,255,255,0.07);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.checkin-badge {
+  width: 38px;
+  height: 38px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.checkin-badge svg { width: 20px; height: 20px; }
+
+.checkin-info {
+  flex: 1;
+  min-width: 0;
+}
+.checkin-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.checkin-date {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.checkin-countdown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.15);
+  border-radius: 10px;
+  padding: 6px 12px;
+  min-width: 52px;
+}
+.checkin-days-value {
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+.checkin-days-label {
+  font-size: 10px;
+  font-weight: 700;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
 .goals-grid { display: flex; flex-direction: column; gap: 12px; }
 
 .empty-state {
