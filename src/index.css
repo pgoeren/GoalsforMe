@@ -1,22 +1,22 @@
 /* ====== Google Font: Nunito (rounded, playful) ====== */
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
 
-/* ====== CSS Variables — Flat palette with indigo accent ====== */
+/* ====== CSS Variables — Jade Pebble Morning palette ====== */
 :root {
-  --color-primary: #4F46E5;
-  --color-primary-light: #818CF8;
-  --color-primary-dark: #3730A3;
-  --color-secondary: #44B7A0;
-  --color-accent: #9B7ED8;
-  --color-success: #5DC09F;
-  --color-warning: #F5C842;
-  --color-danger: #E85A71;
-  --color-bg: #F5F3EF;
+  --color-primary: #315E59;
+  --color-primary-light: #4E8B85;
+  --color-primary-dark: #244943;
+  --color-secondary: #404E3B;
+  --color-accent: #A4835B;
+  --color-success: #4E8B7A;
+  --color-warning: #C49A1A;
+  --color-danger: #DA5F71;
+  --color-bg: #F2F0EB;
   --color-surface: #FFFFFF;
-  --color-text: #2D3047;
-  --color-text-secondary: #8B8BA1;
-  --color-border: #E4E0DA;
-  --color-border-light: #EFEBE6;
+  --color-text: #2C3528;
+  --color-text-secondary: #7B7F73;
+  --color-border: #DDDAD3;
+  --color-border-light: #ECEAE4;
   --radius-sm: 12px;
   --radius-md: 16px;
   --radius-lg: 24px;
@@ -25,57 +25,57 @@
   --shadow-lg: none;
   --nav-height: 64px;
   --header-height: 56px;
-  /* Accent tints — flat pastel fills */
-  --tint-indigo: #EEF2FF;
-  --tint-green: #E0F5EE;
-  --tint-orange: #FFF3D6;
-  --tint-blue: #DBEAFE;
-  --tint-red-light: #FDE8EC;
-  --tint-green-light: #D6F5E8;
-  --tint-theme-bg: #E0F5EE;
-  --tint-theme-text: #2B9A7E;
-  --tint-purple: #F0E8FA;
+  /* Accent tints — earthy pastel fills */
+  --tint-indigo: #E0EDEC;
+  --tint-green: #E3EBE0;
+  --tint-orange: #F0E9DF;
+  --tint-blue: #DCE8E7;
+  --tint-red-light: #FAE0E4;
+  --tint-green-light: #D8EBE4;
+  --tint-theme-bg: #E3EBE0;
+  --tint-theme-text: #315E59;
+  --tint-purple: #EDE8DF;
   /* Flat — no gradients */
-  --gradient-banner: #4F46E5;
-  --gradient-track: #4F46E5;
+  --gradient-banner: #315E59;
+  --gradient-track: #315E59;
   /* Dot decorative colors */
-  --dot-red: #E8685A;
-  --dot-teal: #44B7A0;
-  --dot-yellow: #F5C842;
-  --dot-purple: #9B7ED8;
-  --dot-blue: #5B9BD5;
+  --dot-red: #DA5F71;
+  --dot-teal: #315E59;
+  --dot-yellow: #C49A1A;
+  --dot-purple: #A4835B;
+  --dot-blue: #4E8B85;
   /* Japanese wave background */
-  --wave-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%234F46E5' stroke-width='0.8' opacity='0.06'%3E%3Cpath d='M0 40 C0 22.3 14.3 8 32 8 C49.7 8 64 22.3 64 40'/%3E%3Cpath d='M16 40 C16 31.2 23.2 24 32 24 C40.8 24 48 31.2 48 40'/%3E%3Cpath d='M-16 40 C-16 22.3 -1.7 8 16 8 C33.7 8 48 22.3 48 40'/%3E%3Cpath d='M48 40 C48 22.3 62.3 8 80 8 C97.7 8 112 22.3 112 40'/%3E%3Cpath d='M64 40 C64 31.2 71.2 24 80 24 C88.8 24 96 31.2 96 40'/%3E%3Cpath d='M0 80 C0 62.3 14.3 48 32 48 C49.7 48 64 62.3 64 80'/%3E%3Cpath d='M16 80 C16 71.2 23.2 64 32 64 C40.8 64 48 71.2 48 80'/%3E%3Cpath d='M-16 80 C-16 62.3 -1.7 48 16 48 C33.7 48 48 62.3 48 80'/%3E%3Cpath d='M48 80 C48 62.3 62.3 48 80 48 C97.7 48 112 62.3 112 80'/%3E%3Cpath d='M64 80 C64 71.2 71.2 64 80 64 C88.8 64 96 71.2 96 80'/%3E%3Cpath d='M0 0 C0 -17.7 14.3 -32 32 -32 C49.7 -32 64 -17.7 64 0'/%3E%3Cpath d='M16 0 C16 -8.8 23.2 -16 32 -16 C40.8 -16 48 -8.8 48 0'/%3E%3Cpath d='M48 0 C48 -17.7 62.3 -32 80 -32 C97.7 -32 112 -17.7 112 0'/%3E%3Cpath d='M64 0 C64 -8.8 71.2 -16 80 -16 C88.8 -16 96 -8.8 96 0'/%3E%3C/g%3E%3C/svg%3E");
+  --wave-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23315E59' stroke-width='0.8' opacity='0.07'%3E%3Cpath d='M0 40 C0 22.3 14.3 8 32 8 C49.7 8 64 22.3 64 40'/%3E%3Cpath d='M16 40 C16 31.2 23.2 24 32 24 C40.8 24 48 31.2 48 40'/%3E%3Cpath d='M-16 40 C-16 22.3 -1.7 8 16 8 C33.7 8 48 22.3 48 40'/%3E%3Cpath d='M48 40 C48 22.3 62.3 8 80 8 C97.7 8 112 22.3 112 40'/%3E%3Cpath d='M64 40 C64 31.2 71.2 24 80 24 C88.8 24 96 31.2 96 40'/%3E%3Cpath d='M0 80 C0 62.3 14.3 48 32 48 C49.7 48 64 62.3 64 80'/%3E%3Cpath d='M16 80 C16 71.2 23.2 64 32 64 C40.8 64 48 71.2 48 80'/%3E%3Cpath d='M-16 80 C-16 62.3 -1.7 48 16 48 C33.7 48 48 62.3 48 80'/%3E%3Cpath d='M48 80 C48 62.3 62.3 48 80 48 C97.7 48 112 62.3 112 80'/%3E%3Cpath d='M64 80 C64 71.2 71.2 64 80 64 C88.8 64 96 71.2 96 80'/%3E%3Cpath d='M0 0 C0 -17.7 14.3 -32 32 -32 C49.7 -32 64 -17.7 64 0'/%3E%3Cpath d='M16 0 C16 -8.8 23.2 -16 32 -16 C40.8 -16 48 -8.8 48 0'/%3E%3Cpath d='M48 0 C48 -17.7 62.3 -32 80 -32 C97.7 -32 112 -17.7 112 0'/%3E%3Cpath d='M64 0 C64 -8.8 71.2 -16 80 -16 C88.8 -16 96 -8.8 96 0'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 /* ====== Dark Mode ====== */
 [data-theme="dark"] {
-  --color-primary: #818CF8;
-  --color-primary-light: #A5B4FC;
-  --color-primary-dark: #6366F1;
-  --color-secondary: #7DDBB8;
-  --color-accent: #BDA5E8;
+  --color-primary: #6B9E99;
+  --color-primary-light: #8AB5B1;
+  --color-primary-dark: #4E8B85;
+  --color-secondary: #7A9E74;
+  --color-accent: #C4A580;
   --color-success: #7DDBB8;
   --color-warning: #FFD970;
-  --color-danger: #F58A97;
-  --color-bg: #0F1729;
-  --color-surface: #1A2744;
-  --color-text: #F1F5F9;
-  --color-text-secondary: #94A3B8;
-  --color-border: #2A3D5E;
-  --color-border-light: #1E3050;
-  --tint-indigo: #243356;
-  --tint-green: #1E3D32;
-  --tint-orange: #3D3520;
-  --tint-blue: #1E2E3D;
+  --color-danger: #F08090;
+  --color-bg: #0E1A14;
+  --color-surface: #172019;
+  --color-text: #E8EDE6;
+  --color-text-secondary: #8A9A85;
+  --color-border: #2A3B28;
+  --color-border-light: #1E2D1C;
+  --tint-indigo: #1E322F;
+  --tint-green: #1E2D1C;
+  --tint-orange: #2E2518;
+  --tint-blue: #1E2E2D;
   --tint-red-light: #3D2328;
-  --tint-green-light: #1E3D2E;
-  --tint-theme-bg: #1E3D32;
-  --tint-theme-text: #7DDBB8;
-  --tint-purple: #2E2640;
-  --gradient-banner: #1E3A6E;
-  --gradient-track: #4F46E5;
-  --wave-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23818CF8' stroke-width='0.8' opacity='0.05'%3E%3Cpath d='M0 40 C0 22.3 14.3 8 32 8 C49.7 8 64 22.3 64 40'/%3E%3Cpath d='M16 40 C16 31.2 23.2 24 32 24 C40.8 24 48 31.2 48 40'/%3E%3Cpath d='M-16 40 C-16 22.3 -1.7 8 16 8 C33.7 8 48 22.3 48 40'/%3E%3Cpath d='M48 40 C48 22.3 62.3 8 80 8 C97.7 8 112 22.3 112 40'/%3E%3Cpath d='M64 40 C64 31.2 71.2 24 80 24 C88.8 24 96 31.2 96 40'/%3E%3Cpath d='M0 80 C0 62.3 14.3 48 32 48 C49.7 48 64 62.3 64 80'/%3E%3Cpath d='M16 80 C16 71.2 23.2 64 32 64 C40.8 64 48 71.2 48 80'/%3E%3Cpath d='M-16 80 C-16 62.3 -1.7 48 16 48 C33.7 48 48 62.3 48 80'/%3E%3Cpath d='M48 80 C48 62.3 62.3 48 80 48 C97.7 48 112 62.3 112 80'/%3E%3Cpath d='M64 80 C64 71.2 71.2 64 80 64 C88.8 64 96 71.2 96 80'/%3E%3Cpath d='M0 0 C0 -17.7 14.3 -32 32 -32 C49.7 -32 64 -17.7 64 0'/%3E%3Cpath d='M16 0 C16 -8.8 23.2 -16 32 -16 C40.8 -16 48 -8.8 48 0'/%3E%3Cpath d='M48 0 C48 -17.7 62.3 -32 80 -32 C97.7 -32 112 -17.7 112 0'/%3E%3Cpath d='M64 0 C64 -8.8 71.2 -16 80 -16 C88.8 -16 96 -8.8 96 0'/%3E%3C/g%3E%3C/svg%3E");
+  --tint-green-light: #1E2D1C;
+  --tint-theme-bg: #1E2D1C;
+  --tint-theme-text: #6B9E99;
+  --tint-purple: #2A2318;
+  --gradient-banner: #1E322F;
+  --gradient-track: #315E59;
+  --wave-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%236B9E99' stroke-width='0.8' opacity='0.06'%3E%3Cpath d='M0 40 C0 22.3 14.3 8 32 8 C49.7 8 64 22.3 64 40'/%3E%3Cpath d='M16 40 C16 31.2 23.2 24 32 24 C40.8 24 48 31.2 48 40'/%3E%3Cpath d='M-16 40 C-16 22.3 -1.7 8 16 8 C33.7 8 48 22.3 48 40'/%3E%3Cpath d='M48 40 C48 22.3 62.3 8 80 8 C97.7 8 112 22.3 112 40'/%3E%3Cpath d='M64 40 C64 31.2 71.2 24 80 24 C88.8 24 96 31.2 96 40'/%3E%3Cpath d='M0 80 C0 62.3 14.3 48 32 48 C49.7 48 64 62.3 64 80'/%3E%3Cpath d='M16 80 C16 71.2 23.2 64 32 64 C40.8 64 48 71.2 48 80'/%3E%3Cpath d='M-16 80 C-16 62.3 -1.7 48 16 48 C33.7 48 48 62.3 48 80'/%3E%3Cpath d='M48 80 C48 62.3 62.3 48 80 48 C97.7 48 112 62.3 112 80'/%3E%3Cpath d='M64 80 C64 71.2 71.2 64 80 64 C88.8 64 96 71.2 96 80'/%3E%3Cpath d='M0 0 C0 -17.7 14.3 -32 32 -32 C49.7 -32 64 -17.7 64 0'/%3E%3Cpath d='M16 0 C16 -8.8 23.2 -16 32 -16 C40.8 -16 48 -8.8 48 0'/%3E%3Cpath d='M48 0 C48 -17.7 62.3 -32 80 -32 C97.7 -32 112 -17.7 112 0'/%3E%3Cpath d='M64 0 C64 -8.8 71.2 -16 80 -16 C88.8 -16 96 -8.8 96 0'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 /* ====== Dark Mode Toggle ====== */
@@ -103,9 +103,9 @@
   color: var(--color-primary);
 }
 [data-theme="dark"] .dark-toggle {
-  background: #243356;
+  background: #1E322F;
   border-color: var(--color-border);
-  color: #FBBF24;
+  color: #C49A1A;
 }
 [data-theme="dark"] .dark-toggle:hover {
   border-color: #FBBF24;
@@ -554,15 +554,15 @@ input, textarea, [contenteditable] {
 
 .hero-stat--goals {
   background: var(--tint-indigo);
-  border-color: rgba(79, 70, 229, 0.15);
+  border-color: rgba(49, 94, 89, 0.2);
 }
 .hero-stat--quarter {
   background: var(--tint-green);
-  border-color: rgba(68, 183, 160, 0.15);
+  border-color: rgba(64, 78, 59, 0.2);
 }
 .hero-stat--year {
   background: var(--tint-orange);
-  border-color: rgba(245, 200, 66, 0.2);
+  border-color: rgba(164, 131, 91, 0.25);
 }
 
 .hero-stat-icon {
@@ -572,8 +572,8 @@ input, textarea, [contenteditable] {
 }
 .hero-stat-icon svg { width: 100%; height: 100%; }
 .hero-stat--goals .hero-stat-icon { color: var(--color-primary); }
-.hero-stat--quarter .hero-stat-icon { color: #2B9A7E; }
-.hero-stat--year .hero-stat-icon { color: #C49A1A; }
+.hero-stat--quarter .hero-stat-icon { color: #404E3B; }
+.hero-stat--year .hero-stat-icon { color: #A4835B; }
 
 .hero-stat-value {
   display: block;
@@ -583,8 +583,8 @@ input, textarea, [contenteditable] {
   margin-bottom: 3px;
 }
 .hero-stat--goals .hero-stat-value { color: var(--color-primary); }
-.hero-stat--quarter .hero-stat-value { color: #2B9A7E; }
-.hero-stat--year .hero-stat-value { color: #C49A1A; }
+.hero-stat--quarter .hero-stat-value { color: #404E3B; }
+.hero-stat--year .hero-stat-value { color: #A4835B; }
 
 .hero-stat-label {
   display: block;
@@ -660,7 +660,7 @@ input, textarea, [contenteditable] {
   display: block;
   font-size: 11px;
   font-weight: 700;
-  opacity: 0.8;
+  color: rgba(255, 255, 255, 0.82);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -668,6 +668,7 @@ input, textarea, [contenteditable] {
   display: block;
   font-size: 14px;
   font-weight: 700;
+  color: #FFFFFF;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -687,11 +688,12 @@ input, textarea, [contenteditable] {
   font-size: 17px;
   font-weight: 800;
   line-height: 1.1;
+  color: #FFFFFF;
 }
 .checkin-days-label {
   font-size: 10px;
   font-weight: 700;
-  opacity: 0.8;
+  color: rgba(255, 255, 255, 0.82);
   text-transform: uppercase;
   letter-spacing: 0.3px;
 }
