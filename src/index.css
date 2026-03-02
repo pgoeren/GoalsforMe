@@ -1087,8 +1087,11 @@ input, textarea, [contenteditable] {
 .week-block {
   flex: 1;
   min-width: 0;
-  border: 1.5px dashed var(--color-border);
-  border-radius: var(--radius-sm);
+  border-top: 1.5px dashed var(--color-border);
+  border-left: 1.5px dashed var(--color-border);
+  border-right: 1.5px dashed var(--color-border);
+  border-bottom: none;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
   overflow: hidden;
 }
 
