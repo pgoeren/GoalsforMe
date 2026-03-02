@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { getAllCheckInDatesForYear, getCurrentQuarter } from '../utils/checkInDates';
+import { getAllCheckInDatesForYear } from '../utils/checkInDates';
 
 function formatICSDate(date) {
   const y = date.getFullYear();
@@ -46,15 +46,7 @@ function downloadICS(events, filename) {
   URL.revokeObjectURL(url);
 }
 
-function dayOfYear(date) {
-  // Use UTC to avoid DST drift
-  const start = Date.UTC(date.getFullYear(), 0, 0);
-  const current = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
-  return Math.round((current - start) / (1000 * 60 * 60 * 24));
-}
-
 function daysRemaining(targetDate) {
-  // Use UTC to avoid DST drift
   const now = new Date();
   const todayUTC = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
   const targetUTC = Date.UTC(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
@@ -65,78 +57,88 @@ function formatShort(date) {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
+const DAY_LABELS = ['M', 'T', 'W', 'Th', 'F', 'S', 'S'];
+
 export default function SeasonTimeline({ year }) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
+
   const checkIns = getAllCheckInDatesForYear(year);
-  const currentQ = getCurrentQuarter();
-  const isLeap = (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0));
-  const totalDays = isLeap ? 366 : 365;
-  const todayPct = (dayOfYear(today) / totalDays) * 100;
-
-  const quarterStarts = [
-    { pct: 0, label: 'Jan 1' },
-    { pct: (dayOfYear(new Date(year, 3, 1)) / totalDays) * 100, label: 'Apr 1' },
-    { pct: (dayOfYear(new Date(year, 6, 1)) / totalDays) * 100, label: 'Jul 1' },
-    { pct: (dayOfYear(new Date(year, 9, 1)) / totalDays) * 100, label: 'Oct 1' },
-    { pct: 100, label: 'Dec 31' },
-  ];
-
-  const seasons = ['Winter', 'Spring', 'Summer', 'Fall'];
-
   const [open, setOpen] = useState(false);
 
-  // Find the next upcoming check-in
+  // Next upcoming check-in from today (for the collapsible list)
   const nextCheckIn = checkIns.find(ci => daysRemaining(ci.date) >= 0);
 
+  // Monday of the current calendar week
+  const weekStart = new Date(today);
+  const dow = today.getDay(); // 0=Sun … 6=Sat
+  weekStart.setDate(weekStart.getDate() - (dow === 0 ? 6 : dow - 1));
+
+  // Build 3 week arrays
+  const weeks = Array.from({ length: 3 }, (_, wi) =>
+    Array.from({ length: 7 }, (_, di) => {
+      const date = new Date(weekStart);
+      date.setDate(date.getDate() + wi * 7 + di);
+      const checkIn = checkIns.find(ci => {
+        const d = new Date(ci.date);
+        d.setHours(0, 0, 0, 0);
+        return d.getTime() === date.getTime();
+      }) || null;
+      return { date, dayLabel: DAY_LABELS[di], dayNum: date.getDate(), isToday: date.getTime() === today.getTime(), checkIn };
+    })
+  );
+
+  // Header for each week: countdown to the nearest upcoming check-in from that week's Monday
+  function getWeekHeader(weekDays) {
+    const weekFirst = weekDays[0].date;
+    const weekLast  = weekDays[6].date;
+    const ci = checkIns.find(c => {
+      const d = new Date(c.date);
+      d.setHours(0, 0, 0, 0);
+      return d >= weekFirst;
+    });
+    if (!ci) return '';
+    const ciDate = new Date(ci.date);
+    ciDate.setHours(0, 0, 0, 0);
+    const label = ci.label.replace('Halfway', 'Half');
+    if (ciDate <= weekLast) return `This week — ${label}`;
+    const weeksAway = Math.ceil(Math.round((ciDate - weekFirst) / 86400000) / 7);
+    return `${weeksAway}w to ${label}`;
+  }
+
   return (
-    <div className={`stl ${open ? 'stl-open' : ''}`}>
-      <div className="stl-head">
-        <span className="stl-title">{year} Season Progress</span>
-        <span className="stl-quarter">Q{currentQ} &middot; {seasons[currentQ - 1]}</span>
-      </div>
+    <div className="week-timeline">
 
-      {/* Track — always visible */}
-      <div className="stl-track-wrap">
-        <div className="stl-track">
-          <div className="stl-fill" style={{ width: `${todayPct}%` }} />
-
-          {quarterStarts.map((qs, i) => (
-            <div key={i} className="stl-tick" style={{ left: `${qs.pct}%` }} />
-          ))}
-
-          {checkIns.map((ci) => {
-            const pct = (dayOfYear(ci.date) / totalDays) * 100;
-            const days = daysRemaining(ci.date);
-            const isPast = days < 0;
-            const isNext = nextCheckIn && ci.quarter === nextCheckIn.quarter && ci.type === nextCheckIn.type;
-            return (
-              <div
-                key={`${ci.quarter}-${ci.type}`}
-                className={`stl-checkin ${isPast ? 'past' : ''} ${isNext ? 'next' : ''} stl-checkin-${ci.type}`}
-                style={{ left: `${pct}%` }}
-              >
-                <div className={ci.type === 'full' ? 'stl-circle' : 'stl-diamond'} />
+      {/* 3-week strip */}
+      <div className="week-strip">
+        {weeks.map((weekDays, wi) => {
+          const annotations = weekDays.filter(d => d.checkIn).map(d => d.checkIn);
+          return (
+            <div key={wi} className="week-block">
+              <div className="week-block-header">{getWeekHeader(weekDays)}</div>
+              <div className="week-days">
+                {weekDays.map((day, di) => (
+                  <div key={di} className={`day-cell${day.isToday ? ' today' : ''}${day.checkIn ? ` checkin-${day.checkIn.type}` : ''}`}>
+                    <span className="day-label">{day.dayLabel}</span>
+                    <span className="day-num">{day.dayNum}</span>
+                  </div>
+                ))}
               </div>
-            );
-          })}
-
-          <div className="stl-needle" style={{ left: `${todayPct}%` }}>
-            <div className="stl-needle-line" />
-            <div className="stl-needle-head" />
-          </div>
-        </div>
-
-        <div className="stl-quarters">
-          {['Q1', 'Q2', 'Q3', 'Q4'].map((q, i) => (
-            <div key={q} className={`stl-qlabel ${i + 1 === currentQ ? 'active' : ''}`}>
-              {q}
+              {annotations.length > 0 && (
+                <div className="week-annotations">
+                  {annotations.map((ci, i) => (
+                    <span key={i} className={`week-annotation ${ci.type}`}>
+                      {ci.type === 'halfway' ? '◆' : '●'} {ci.label} · {formatShort(ci.date)}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
-          ))}
-        </div>
+          );
+        })}
       </div>
 
-      {/* Toggle for check-in details */}
+      {/* Toggle for full check-in list */}
       <button className="stl-toggle" onClick={() => setOpen(o => !o)} type="button">
         <span>{open ? 'Hide' : 'Show'} Check-in Dates</span>
         <span className={`stl-chevron ${open ? 'stl-chevron-open' : ''}`}>
