@@ -128,37 +128,73 @@ export default function Dashboard() {
         </button>
       </div>
 
-      {nextCheckIn && (
-        <Collapsible id="checkin" title="Next Check-in">
-          <div className="next-checkin-banner">
-            <div className="banner-content">
-              <span className="banner-label">Next Check-in</span>
-              <span className="banner-date">
-                {nextCheckIn.label} &mdash; {formatDate(nextCheckIn.date)}
-              </span>
+      {/* Hero stats + next check-in grouped as dashboard overview */}
+      <div className="dashboard-overview">
+        <div className="overview-hero-stats">
+          <div className="hero-stat hero-stat--goals">
+            <div className="hero-stat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <circle cx="12" cy="12" r="6"/>
+                <circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/>
+              </svg>
             </div>
+            <span className="hero-stat-value">{yearlyGoals.length}</span>
+            <span className="hero-stat-label">Goals</span>
+            <span className="hero-stat-sub">this year</span>
           </div>
-        </Collapsible>
-      )}
-
-      <Collapsible id="countdown" title="Countdown">
-        <div className="countdown-strip">
-          {daysToCheckIn !== null && (
-            <div className="countdown-item">
-              <span className="countdown-value">{formatCountdown(daysToCheckIn)}</span>
-              <span className="countdown-label">to check-in</span>
+          <div className="hero-stat hero-stat--quarter">
+            <div className="hero-stat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+                <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+                <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+                <rect x="14" y="14" width="7" height="7" rx="1.5" opacity="0.4"/>
+              </svg>
             </div>
-          )}
-          <div className="countdown-item">
-            <span className="countdown-value">{formatCountdown(daysToQuarterEnd)}</span>
-            <span className="countdown-label">left in Q{currentQuarter}</span>
+            <span className="hero-stat-value">Q{getCurrentQuarter()}</span>
+            <span className="hero-stat-label">Current</span>
+            <span className="hero-stat-sub">{formatCountdown(daysToQuarterEnd)} left</span>
           </div>
-          <div className="countdown-item">
-            <span className="countdown-value">{formatCountdown(daysToYearEnd)}</span>
-            <span className="countdown-label">left in {currentYear}</span>
+          <div className="hero-stat hero-stat--year">
+            <div className="hero-stat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+            </div>
+            <span className="hero-stat-value">{currentYear}</span>
+            <span className="hero-stat-label">Year</span>
+            <span className="hero-stat-sub">{formatCountdown(daysToYearEnd)} left</span>
           </div>
         </div>
-      </Collapsible>
+
+        {nextCheckIn && (
+          <div className="overview-checkin">
+            <div className="checkin-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+                <polyline points="9 16 11 18 15 14"/>
+              </svg>
+            </div>
+            <div className="checkin-info">
+              <span className="checkin-label">Next Check-in</span>
+              <span className="checkin-date">{nextCheckIn.label} &mdash; {formatDate(nextCheckIn.date)}</span>
+            </div>
+            {daysToCheckIn !== null && (
+              <div className="checkin-countdown">
+                <span className="checkin-days-value">{formatCountdown(daysToCheckIn)}</span>
+                <span className="checkin-days-label">away</span>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
 
       {yearlyGoals.length > 0 && (
         <Collapsible id="glance" title="At a Glance">
@@ -199,21 +235,6 @@ export default function Dashboard() {
         </div>
       ) : (
         <Collapsible id="goals" title="Goals">
-          <div className="goals-summary">
-            <div className="summary-stat">
-              <span className="stat-value">{yearlyGoals.length}</span>
-              <span className="stat-label">Goals</span>
-            </div>
-            <div className="summary-stat">
-              <span className="stat-value">Q{getCurrentQuarter()}</span>
-              <span className="stat-label">Current</span>
-            </div>
-            <div className="summary-stat">
-              <span className="stat-value">{currentYear}</span>
-              <span className="stat-label">Year</span>
-            </div>
-          </div>
-
           <div className="themed-groups">
             {getGroupedGoals().map(([theme, goals]) => {
               const themeAvg =
