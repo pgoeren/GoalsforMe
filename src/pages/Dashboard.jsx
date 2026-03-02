@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useGoals } from '../context/GoalContext';
 import GoalCard from '../components/GoalCard';
 import ProgressBar from '../components/ProgressBar';
+import Collapsible from '../components/Collapsible';
 import SeasonTimeline from '../components/SeasonTimeline';
 import { getQuarterlyGoals, subscribeToQuarterlyGoals } from '../firebase/goalService';
 import { getNextCheckIn, formatDate, getCurrentQuarter, getEndOfQuarterWednesday } from '../utils/checkInDates';
@@ -131,50 +132,57 @@ export default function Dashboard() {
       </div>
 
       {nextCheckIn && (
-        <div className="next-checkin-banner">
-          <div className="banner-content">
-            <span className="banner-label">Next Check-in</span>
-            <span className="banner-date">
-              {nextCheckIn.label} &mdash; {formatDate(nextCheckIn.date)}
-            </span>
+        <Collapsible id="checkin" title="Next Check-in">
+          <div className="next-checkin-banner">
+            <div className="banner-content">
+              <span className="banner-label">Next Check-in</span>
+              <span className="banner-date">
+                {nextCheckIn.label} &mdash; {formatDate(nextCheckIn.date)}
+              </span>
+            </div>
           </div>
-        </div>
+        </Collapsible>
       )}
 
-      <div className="countdown-strip">
-        {daysToCheckIn !== null && (
+      <Collapsible id="countdown" title="Countdown">
+        <div className="countdown-strip">
+          {daysToCheckIn !== null && (
+            <div className="countdown-item">
+              <span className="countdown-value">{formatCountdown(daysToCheckIn)}</span>
+              <span className="countdown-label">to check-in</span>
+            </div>
+          )}
           <div className="countdown-item">
-            <span className="countdown-value">{formatCountdown(daysToCheckIn)}</span>
-            <span className="countdown-label">to check-in</span>
+            <span className="countdown-value">{formatCountdown(daysToQuarterEnd)}</span>
+            <span className="countdown-label">left in Q{currentQuarter}</span>
           </div>
-        )}
-        <div className="countdown-item">
-          <span className="countdown-value">{formatCountdown(daysToQuarterEnd)}</span>
-          <span className="countdown-label">left in Q{currentQuarter}</span>
+          <div className="countdown-item">
+            <span className="countdown-value">{formatCountdown(daysToYearEnd)}</span>
+            <span className="countdown-label">left in {currentYear}</span>
+          </div>
         </div>
-        <div className="countdown-item">
-          <span className="countdown-value">{formatCountdown(daysToYearEnd)}</span>
-          <span className="countdown-label">left in {currentYear}</span>
-        </div>
-      </div>
+      </Collapsible>
 
       {yearlyGoals.length > 0 && (
-        <div className="goals-glance">
-          <h3 className="goals-glance-title">At a Glance</h3>
-          {yearlyGoals.map((goal) => (
-            <div
-              key={goal.id}
-              className="glance-row"
-              onClick={() => navigate(`/goal/${goal.id}`)}
-            >
-              <span className="glance-name">{goal.title}</span>
-              <ProgressBar value={getGoalProgress(goal)} size="small" />
-            </div>
-          ))}
-        </div>
+        <Collapsible id="glance" title="At a Glance">
+          <div className="goals-glance">
+            {yearlyGoals.map((goal) => (
+              <div
+                key={goal.id}
+                className="glance-row"
+                onClick={() => navigate(`/goal/${goal.id}`)}
+              >
+                <span className="glance-name">{goal.title}</span>
+                <ProgressBar value={getGoalProgress(goal)} size="small" />
+              </div>
+            ))}
+          </div>
+        </Collapsible>
       )}
 
-      <SeasonTimeline year={currentYear} />
+      <Collapsible id="timeline" title="Timeline">
+        <SeasonTimeline year={currentYear} />
+      </Collapsible>
 
       {yearlyGoals.length === 0 ? (
         <div className="empty-state">
@@ -193,7 +201,7 @@ export default function Dashboard() {
           </button>
         </div>
       ) : (
-        <>
+        <Collapsible id="goals" title="Goals">
           <div className="goals-summary">
             <div className="summary-stat">
               <span className="stat-value">{yearlyGoals.length}</span>
@@ -254,7 +262,7 @@ export default function Dashboard() {
               ))}
             </div>
           )}
-        </>
+        </Collapsible>
       )}
     </div>
   );

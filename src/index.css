@@ -171,6 +171,37 @@
 .swatch-dot:hover { transform: scale(1.15); }
 .swatch-dot.active { border-color: var(--color-text); transform: scale(1.1); }
 
+/* ====== Collapsible ====== */
+.collapsible { margin-bottom: 16px; }
+.collapsible-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 4px 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.collapsible-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-secondary);
+}
+.collapsible-chevron {
+  color: var(--color-text-secondary);
+  transition: transform 0.2s ease;
+}
+.collapsible.closed .collapsible-chevron { transform: rotate(-90deg); }
+.collapsible-body { margin-top: 6px; }
+
+/* Remove extra bottom margin from children already inside collapsible */
+.collapsible-body > .next-checkin-banner { margin-bottom: 0; }
+.collapsible-body > .countdown-strip { margin-bottom: 0; }
+
 /* ====== Reset ====== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -454,15 +485,6 @@ input, textarea, [contenteditable] {
   border: 2px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: 12px 14px;
-  margin-bottom: 16px;
-}
-.goals-glance-title {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--color-text-secondary);
-  margin-bottom: 8px;
 }
 .glance-row {
   display: flex;
