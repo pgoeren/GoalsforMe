@@ -5,7 +5,7 @@
 export const inspirationVideos = [
   // ─── Tony Robbins ────────────────────────────────────────────────────────────
   {
-    id: 'Cpc-t-Uwv1I',
+    id: 'BwFOwyoH-3g',
     title: 'Why We Do What We Do',
     speaker: 'Tony Robbins',
     category: 'mindset',
@@ -77,7 +77,7 @@ export const inspirationVideos = [
     duration: '8:47',
   },
   {
-    id: 'D1ZYhVpdXbQ',
+    id: 'fl6X5dh6TFU',
     title: 'Master Your Mind — The Only Way Out Is Through',
     speaker: 'David Goggins',
     category: 'mindset',
@@ -149,7 +149,7 @@ export const inspirationVideos = [
     duration: '14:50',
   },
   {
-    id: 'WAoHmELBBnM',
+    id: 'P91b4civBxA',
     title: 'Let Them — The Mindset Shift That Changes Everything',
     speaker: 'Mel Robbins',
     category: 'mindset',
@@ -179,7 +179,7 @@ export const inspirationVideos = [
     duration: '22:38',
   },
   {
-    id: 'DGO0k3A2q3c',
+    id: 'Cgq0WUVI_IE',
     title: 'The Power of Ambition',
     speaker: 'Jim Rohn',
     category: 'goals',
@@ -200,7 +200,7 @@ export const inspirationVideos = [
     duration: '28:09',
   },
   {
-    id: 'IGhFqn0N9rw',
+    id: 'MCQjjFy4FVg',
     title: 'Six Months to a New Life',
     speaker: 'Jim Rohn',
     category: 'planning',
@@ -209,7 +209,7 @@ export const inspirationVideos = [
 
   // ─── Les Brown ────────────────────────────────────────────────────────────────
   {
-    id: 'KcPJmFMpxEk',
+    id: 'D4GXqPIYLNQ',
     title: "It's Possible — You Have Greatness Within You",
     speaker: 'Les Brown',
     category: 'mindset',
@@ -253,7 +253,7 @@ export const inspirationVideos = [
 
   // ─── Jocko Willink ────────────────────────────────────────────────────────────
   {
-    id: 'IdTMDpizis8',
+    id: 'bNKLfwrhkqQ',
     title: 'Discipline Equals Freedom',
     speaker: 'Jocko Willink',
     category: 'discipline',
@@ -325,7 +325,7 @@ export const inspirationVideos = [
     duration: '9:05',
   },
   {
-    id: 'PcYdT7JVWPU',
+    id: 'DG-oAF1i_UA',
     title: 'You Owe You — Bet on Yourself',
     speaker: 'Eric Thomas',
     category: 'action',
