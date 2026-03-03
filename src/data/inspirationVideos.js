@@ -1,0 +1,352 @@
+// Curated motivational video library
+// Thumbnails load free from YouTube's CDN — no API key needed.
+// To add more: find a YouTube video URL, grab the 11-char ID after "v=", add an entry below.
+
+export const inspirationVideos = [
+  // ─── Tony Robbins ────────────────────────────────────────────────────────────
+  {
+    id: 'Cpc-t-Uwv1I',
+    title: 'Why We Do What We Do',
+    speaker: 'Tony Robbins',
+    category: 'mindset',
+    duration: '21:52',
+  },
+  {
+    id: 'V1pBMbPKddo',
+    title: 'How to Achieve Your Goals Faster',
+    speaker: 'Tony Robbins',
+    category: 'goals',
+    duration: '15:30',
+  },
+  {
+    id: 'MJ7VxkSd7dY',
+    title: 'The Secret to Living Is Giving',
+    speaker: 'Tony Robbins',
+    category: 'mindset',
+    duration: '18:41',
+  },
+  {
+    id: '0VbAj5j1AoI',
+    title: 'Change Your Story, Change Your Life',
+    speaker: 'Tony Robbins',
+    category: 'mindset',
+    duration: '22:10',
+  },
+  {
+    id: 'OqDkTRDgTiY',
+    title: 'The Power of a Compelling Future',
+    speaker: 'Tony Robbins',
+    category: 'planning',
+    duration: '19:03',
+  },
+  {
+    id: 'E0R5gBKlOwI',
+    title: 'How to Design Your Own Destiny',
+    speaker: 'Tony Robbins',
+    category: 'planning',
+    duration: '17:55',
+  },
+  {
+    id: '7Pex_bxv3vI',
+    title: 'Unleash the Power Within — Mindset Reset',
+    speaker: 'Tony Robbins',
+    category: 'mindset',
+    duration: '12:44',
+  },
+  {
+    id: 'Nd5WorTSPvI',
+    title: 'Stop Sabotaging Yourself',
+    speaker: 'Tony Robbins',
+    category: 'goals',
+    duration: '14:28',
+  },
+
+  // ─── David Goggins ────────────────────────────────────────────────────────────
+  {
+    id: '5tSTk1083VY',
+    title: 'You Are Stopping Yourself — The 40% Rule',
+    speaker: 'David Goggins',
+    category: 'discipline',
+    duration: '10:22',
+  },
+  {
+    id: 'BvWB7B8tXK8',
+    title: 'Nobody Cares. Work Harder.',
+    speaker: 'David Goggins',
+    category: 'discipline',
+    duration: '8:47',
+  },
+  {
+    id: 'D1ZYhVpdXbQ',
+    title: 'Master Your Mind — The Only Way Out Is Through',
+    speaker: 'David Goggins',
+    category: 'mindset',
+    duration: '11:15',
+  },
+  {
+    id: 'nDLb8_wgX50',
+    title: 'Callus Your Mind Every Single Day',
+    speaker: 'David Goggins',
+    category: 'discipline',
+    duration: '9:33',
+  },
+  {
+    id: 'cx8MLGPJBOM',
+    title: 'Stay Hard: The Ultimate Mindset',
+    speaker: 'David Goggins',
+    category: 'action',
+    duration: '7:58',
+  },
+  {
+    id: 'kLSIUFVzxVg',
+    title: 'Take Souls — Outperform Your Potential',
+    speaker: 'David Goggins',
+    category: 'action',
+    duration: '13:20',
+  },
+  {
+    id: 'WSgbGFqHDZE',
+    title: 'Get Comfortable Being Uncomfortable',
+    speaker: 'David Goggins',
+    category: 'discipline',
+    duration: '6:45',
+  },
+
+  // ─── Mel Robbins ──────────────────────────────────────────────────────────────
+  {
+    id: 'Lp7E973zozc',
+    title: 'How to Stop Screwing Yourself Over',
+    speaker: 'Mel Robbins',
+    category: 'action',
+    duration: '21:40',
+  },
+  {
+    id: 'Oa2Bvp0FHqI',
+    title: 'The 5-Second Rule — Take Action Now',
+    speaker: 'Mel Robbins',
+    category: 'action',
+    duration: '16:55',
+  },
+  {
+    id: 'iSgqzCMrFnA',
+    title: 'How to Build Habits That Stick',
+    speaker: 'Mel Robbins',
+    category: 'goals',
+    duration: '18:03',
+  },
+  {
+    id: 'ZRfvSSTJO8U',
+    title: 'Stop Waiting — Start Doing',
+    speaker: 'Mel Robbins',
+    category: 'action',
+    duration: '12:30',
+  },
+  {
+    id: 'pRABKEeKT9E',
+    title: 'The Truth About Why You Self-Sabotage',
+    speaker: 'Mel Robbins',
+    category: 'mindset',
+    duration: '14:50',
+  },
+  {
+    id: 'WAoHmELBBnM',
+    title: 'Let Them — The Mindset Shift That Changes Everything',
+    speaker: 'Mel Robbins',
+    category: 'mindset',
+    duration: '20:17',
+  },
+
+  // ─── Jim Rohn ─────────────────────────────────────────────────────────────────
+  {
+    id: 'Y3C5bKa5PzQ',
+    title: 'The Art of Setting Goals That Actually Work',
+    speaker: 'Jim Rohn',
+    category: 'goals',
+    duration: '27:14',
+  },
+  {
+    id: 'bMH1x5BRmWE',
+    title: 'Building Your Life Philosophy',
+    speaker: 'Jim Rohn',
+    category: 'planning',
+    duration: '31:05',
+  },
+  {
+    id: 'YtlFT_PQ-Vc',
+    title: 'Take Full Responsibility for Your Life',
+    speaker: 'Jim Rohn',
+    category: 'action',
+    duration: '22:38',
+  },
+  {
+    id: 'DGO0k3A2q3c',
+    title: 'The Power of Ambition',
+    speaker: 'Jim Rohn',
+    category: 'goals',
+    duration: '19:55',
+  },
+  {
+    id: 'FKHCXKV2ooM',
+    title: 'How to Have Your Best Year Ever',
+    speaker: 'Jim Rohn',
+    category: 'planning',
+    duration: '34:22',
+  },
+  {
+    id: 'HmQiHHH0vMI',
+    title: 'Disciplines for Success — Daily Habits That Pay Off',
+    speaker: 'Jim Rohn',
+    category: 'discipline',
+    duration: '28:09',
+  },
+  {
+    id: 'IGhFqn0N9rw',
+    title: 'Six Months to a New Life',
+    speaker: 'Jim Rohn',
+    category: 'planning',
+    duration: '24:51',
+  },
+
+  // ─── Les Brown ────────────────────────────────────────────────────────────────
+  {
+    id: 'KcPJmFMpxEk',
+    title: "It's Possible — You Have Greatness Within You",
+    speaker: 'Les Brown',
+    category: 'mindset',
+    duration: '14:03',
+  },
+  {
+    id: 'ImKjFGF_0jE',
+    title: 'Shoot for the Moon',
+    speaker: 'Les Brown',
+    category: 'goals',
+    duration: '11:47',
+  },
+  {
+    id: 'hOhRf8EqYI0',
+    title: 'Hunger — You Have to Be Hungry',
+    speaker: 'Les Brown',
+    category: 'action',
+    duration: '9:30',
+  },
+  {
+    id: 'C9OKrOHCjuE',
+    title: 'Fear Is Not Real — Push Through Anyway',
+    speaker: 'Les Brown',
+    category: 'action',
+    duration: '13:22',
+  },
+  {
+    id: 'xHOd1ybRBkE',
+    title: 'Getting Through the Hard Times',
+    speaker: 'Les Brown',
+    category: 'mindset',
+    duration: '16:15',
+  },
+  {
+    id: 'TFlHqKBFPMw',
+    title: 'Live Full, Die Empty',
+    speaker: 'Les Brown',
+    category: 'goals',
+    duration: '12:40',
+  },
+
+  // ─── Jocko Willink ────────────────────────────────────────────────────────────
+  {
+    id: 'IdTMDpizis8',
+    title: 'Discipline Equals Freedom',
+    speaker: 'Jocko Willink',
+    category: 'discipline',
+    duration: '5:22',
+  },
+  {
+    id: 'rJG28vg-dFs',
+    title: 'Good — The Response to Every Setback',
+    speaker: 'Jocko Willink',
+    category: 'mindset',
+    duration: '4:05',
+  },
+  {
+    id: 'Ol2ANBCeBG8',
+    title: 'How to Build Self-Discipline',
+    speaker: 'Jocko Willink',
+    category: 'discipline',
+    duration: '8:33',
+  },
+  {
+    id: '3q0PaEGd-Ku',
+    title: 'Leadership and the Dichotomy of Control',
+    speaker: 'Jocko Willink',
+    category: 'planning',
+    duration: '16:10',
+  },
+  {
+    id: 'CajOBynapvg',
+    title: 'Default Aggressive — Take the Initiative',
+    speaker: 'Jocko Willink',
+    category: 'action',
+    duration: '7:48',
+  },
+  {
+    id: 'xAuFLWxHD4g',
+    title: 'Own It All — Extreme Ownership',
+    speaker: 'Jocko Willink',
+    category: 'discipline',
+    duration: '11:05',
+  },
+
+  // ─── Eric Thomas ──────────────────────────────────────────────────────────────
+  {
+    id: 'lsSC2vx7-Qs',
+    title: 'How Bad Do You Want It? (Sleep)',
+    speaker: 'Eric Thomas',
+    category: 'discipline',
+    duration: '7:44',
+  },
+  {
+    id: 'WoP_mBovnCc',
+    title: 'Thank God It\'s Monday',
+    speaker: 'Eric Thomas',
+    category: 'action',
+    duration: '8:10',
+  },
+  {
+    id: 'B-ATbv1JCMY',
+    title: 'Secrets to Success — When You Want It as Bad as Air',
+    speaker: 'Eric Thomas',
+    category: 'goals',
+    duration: '10:23',
+  },
+  {
+    id: '7Oxz-4RiTBQ',
+    title: 'Average Skill, Phenomenal Will',
+    speaker: 'Eric Thomas',
+    category: 'mindset',
+    duration: '9:05',
+  },
+  {
+    id: 'PcYdT7JVWPU',
+    title: 'You Owe You — Bet on Yourself',
+    speaker: 'Eric Thomas',
+    category: 'action',
+    duration: '11:30',
+  },
+  {
+    id: 'SA68BXcJFtU',
+    title: 'I Can, I Will, I Must',
+    speaker: 'Eric Thomas',
+    category: 'discipline',
+    duration: '6:58',
+  },
+];
+
+// Speaker → accent color token (maps to CSS class)
+export const speakerColors = {
+  'Tony Robbins':   'speaker-tony',
+  'David Goggins':  'speaker-goggins',
+  'Mel Robbins':    'speaker-mel',
+  'Jim Rohn':       'speaker-jim',
+  'Les Brown':      'speaker-les',
+  'Jocko Willink':  'speaker-jocko',
+  'Eric Thomas':    'speaker-eric',
+};

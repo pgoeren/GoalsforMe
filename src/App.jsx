@@ -7,6 +7,7 @@ import AddGoal from './pages/AddGoal';
 import GoalDetail from './pages/GoalDetail';
 import History from './pages/History';
 import Profile from './pages/Profile';
+import Inspiration from './pages/Inspiration';
 
 function ProtectedRoute({ children }) {
   const { user, loading, isAuthEnabled } = useAuth();
@@ -59,6 +60,14 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <History />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/inspire"
+                element={
+                  <ProtectedRoute>
+                    <Inspiration />
                   </ProtectedRoute>
                 }
               />
