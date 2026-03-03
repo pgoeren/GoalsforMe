@@ -1917,7 +1917,6 @@ input, textarea, [contenteditable] {
   border: 2px solid var(--color-border);
   border-radius: var(--radius-md);
   overflow: hidden;
-  cursor: pointer;
   transition: transform 0.15s, box-shadow 0.15s;
 }
 
@@ -1926,12 +1925,31 @@ input, textarea, [contenteditable] {
   box-shadow: 0 4px 16px rgba(0,0,0,0.08);
 }
 
+/* Button reset — wraps entire card content so the whole card is one click target */
+.video-card-btn {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.video-card-btn:active .video-thumb-wrap {
+  opacity: 0.9;
+}
+
 /* 16:9 thumbnail wrapper */
 .video-thumb-wrap {
   position: relative;
   padding-top: 56.25%;
   background: var(--color-border-light);
   overflow: hidden;
+  pointer-events: none; /* let clicks pass through to the button */
 }
 
 .video-thumb {
@@ -1953,6 +1971,7 @@ input, textarea, [contenteditable] {
   color: var(--color-primary);
 }
 
+/* Overlay is decorative only — never intercepts clicks */
 .video-play-overlay {
   position: absolute;
   inset: 0;
@@ -1961,11 +1980,24 @@ input, textarea, [contenteditable] {
   justify-content: center;
   opacity: 0;
   transition: opacity 0.15s;
-  background: rgba(0,0,0,0.15);
+  background: rgba(0,0,0,0.2);
+  pointer-events: none;
 }
 
 .video-card:hover .video-play-overlay {
   opacity: 1;
+}
+
+.video-play-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  padding-left: 3px;
 }
 
 .video-card-body {

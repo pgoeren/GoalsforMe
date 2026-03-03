@@ -18,39 +18,42 @@ function VideoCard({ video, onSelect }) {
   const colorClass = speakerColors[video.speaker] || 'speaker-tony';
 
   return (
-    <article className="video-card" onClick={() => onSelect(video)}>
-      <div className="video-thumb-wrap">
-        {thumbFailed ? (
-          <div className="video-thumb-fallback">
-            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <polygon points="5 3 19 12 5 21 5 3" />
-            </svg>
+    <article className="video-card">
+      <button className="video-card-btn" onClick={() => onSelect(video)}>
+        <div className="video-thumb-wrap">
+          {thumbFailed ? (
+            <div className="video-thumb-fallback">
+              <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <polygon points="5 3 19 12 5 21 5 3" />
+              </svg>
+            </div>
+          ) : (
+            <img
+              className="video-thumb"
+              src={`https://img.youtube.com/vi/${video.id}/mqdefault.jpg`}
+              alt={video.title}
+              loading="lazy"
+              onError={() => setThumbFailed(true)}
+            />
+          )}
+          <div className="video-play-overlay" aria-hidden="true">
+            <div className="video-play-btn">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <polygon points="6 4 20 12 6 20 6 4" />
+              </svg>
+            </div>
           </div>
-        ) : (
-          <img
-            className="video-thumb"
-            src={`https://img.youtube.com/vi/${video.id}/mqdefault.jpg`}
-            alt={video.title}
-            loading="lazy"
-            onError={() => setThumbFailed(true)}
-          />
-        )}
-        <div className="video-play-overlay">
-          <svg viewBox="0 0 24 24" width="44" height="44" fill="white">
-            <circle cx="12" cy="12" r="12" fillOpacity="0.85" />
-            <polygon points="10 8 17 12 10 16 10 8" fill="var(--color-primary)" />
-          </svg>
         </div>
-      </div>
-      <div className="video-card-body">
-        <span className={`video-speaker-chip ${colorClass}`}>{video.speaker}</span>
-        <p className="video-title">{video.title}</p>
-        <p className="video-meta">
-          <span className="video-category">{video.category.charAt(0).toUpperCase() + video.category.slice(1)}</span>
-          <span className="video-dot">·</span>
-          <span>{video.duration}</span>
-        </p>
-      </div>
+        <div className="video-card-body">
+          <span className={`video-speaker-chip ${colorClass}`}>{video.speaker}</span>
+          <p className="video-title">{video.title}</p>
+          <p className="video-meta">
+            <span>{video.category.charAt(0).toUpperCase() + video.category.slice(1)}</span>
+            <span className="video-dot">·</span>
+            <span>{video.duration}</span>
+          </p>
+        </div>
+      </button>
     </article>
   );
 }
