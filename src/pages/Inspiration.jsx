@@ -14,14 +14,22 @@ function shuffleArray(arr) {
 }
 
 function VideoCard({ video, onSelect }) {
-  const [thumbFailed, setThumbFailed] = useState(false);
+  const [thumbLevel, setThumbLevel] = useState('hq');
   const colorClass = speakerColors[video.speaker] || 'speaker-tony';
+
+  const thumbSrc =
+    thumbLevel === 'hq'
+      ? `https://img.youtube.com/vi/${video.id}/hqdefault.jpg`
+      : `https://img.youtube.com/vi/${video.id}/mqdefault.jpg`;
+
+  const handleThumbError = () =>
+    setThumbLevel((l) => (l === 'hq' ? 'mq' : 'failed'));
 
   return (
     <article className="video-card">
       <button className="video-card-btn" onClick={() => onSelect(video)}>
         <div className="video-thumb-wrap">
-          {thumbFailed ? (
+          {thumbLevel === 'failed' ? (
             <div className="video-thumb-fallback">
               <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <polygon points="5 3 19 12 5 21 5 3" />
@@ -30,10 +38,10 @@ function VideoCard({ video, onSelect }) {
           ) : (
             <img
               className="video-thumb"
-              src={`https://img.youtube.com/vi/${video.id}/mqdefault.jpg`}
+              src={thumbSrc}
               alt={video.title}
               loading="lazy"
-              onError={() => setThumbFailed(true)}
+              onError={handleThumbError}
             />
           )}
           <div className="video-play-overlay" aria-hidden="true">
