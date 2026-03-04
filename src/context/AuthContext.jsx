@@ -21,12 +21,22 @@ export function AuthProvider({ children }) {
       return;
     }
 
+    // Fallback: if Firebase auth doesn't respond in 5 s, unblock the app
+    const timeout = setTimeout(() => {
+      console.warn('[GoalsForMe] Firebase auth timed out — falling back to local mode.');
+      setLoading(false);
+    }, 5000);
+
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      clearTimeout(timeout);
       setUser(firebaseUser);
       setLoading(false);
     });
 
-    return unsubscribe;
+    return () => {
+      clearTimeout(timeout);
+      unsubscribe();
+    };
   }, []);
 
   const signup = async (email, password, displayName) => {
