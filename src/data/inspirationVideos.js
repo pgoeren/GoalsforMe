@@ -20,25 +20,25 @@ export const inspirationVideos = [
     duration: '15:30',
   },
   {
-    id: 'MJ7VxkSd7dY',
+    id: 'T7Etxod0a0A',
     title: 'The Secret to Living Is Giving',
     speaker: 'Tony Robbins',
     category: 'mindset',
-    duration: '18:41',
+    duration: '6:30',
   },
   {
-    id: '0VbAj5j1AoI',
-    title: 'Change Your Story, Change Your Life',
+    id: 'aUQo9eWDZ7Y',
+    title: 'NSTANTLY Change Your Life with This One Daily Habit',
     speaker: 'Tony Robbins',
     category: 'mindset',
-    duration: '22:10',
+    duration: '8:06',
   },
   {
-    id: 'OqDkTRDgTiY',
-    title: 'The Power of a Compelling Future',
+    id: 'zi_22RoSklI',
+    title: 'Mental Shift Will Rewrite Your Entire Future',
     speaker: 'Tony Robbins',
     category: 'planning',
-    duration: '19:03',
+    duration: '9:18',
   },
   {
     id: 'E0R5gBKlOwI',
@@ -93,19 +93,13 @@ export const inspirationVideos = [
     category: 'action',
     duration: '21:40',
   },
+
   {
-    id: 'Oa2Bvp0FHqI',
-    title: 'The 5-Second Rule — Take Action Now',
-    speaker: 'Mel Robbins',
-    category: 'action',
-    duration: '16:55',
-  },
-  {
-    id: 'pRABKEeKT9E',
-    title: 'The Truth About Why You Self-Sabotage',
+    id: 'cRsSp1GYzVY',
+    title: 'Do this ONE THING',
     speaker: 'Mel Robbins',
     category: 'mindset',
-    duration: '14:50',
+    duration: '3:00',
   },
   {
     id: 'P91b4civBxA',
@@ -117,11 +111,11 @@ export const inspirationVideos = [
 
   // ─── Jim Rohn ─────────────────────────────────────────────────────────────────
   {
-    id: 'Y3C5bKa5PzQ',
-    title: 'The Art of Setting Goals That Actually Work',
+    id: 'ajHLGl8ksMc',
+    title: 'How to Set Goals Step by Step',
     speaker: 'Jim Rohn',
     category: 'goals',
-    duration: '27:14',
+    duration: '16:11',
   },
   {
     id: 'bMH1x5BRmWE',
@@ -138,11 +132,11 @@ export const inspirationVideos = [
     duration: '22:38',
   },
   {
-    id: 'FKHCXKV2ooM',
+    id: 'JfA-qNWLBHo',
     title: 'How to Have Your Best Year Ever',
     speaker: 'Jim Rohn',
     category: 'planning',
-    duration: '34:22',
+    duration: '3:51',
   },
   {
     id: 'HmQiHHH0vMI',
@@ -205,13 +199,6 @@ export const inspirationVideos = [
     duration: '5:22',
   },
   {
-    id: 'rJG28vg-dFs',
-    title: 'Good — The Response to Every Setback',
-    speaker: 'Jocko Willink',
-    category: 'mindset',
-    duration: '4:05',
-  },
-  {
     id: 'Ol2ANBCeBG8',
     title: 'How to Build Self-Discipline',
     speaker: 'Jocko Willink',
@@ -235,18 +222,11 @@ export const inspirationVideos = [
     duration: '7:44',
   },
   {
-    id: 'WoP_mBovnCc',
+    id: 'wivUKe1s96s',
     title: "Thank God It's Monday",
     speaker: 'Eric Thomas',
     category: 'action',
-    duration: '8:10',
-  },
-  {
-    id: 'B-ATbv1JCMY',
-    title: 'Secrets to Success — When You Want It as Bad as Air',
-    speaker: 'Eric Thomas',
-    category: 'goals',
-    duration: '10:23',
+    duration: '3:00',
   },
   {
     id: 'DG-oAF1i_UA',
@@ -286,36 +266,6 @@ export const inspirationVideos = [
     duration: '16:47',
   },
 
-  // ─── Brené Brown ──────────────────────────────────────────────────────────────
-  {
-    id: 'X4Qm9cGRub0',
-    title: 'The Power of Vulnerability',
-    speaker: 'Brené Brown',
-    category: 'mindset',
-    duration: '20:49',
-  },
-  {
-    id: 'psN1DORYYV0',
-    title: 'Listening to Shame',
-    speaker: 'Brené Brown',
-    category: 'mindset',
-    duration: '20:38',
-  },
-  {
-    id: 'tI7dAgNhCZo',
-    title: 'The Courage to Be Imperfect',
-    speaker: 'Brené Brown',
-    category: 'mindset',
-    duration: '11:24',
-  },
-  {
-    id: 'HqetWsb28Mo',
-    title: 'The Four Skill Sets of Great Leaders',
-    speaker: 'Brené Brown',
-    category: 'discipline',
-    duration: '8:56',
-  },
-
   // ─── Jay Shetty ───────────────────────────────────────────────────────────────
   {
     id: 'Skh8ZYxrLhg',
@@ -348,7 +298,7 @@ export const inspirationVideos = [
 
   // ─── Matthew McConaughey ──────────────────────────────────────────────────────
   {
-    id: 'QbL0X3B4mjg',
+    id: 'OKJImnk-gzQ',
     title: '5 Minutes for the Next 50 Years of Your Life',
     speaker: 'Matthew McConaughey',
     category: 'planning',
