@@ -2019,13 +2019,17 @@ input, textarea, [contenteditable] {
   width: fit-content;
 }
 
-.speaker-tony    { background: var(--tint-indigo);    color: var(--color-primary); }
-.speaker-goggins { background: var(--tint-red-light); color: var(--color-danger);  }
-.speaker-mel     { background: var(--tint-orange);    color: var(--color-warning); }
-.speaker-jim     { background: var(--tint-green);     color: var(--color-success); }
-.speaker-les     { background: var(--tint-orange);    color: #a0620a;              }
-.speaker-jocko   { background: var(--color-border-light); color: var(--color-text); }
-.speaker-eric    { background: var(--tint-red-light); color: #b04060;              }
+.speaker-tony    { background: var(--tint-indigo);        color: var(--color-primary); }
+.speaker-goggins { background: var(--tint-red-light);     color: var(--color-danger);  }
+.speaker-mel     { background: var(--tint-orange);        color: var(--color-warning); }
+.speaker-jim     { background: var(--tint-green);         color: var(--color-success); }
+.speaker-les     { background: var(--tint-orange);        color: #a0620a;              }
+.speaker-jocko   { background: var(--color-border-light); color: var(--color-text);    }
+.speaker-eric    { background: var(--tint-red-light);     color: #b04060;              }
+.speaker-sinek   { background: var(--tint-blue);          color: #2E5E8E;              }
+.speaker-brene   { background: #EDE0F5;                   color: #7038A0;              }
+.speaker-jay     { background: #FFF8E8;                   color: #B07A20;              }
+.speaker-matt    { background: var(--tint-green-light);   color: #0D7060;              }
 
 .video-title {
   font-size: 14px;

@@ -1,5 +1,6 @@
 // Curated motivational video library
 // Thumbnails load free from YouTube's CDN — no API key needed.
+// All IDs verified via YouTube oEmbed / ytscribe.com / TED.com.
 // To add more: find a YouTube video URL, grab the 11-char ID after "v=", add an entry below.
 
 export const inspirationVideos = [
@@ -46,20 +47,6 @@ export const inspirationVideos = [
     category: 'planning',
     duration: '17:55',
   },
-  {
-    id: '7Pex_bxv3vI',
-    title: 'Unleash the Power Within — Mindset Reset',
-    speaker: 'Tony Robbins',
-    category: 'mindset',
-    duration: '12:44',
-  },
-  {
-    id: 'Nd5WorTSPvI',
-    title: 'Stop Sabotaging Yourself',
-    speaker: 'Tony Robbins',
-    category: 'goals',
-    duration: '14:28',
-  },
 
   // ─── David Goggins ────────────────────────────────────────────────────────────
   {
@@ -84,32 +71,18 @@ export const inspirationVideos = [
     duration: '11:15',
   },
   {
-    id: 'nDLb8_wgX50',
-    title: 'Callus Your Mind Every Single Day',
+    id: '6_uvpReICDU',
+    title: 'Push Yourself Every Single Day',
     speaker: 'David Goggins',
     category: 'discipline',
-    duration: '9:33',
+    duration: '9:14',
   },
   {
-    id: 'cx8MLGPJBOM',
-    title: 'Stay Hard: The Ultimate Mindset',
+    id: 'dl_scmOu-zY',
+    title: 'How to Force Your Brain to Do Hard Things',
     speaker: 'David Goggins',
-    category: 'action',
-    duration: '7:58',
-  },
-  {
-    id: 'kLSIUFVzxVg',
-    title: 'Take Souls — Outperform Your Potential',
-    speaker: 'David Goggins',
-    category: 'action',
-    duration: '13:20',
-  },
-  {
-    id: 'WSgbGFqHDZE',
-    title: 'Get Comfortable Being Uncomfortable',
-    speaker: 'David Goggins',
-    category: 'discipline',
-    duration: '6:45',
+    category: 'mindset',
+    duration: '12:08',
   },
 
   // ─── Mel Robbins ──────────────────────────────────────────────────────────────
@@ -126,20 +99,6 @@ export const inspirationVideos = [
     speaker: 'Mel Robbins',
     category: 'action',
     duration: '16:55',
-  },
-  {
-    id: 'iSgqzCMrFnA',
-    title: 'How to Build Habits That Stick',
-    speaker: 'Mel Robbins',
-    category: 'goals',
-    duration: '18:03',
-  },
-  {
-    id: 'ZRfvSSTJO8U',
-    title: 'Stop Waiting — Start Doing',
-    speaker: 'Mel Robbins',
-    category: 'action',
-    duration: '12:30',
   },
   {
     id: 'pRABKEeKT9E',
@@ -179,13 +138,6 @@ export const inspirationVideos = [
     duration: '22:38',
   },
   {
-    id: 'Cgq0WUVI_IE',
-    title: 'The Power of Ambition',
-    speaker: 'Jim Rohn',
-    category: 'goals',
-    duration: '19:55',
-  },
-  {
     id: 'FKHCXKV2ooM',
     title: 'How to Have Your Best Year Ever',
     speaker: 'Jim Rohn',
@@ -199,56 +151,49 @@ export const inspirationVideos = [
     category: 'discipline',
     duration: '28:09',
   },
-  {
-    id: 'MCQjjFy4FVg',
-    title: 'Six Months to a New Life',
-    speaker: 'Jim Rohn',
-    category: 'planning',
-    duration: '24:51',
-  },
 
   // ─── Les Brown ────────────────────────────────────────────────────────────────
   {
-    id: 'D4GXqPIYLNQ',
+    id: 'uFBqCPj6n44',
+    title: "You've Gotta Be Hungry",
+    speaker: 'Les Brown',
+    category: 'action',
+    duration: '9:41',
+  },
+  {
+    id: 'gXuSMjrx_e8',
     title: "It's Possible — You Have Greatness Within You",
     speaker: 'Les Brown',
     category: 'mindset',
-    duration: '14:03',
+    duration: '14:22',
   },
   {
-    id: 'ImKjFGF_0jE',
-    title: 'Shoot for the Moon',
-    speaker: 'Les Brown',
-    category: 'goals',
-    duration: '11:47',
-  },
-  {
-    id: 'hOhRf8EqYI0',
-    title: 'Hunger — You Have to Be Hungry',
-    speaker: 'Les Brown',
-    category: 'action',
-    duration: '9:30',
-  },
-  {
-    id: 'C9OKrOHCjuE',
-    title: 'Fear Is Not Real — Push Through Anyway',
-    speaker: 'Les Brown',
-    category: 'action',
-    duration: '13:22',
-  },
-  {
-    id: 'xHOd1ybRBkE',
-    title: 'Getting Through the Hard Times',
+    id: 'LPG9OmVn3Yk',
+    title: 'Words That Will Change Your Life',
     speaker: 'Les Brown',
     category: 'mindset',
-    duration: '16:15',
+    duration: '11:05',
   },
   {
-    id: 'TFlHqKBFPMw',
-    title: 'Live Full, Die Empty',
+    id: 'fvQdIOzSwG4',
+    title: 'Change the Way You Look at Things',
+    speaker: 'Les Brown',
+    category: 'mindset',
+    duration: '12:38',
+  },
+  {
+    id: 'PeK9EeKNXDM',
+    title: "This Is Why You Don't Succeed",
     speaker: 'Les Brown',
     category: 'goals',
-    duration: '12:40',
+    duration: '10:17',
+  },
+  {
+    id: 'cd_Vw4CmgUQ',
+    title: 'Wake Up and Take Action',
+    speaker: 'Les Brown',
+    category: 'action',
+    duration: '13:44',
   },
 
   // ─── Jocko Willink ────────────────────────────────────────────────────────────
@@ -274,25 +219,11 @@ export const inspirationVideos = [
     duration: '8:33',
   },
   {
-    id: '3q0PaEGd-Ku',
-    title: 'Leadership and the Dichotomy of Control',
+    id: 'RkT0BxTz3uU',
+    title: 'Get Rid of Ego — Lead with Humility',
     speaker: 'Jocko Willink',
-    category: 'planning',
-    duration: '16:10',
-  },
-  {
-    id: 'CajOBynapvg',
-    title: 'Default Aggressive — Take the Initiative',
-    speaker: 'Jocko Willink',
-    category: 'action',
-    duration: '7:48',
-  },
-  {
-    id: 'xAuFLWxHD4g',
-    title: 'Own It All — Extreme Ownership',
-    speaker: 'Jocko Willink',
-    category: 'discipline',
-    duration: '11:05',
+    category: 'mindset',
+    duration: '7:14',
   },
 
   // ─── Eric Thomas ──────────────────────────────────────────────────────────────
@@ -305,7 +236,7 @@ export const inspirationVideos = [
   },
   {
     id: 'WoP_mBovnCc',
-    title: 'Thank God It\'s Monday',
+    title: "Thank God It's Monday",
     speaker: 'Eric Thomas',
     category: 'action',
     duration: '8:10',
@@ -318,35 +249,138 @@ export const inspirationVideos = [
     duration: '10:23',
   },
   {
-    id: '7Oxz-4RiTBQ',
-    title: 'Average Skill, Phenomenal Will',
-    speaker: 'Eric Thomas',
-    category: 'mindset',
-    duration: '9:05',
-  },
-  {
     id: 'DG-oAF1i_UA',
     title: 'You Owe You — Bet on Yourself',
     speaker: 'Eric Thomas',
     category: 'action',
     duration: '11:30',
   },
+
+  // ─── Simon Sinek ──────────────────────────────────────────────────────────────
   {
-    id: 'SA68BXcJFtU',
-    title: 'I Can, I Will, I Must',
-    speaker: 'Eric Thomas',
+    id: 'u4ZoJKF_VuA',
+    title: 'Start With Why — How Great Leaders Inspire Action',
+    speaker: 'Simon Sinek',
+    category: 'mindset',
+    duration: '18:01',
+  },
+  {
+    id: 'tqC1WwWKtfE',
+    title: 'The Infinite Mindset — Stop Playing a Finite Game',
+    speaker: 'Simon Sinek',
+    category: 'planning',
+    duration: '35:20',
+  },
+  {
+    id: 'vCIu7Ja_TE0',
+    title: 'Advice That Will Leave You Speechless',
+    speaker: 'Simon Sinek',
+    category: 'mindset',
+    duration: '14:33',
+  },
+  {
+    id: 'bXGa7IEUixw',
+    title: 'Find Your Why — Your Purpose Changes Everything',
+    speaker: 'Simon Sinek',
+    category: 'goals',
+    duration: '16:47',
+  },
+
+  // ─── Brené Brown ──────────────────────────────────────────────────────────────
+  {
+    id: 'X4Qm9cGRub0',
+    title: 'The Power of Vulnerability',
+    speaker: 'Brené Brown',
+    category: 'mindset',
+    duration: '20:49',
+  },
+  {
+    id: 'psN1DORYYV0',
+    title: 'Listening to Shame',
+    speaker: 'Brené Brown',
+    category: 'mindset',
+    duration: '20:38',
+  },
+  {
+    id: 'tI7dAgNhCZo',
+    title: 'The Courage to Be Imperfect',
+    speaker: 'Brené Brown',
+    category: 'mindset',
+    duration: '11:24',
+  },
+  {
+    id: 'HqetWsb28Mo',
+    title: 'The Four Skill Sets of Great Leaders',
+    speaker: 'Brené Brown',
     category: 'discipline',
-    duration: '6:58',
+    duration: '8:56',
+  },
+
+  // ─── Jay Shetty ───────────────────────────────────────────────────────────────
+  {
+    id: 'Skh8ZYxrLhg',
+    title: 'Feeling Insecure? This Will Change Everything',
+    speaker: 'Jay Shetty',
+    category: 'mindset',
+    duration: '1:04:18',
+  },
+  {
+    id: 'ZjIRYn7x8sk',
+    title: 'How to Overcome Anxiety and Find True Happiness',
+    speaker: 'Jay Shetty',
+    category: 'mindset',
+    duration: '58:42',
+  },
+  {
+    id: 'AyiWKXTd9aY',
+    title: 'Everything You Know About Success Is Wrong',
+    speaker: 'Jay Shetty',
+    category: 'goals',
+    duration: '1:12:05',
+  },
+  {
+    id: 'OTQJmkXC2EI',
+    title: 'The Root Cause of Trauma and Feeling Lost',
+    speaker: 'Jay Shetty',
+    category: 'mindset',
+    duration: '1:06:33',
+  },
+
+  // ─── Matthew McConaughey ──────────────────────────────────────────────────────
+  {
+    id: 'QbL0X3B4mjg',
+    title: '5 Minutes for the Next 50 Years of Your Life',
+    speaker: 'Matthew McConaughey',
+    category: 'planning',
+    duration: '5:12',
+  },
+  {
+    id: 'p0p1fjLPjYQ',
+    title: 'This Is Why You Are Not Happy',
+    speaker: 'Matthew McConaughey',
+    category: 'mindset',
+    duration: '8:43',
+  },
+  {
+    id: 'yjr3cuSUs2A',
+    title: 'The 13 Truths for a Good Life',
+    speaker: 'Matthew McConaughey',
+    category: 'goals',
+    duration: '24:15',
   },
 ];
 
 // Speaker → accent color token (maps to CSS class)
 export const speakerColors = {
-  'Tony Robbins':   'speaker-tony',
-  'David Goggins':  'speaker-goggins',
-  'Mel Robbins':    'speaker-mel',
-  'Jim Rohn':       'speaker-jim',
-  'Les Brown':      'speaker-les',
-  'Jocko Willink':  'speaker-jocko',
-  'Eric Thomas':    'speaker-eric',
+  'Tony Robbins':       'speaker-tony',
+  'David Goggins':      'speaker-goggins',
+  'Mel Robbins':        'speaker-mel',
+  'Jim Rohn':           'speaker-jim',
+  'Les Brown':          'speaker-les',
+  'Jocko Willink':      'speaker-jocko',
+  'Eric Thomas':        'speaker-eric',
+  'Simon Sinek':        'speaker-sinek',
+  'Brené Brown':        'speaker-brene',
+  'Jay Shetty':         'speaker-jay',
+  'Matthew McConaughey': 'speaker-matt',
 };
