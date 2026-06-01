@@ -14,8 +14,16 @@ function shuffleArray(arr) {
 }
 
 function VideoCard({ video, onSelect }) {
-  const [thumbFailed, setThumbFailed] = useState(false);
+  const [thumbLevel, setThumbLevel] = useState('hq');
   const colorClass = speakerColors[video.speaker] || 'speaker-tony';
+
+  const thumbSrc =
+    thumbLevel === 'hq'
+      ? `https://img.youtube.com/vi/${video.id}/hqdefault.jpg`
+      : `https://img.youtube.com/vi/${video.id}/mqdefault.jpg`;
+
+  const handleThumbError = () =>
+    setThumbLevel((l) => (l === 'hq' ? 'mq' : 'failed'));
 
   return (
     <article className="video-card">
