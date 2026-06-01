@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useGoals } from '../context/GoalContext';
 import GoalRow from '../components/GoalRow';
 import ProgressBar from '../components/ProgressBar';
-import Collapsible from '../components/Collapsible';
 import SeasonTimeline from '../components/SeasonTimeline';
 import { getQuarterlyGoals, subscribeToQuarterlyGoals } from '../firebase/goalService';
 import { getNextCheckIn, formatDate, getCurrentQuarter, getEndOfQuarterWednesday } from '../utils/checkInDates';
@@ -16,9 +15,7 @@ export default function Dashboard() {
   const nextCheckIn = getNextCheckIn(currentYear);
   const unsubscribesRef = useRef([]);
 
-  // Real-time subscriptions for quarterly goals of each yearly goal
   useEffect(() => {
-    // Clean up previous subscriptions
     unsubscribesRef.current.forEach((fn) => fn());
     unsubscribesRef.current = [];
 
@@ -29,17 +26,14 @@ export default function Dashboard() {
         goal.id,
         (goals) => setQuarterlyData((prev) => ({ ...prev, [goal.id]: goals })),
         () => {
-          // Fallback: one-time fetch
           getQuarterlyGoals(goal.id).then((goals) =>
             setQuarterlyData((prev) => ({ ...prev, [goal.id]: goals }))
           );
         }
       );
-
       if (unsub) {
         unsubscribesRef.current.push(unsub);
       } else {
-        // Firestore not available — one-time fetch
         getQuarterlyGoals(goal.id).then((goals) =>
           setQuarterlyData((prev) => ({ ...prev, [goal.id]: goals }))
         );
@@ -52,7 +46,6 @@ export default function Dashboard() {
     };
   }, [yearlyGoals]);
 
-  // Countdown calculations
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -107,13 +100,16 @@ export default function Dashboard() {
       if (!groups[key]) groups[key] = [];
       groups[key].push(goal);
     }
-    const sorted = Object.entries(groups).sort(([a], [b]) => {
+    return Object.entries(groups).sort(([a], [b]) => {
       if (a === 'Uncategorized') return 1;
       if (b === 'Uncategorized') return -1;
       return a.localeCompare(b);
     });
-    return sorted;
   };
+
+  const overallProgress = yearlyGoals.length > 0
+    ? yearlyGoals.reduce((sum, g) => sum + getGoalProgress(g), 0) / yearlyGoals.length
+    : 0;
 
   if (loading) {
     return <div className="loading-spinner">Loading your goals...</div>;
@@ -121,110 +117,101 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard">
-      <div className="dashboard-header">
-        <h1>My Goals</h1>
-        <button className="btn btn-primary" onClick={() => navigate('/add')}>
-          + New Goal
-        </button>
+
+      {/* ── Hero stats ── */}
+      <div className="overview-hero-stats" style={{ marginBottom: 12 }}>
+        <div className="hero-stat hero-stat--goals">
+          <div className="hero-stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/>
+              <circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/>
+            </svg>
+          </div>
+          <span className="hero-stat-value">{yearlyGoals.length}</span>
+          <span className="hero-stat-label">Goals</span>
+          <span className="hero-stat-sub">this year</span>
+        </div>
+        <div className="hero-stat hero-stat--quarter">
+          <div className="hero-stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+              <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+              <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+              <rect x="14" y="14" width="7" height="7" rx="1.5" opacity="0.4"/>
+            </svg>
+          </div>
+          <span className="hero-stat-value">Q{currentQuarter}</span>
+          <span className="hero-stat-label">Current</span>
+          <span className="hero-stat-sub">{formatCountdown(daysToQuarterEnd)} left</span>
+        </div>
+        <div className="hero-stat hero-stat--year">
+          <div className="hero-stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
+          <span className="hero-stat-value">{currentYear}</span>
+          <span className="hero-stat-label">Year</span>
+          <span className="hero-stat-sub">{formatCountdown(daysToYearEnd)} left</span>
+        </div>
       </div>
 
-      {/* Hero stats + next check-in grouped as dashboard overview */}
-      <div className="dashboard-overview">
-        <div className="overview-hero-stats">
-          <div className="hero-stat hero-stat--goals">
-            <div className="hero-stat-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10"/>
-                <circle cx="12" cy="12" r="6"/>
-                <circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/>
-              </svg>
-            </div>
-            <span className="hero-stat-value">{yearlyGoals.length}</span>
-            <span className="hero-stat-label">Goals</span>
-            <span className="hero-stat-sub">this year</span>
+      {/* ── Overall progress bar ── */}
+      {yearlyGoals.length > 0 && (
+        <div className="dash-overall-progress">
+          <div className="dash-overall-label">
+            <span>Overall progress</span>
+            <span className="dash-overall-pct">{Math.round(overallProgress)}%</span>
           </div>
-          <div className="hero-stat hero-stat--quarter">
-            <div className="hero-stat-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="3" width="7" height="7" rx="1.5"/>
-                <rect x="14" y="3" width="7" height="7" rx="1.5"/>
-                <rect x="3" y="14" width="7" height="7" rx="1.5"/>
-                <rect x="14" y="14" width="7" height="7" rx="1.5" opacity="0.4"/>
-              </svg>
-            </div>
-            <span className="hero-stat-value">Q{getCurrentQuarter()}</span>
-            <span className="hero-stat-label">Current</span>
-            <span className="hero-stat-sub">{formatCountdown(daysToQuarterEnd)} left</span>
-          </div>
-          <div className="hero-stat hero-stat--year">
-            <div className="hero-stat-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2"/>
-                <line x1="16" y1="2" x2="16" y2="6"/>
-                <line x1="8" y1="2" x2="8" y2="6"/>
-                <line x1="3" y1="10" x2="21" y2="10"/>
-              </svg>
-            </div>
-            <span className="hero-stat-value">{currentYear}</span>
-            <span className="hero-stat-label">Year</span>
-            <span className="hero-stat-sub">{formatCountdown(daysToYearEnd)} left</span>
+          <div className="dash-overall-track">
+            <div className="dash-overall-fill" style={{ width: `${overallProgress}%` }} />
           </div>
         </div>
-
-        {nextCheckIn && (
-          <div className="overview-checkin">
-            <div className="checkin-badge">
-              <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2"/>
-                <line x1="16" y1="2" x2="16" y2="6"/>
-                <line x1="8" y1="2" x2="8" y2="6"/>
-                <line x1="3" y1="10" x2="21" y2="10"/>
-                <polyline points="9 16 11 18 15 14"/>
-              </svg>
-            </div>
-            <div className="checkin-info">
-              <span className="checkin-label">Next Check-in</span>
-              <span className="checkin-date">{nextCheckIn.label} &mdash; {formatDate(nextCheckIn.date)}</span>
-            </div>
-            {daysToCheckIn !== null && (
-              <div className="checkin-countdown">
-                <span className="checkin-days-value">{formatCountdown(daysToCheckIn)}</span>
-                <span className="checkin-days-label">away</span>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-
-      {yearlyGoals.length > 0 && (
-        <Collapsible id="glance" title="At a Glance">
-          <div className="goals-glance">
-            {yearlyGoals.map((goal) => (
-              <div
-                key={goal.id}
-                className="glance-row"
-                onClick={() => navigate(`/goal/${goal.id}`)}
-              >
-                <span className="glance-name">{goal.title}</span>
-                <ProgressBar value={getGoalProgress(goal)} size="small" />
-              </div>
-            ))}
-          </div>
-        </Collapsible>
       )}
 
-      <Collapsible id="timeline" title="Timeline">
-        <SeasonTimeline year={currentYear} />
-      </Collapsible>
+      {/* ── Next check-in ── */}
+      {nextCheckIn && (
+        <div className="overview-checkin">
+          <div className="checkin-badge">
+            <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+              <polyline points="9 16 11 18 15 14"/>
+            </svg>
+          </div>
+          <div className="checkin-info">
+            <span className="checkin-label">Next Check-in</span>
+            <span className="checkin-date">{nextCheckIn.label} &mdash; {formatDate(nextCheckIn.date)}</span>
+          </div>
+          {daysToCheckIn !== null && (
+            <div className="checkin-countdown">
+              <span className="checkin-days-value">{formatCountdown(daysToCheckIn)}</span>
+              <span className="checkin-days-label">away</span>
+            </div>
+          )}
+        </div>
+      )}
 
+      {/* ── Timeline ── */}
+      <div className="dash-section">
+        <p className="dash-section-label">Timeline</p>
+        <SeasonTimeline year={currentYear} />
+      </div>
+
+      {/* ── Goals ── */}
       {yearlyGoals.length === 0 ? (
         <div className="empty-state">
           <div className="empty-icon">
             <svg viewBox="0 0 64 64" width="64" height="64" fill="none">
-              <circle cx="20" cy="32" r="8" fill="#4F46E5" opacity="0.2" />
-              <circle cx="44" cy="32" r="8" fill="#818CF8" opacity="0.2" />
-              <circle cx="32" cy="18" r="8" fill="#A5B4FC" opacity="0.2" />
-              <circle cx="32" cy="46" r="8" fill="#4F46E5" opacity="0.15" />
+              <circle cx="20" cy="32" r="8" fill="#6366F1" opacity="0.2"/>
+              <circle cx="44" cy="32" r="8" fill="#818CF8" opacity="0.2"/>
+              <circle cx="32" cy="18" r="8" fill="#A5B4FC" opacity="0.2"/>
+              <circle cx="32" cy="46" r="8" fill="#6366F1" opacity="0.15"/>
             </svg>
           </div>
           <h2>No goals yet</h2>
@@ -234,11 +221,14 @@ export default function Dashboard() {
           </button>
         </div>
       ) : (
-        <Collapsible id="goals" title="Goals">
+        <div className="dash-section">
+          <div className="dash-section-header">
+            <p className="dash-section-label">Goals</p>
+            <button className="dash-add-btn" onClick={() => navigate('/add')}>+ Add</button>
+          </div>
           <div className="themed-groups">
             {getGroupedGoals().map(([theme, goals]) => {
-              const themeAvg =
-                goals.reduce((sum, g) => sum + getGoalProgress(g), 0) / goals.length;
+              const themeAvg = goals.reduce((sum, g) => sum + getGoalProgress(g), 0) / goals.length;
               return (
                 <div key={theme} className="theme-section">
                   <div className="theme-section-header">
@@ -261,7 +251,7 @@ export default function Dashboard() {
               );
             })}
           </div>
-        </Collapsible>
+        </div>
       )}
     </div>
   );
