@@ -159,16 +159,25 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* ── Overall progress bar ── */}
+      {/* ── At a Glance — horizontal scroll strip ── */}
       {yearlyGoals.length > 0 && (
-        <div className="dash-overall-progress">
-          <div className="dash-overall-label">
-            <span>Overall progress</span>
-            <span className="dash-overall-pct">{Math.round(overallProgress)}%</span>
-          </div>
-          <div className="dash-overall-track">
-            <div className="dash-overall-fill" style={{ width: `${overallProgress}%` }} />
-          </div>
+        <div className="glance-strip">
+          {yearlyGoals.map((goal) => {
+            const pct = Math.round(getGoalProgress(goal));
+            return (
+              <button
+                key={goal.id}
+                className="glance-card"
+                onClick={() => navigate(`/goal/${goal.id}`)}
+              >
+                <span className="glance-card-title">{goal.title}</span>
+                <span className="glance-card-pct">{pct}%</span>
+                <div className="glance-card-track">
+                  <div className="glance-card-fill" style={{ width: `${pct}%` }} />
+                </div>
+              </button>
+            );
+          })}
         </div>
       )}
 
