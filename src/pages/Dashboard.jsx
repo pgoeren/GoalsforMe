@@ -93,6 +93,18 @@ export default function Dashboard() {
     return goal.kpiTarget > 0 ? (sum / goal.kpiTarget) * 100 : 0;
   };
 
+  const THEME_PALETTE = [
+    '#6366F1', '#0EA5E9', '#10B981', '#F59E0B',
+    '#F43F5E', '#F97316', '#14B8A6', '#8B5CF6',
+  ];
+
+  const themeColorMap = (() => {
+    const themes = [...new Set(yearlyGoals.map(g => g.theme || 'Uncategorized'))].sort();
+    const map = {};
+    themes.forEach((t, i) => { map[t] = THEME_PALETTE[i % THEME_PALETTE.length]; });
+    return map;
+  })();
+
   const getGroupedGoals = () => {
     const groups = {};
     for (const goal of yearlyGoals) {
@@ -167,13 +179,24 @@ export default function Dashboard() {
             let fillClass = 'glance-fill-low';
             if (pct >= 75) fillClass = 'glance-fill-high';
             else if (pct >= 40) fillClass = 'glance-fill-mid';
+            const themeColor = themeColorMap[goal.theme || 'Uncategorized'];
+            const currentQGoal = (quarterlyData[goal.id] || []).find(q => q.quarter === currentQuarter);
             return (
               <button
                 key={goal.id}
                 className="glance-card"
                 onClick={() => navigate(`/goal/${goal.id}`)}
+                style={{ '--glance-accent': themeColor }}
               >
+                <span className="glance-theme-badge" style={{ background: `${themeColor}1A`, color: themeColor }}>
+                  {goal.theme || 'Uncategorized'}
+                </span>
                 <span className="glance-card-title">{goal.title}</span>
+                {currentQGoal?.title && (
+                  <span className="glance-quarter-task">
+                    Q{currentQuarter} › {currentQGoal.title}
+                  </span>
+                )}
                 <div className="glance-card-footer">
                   <div className="glance-card-track">
                     <div className={`glance-card-fill ${fillClass}`} style={{ width: `${pct}%` }} />
