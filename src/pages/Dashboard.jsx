@@ -161,26 +161,24 @@ export default function Dashboard() {
 
       {/* ── At a Glance ── */}
       {yearlyGoals.length > 0 && (
-        <div className="glance-list">
+        <div className="glance-grid">
           {yearlyGoals.map((goal) => {
             const pct = Math.round(getGoalProgress(goal));
+            let fillClass = 'glance-fill-low';
+            if (pct >= 75) fillClass = 'glance-fill-high';
+            else if (pct >= 40) fillClass = 'glance-fill-mid';
             return (
               <button
                 key={goal.id}
-                className="glance-row"
+                className="glance-card"
                 onClick={() => navigate(`/goal/${goal.id}`)}
               >
-                <div className="glance-row-top">
-                  <span className="glance-row-title">{goal.title}</span>
-                  <div className="glance-row-right">
-                    <span className="glance-row-pct">{pct}%</span>
-                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="glance-row-chevron">
-                      <polyline points="9 18 15 12 9 6" />
-                    </svg>
+                <span className="glance-card-title">{goal.title}</span>
+                <div className="glance-card-footer">
+                  <div className="glance-card-track">
+                    <div className={`glance-card-fill ${fillClass}`} style={{ width: `${pct}%` }} />
                   </div>
-                </div>
-                <div className="glance-row-track">
-                  <div className="glance-row-fill" style={{ width: `${pct}%` }} />
+                  <span className="glance-card-pct">{pct}%</span>
                 </div>
               </button>
             );

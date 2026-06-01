@@ -401,73 +401,69 @@ input, textarea, [contenteditable] { -webkit-user-select: text; user-select: tex
 }
 .dashboard-header h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
 
-/* ====== At a Glance — stacked rows ====== */
-.glance-list {
-  background: var(--color-surface);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--color-border);
-  overflow: hidden;
+/* ====== At a Glance — 2-column card grid ====== */
+.glance-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
   margin-bottom: 12px;
 }
 
-.glance-row {
-  display: block;
-  width: 100%;
-  padding: 12px 14px;
-  background: none;
-  border: none;
-  border-bottom: 1px solid var(--color-border-light);
+.glance-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  padding: 14px 14px 12px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
   cursor: pointer;
   font-family: inherit;
   text-align: left;
-  transition: background 0.12s;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: box-shadow 0.15s, transform 0.15s;
   -webkit-tap-highlight-color: transparent;
 }
-.glance-row:last-child { border-bottom: none; }
-.glance-row:hover  { background: var(--color-border-light); }
-.glance-row:active { background: var(--tint-indigo); }
+.glance-card:hover  { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+.glance-card:active { transform: translateY(0); box-shadow: var(--shadow-sm); }
 
-.glance-row-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 8px;
-}
-.glance-row-title {
-  font-size: 14px;
+.glance-card-title {
+  font-size: 13px;
   font-weight: 600;
   color: var(--color-text);
-  line-height: 1.35;
+  line-height: 1.4;
   flex: 1;
 }
-.glance-row-right {
+
+.glance-card-footer {
   display: flex;
   align-items: center;
-  gap: 4px;
-  flex-shrink: 0;
+  gap: 8px;
 }
-.glance-row-pct {
-  font-size: 14px;
-  font-weight: 800;
-  color: var(--color-primary);
-}
-.glance-row-chevron {
-  color: var(--color-primary);
-  opacity: 0.6;
-}
-.glance-row-track {
-  height: 5px;
+
+.glance-card-track {
+  flex: 1;
+  height: 7px;
   background: var(--color-border-light);
   border-radius: 999px;
   overflow: hidden;
 }
-.glance-row-fill {
+
+.glance-card-fill {
   height: 100%;
   border-radius: 999px;
-  background: var(--color-primary);
   transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+.glance-fill-low  { background: var(--color-danger); }
+.glance-fill-mid  { background: var(--color-warning); }
+.glance-fill-high { background: var(--color-success); }
+
+.glance-card-pct {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--color-text-secondary);
+  min-width: 32px;
+  text-align: right;
 }
 
 /* Dashboard sections — replaces collapsibles */
@@ -1158,7 +1154,7 @@ input, textarea, [contenteditable] { -webkit-user-select: text; user-select: tex
 .goal-row-title {
   font-size: 14px; font-weight: 600;
   color: var(--color-text);
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  line-height: 1.35;
 }
 .goal-row-right { flex-shrink: 0; width: 40%; min-width: 120px; }
 .goal-row-right .progress-bar-wrapper { width: 100%; }
