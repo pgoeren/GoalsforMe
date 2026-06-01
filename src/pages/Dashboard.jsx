@@ -159,21 +159,28 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* ── At a Glance — horizontal scroll strip ── */}
+      {/* ── At a Glance ── */}
       {yearlyGoals.length > 0 && (
-        <div className="glance-strip">
+        <div className="glance-list">
           {yearlyGoals.map((goal) => {
             const pct = Math.round(getGoalProgress(goal));
             return (
               <button
                 key={goal.id}
-                className="glance-card"
+                className="glance-row"
                 onClick={() => navigate(`/goal/${goal.id}`)}
               >
-                <span className="glance-card-title">{goal.title}</span>
-                <span className="glance-card-pct">{pct}%</span>
-                <div className="glance-card-track">
-                  <div className="glance-card-fill" style={{ width: `${pct}%` }} />
+                <div className="glance-row-top">
+                  <span className="glance-row-title">{goal.title}</span>
+                  <div className="glance-row-right">
+                    <span className="glance-row-pct">{pct}%</span>
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="glance-row-chevron">
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="glance-row-track">
+                  <div className="glance-row-fill" style={{ width: `${pct}%` }} />
                 </div>
               </button>
             );
