@@ -29,7 +29,7 @@ function VideoCard({ video, onSelect }) {
     <article className="video-card">
       <button className="video-card-btn" onClick={() => onSelect(video)}>
         <div className="video-thumb-wrap">
-          {thumbLevel === 'failed' ? (
+          {thumbFailed ? (
             <div className="video-thumb-fallback">
               <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <polygon points="5 3 19 12 5 21 5 3" />
@@ -38,10 +38,10 @@ function VideoCard({ video, onSelect }) {
           ) : (
             <img
               className="video-thumb"
-              src={thumbSrc}
+              src={`https://img.youtube.com/vi/${video.id}/mqdefault.jpg`}
               alt={video.title}
               loading="lazy"
-              onError={handleThumbError}
+              onError={() => setThumbFailed(true)}
             />
           )}
           <div className="video-play-overlay" aria-hidden="true">

@@ -132,7 +132,14 @@ export const inspirationVideos = [
     duration: '22:38',
   },
   {
-    id: 'JfA-qNWLBHo',
+    id: 'Cgq0WUVI_IE',
+    title: 'The Power of Ambition',
+    speaker: 'Jim Rohn',
+    category: 'goals',
+    duration: '19:55',
+  },
+  {
+    id: 'FKHCXKV2ooM',
     title: 'How to Have Your Best Year Ever',
     speaker: 'Jim Rohn',
     category: 'planning',
@@ -145,11 +152,18 @@ export const inspirationVideos = [
     category: 'discipline',
     duration: '28:09',
   },
+  {
+    id: 'MCQjjFy4FVg',
+    title: 'Six Months to a New Life',
+    speaker: 'Jim Rohn',
+    category: 'planning',
+    duration: '24:51',
+  },
 
   // ─── Les Brown ────────────────────────────────────────────────────────────────
   {
-    id: 'uFBqCPj6n44',
-    title: "You've Gotta Be Hungry",
+    id: 'D4GXqPIYLNQ',
+    title: "It's Possible — You Have Greatness Within You",
     speaker: 'Les Brown',
     category: 'action',
     duration: '9:41',
@@ -275,11 +289,11 @@ export const inspirationVideos = [
     duration: '1:04:18',
   },
   {
-    id: 'ZjIRYn7x8sk',
-    title: 'How to Overcome Anxiety and Find True Happiness',
-    speaker: 'Jay Shetty',
-    category: 'mindset',
-    duration: '58:42',
+    id: 'DG-oAF1i_UA',
+    title: 'You Owe You — Bet on Yourself',
+    speaker: 'Eric Thomas',
+    category: 'action',
+    duration: '11:30',
   },
   {
     id: 'AyiWKXTd9aY',

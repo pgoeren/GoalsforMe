@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { isFirebaseConfigured } from '../firebase/config';
+import DarkModeToggle from './DarkModeToggle';
 
 export default function Layout() {
   return (
@@ -7,18 +8,21 @@ export default function Layout() {
       <header className="app-header">
         <NavLink to="/" className="app-logo">
           <svg viewBox="0 0 100 100" width="28" height="28">
-            <rect width="100" height="100" rx="24" fill="#4F46E5" />
-            <circle cx="35" cy="55" r="10" fill="#818CF8" />
-            <circle cx="65" cy="55" r="10" fill="#A5B4FC" />
+            <rect width="100" height="100" rx="24" fill="rgba(255,255,255,0.22)" />
+            <circle cx="35" cy="55" r="10" fill="rgba(255,255,255,0.5)" />
+            <circle cx="65" cy="55" r="10" fill="rgba(255,255,255,0.75)" />
             <circle cx="50" cy="35" r="10" fill="white" />
           </svg>
           <span>GoalsForMe</span>
         </NavLink>
-        {!isFirebaseConfigured && (
-          <span className="storage-badge" title="Using browser storage. Add Firebase config for cloud sync.">
-            Local
-          </span>
-        )}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          {!isFirebaseConfigured && (
+            <span className="storage-badge" title="Using browser storage. Add Firebase config for cloud sync.">
+              Local
+            </span>
+          )}
+          <DarkModeToggle />
+        </div>
       </header>
 
       <main className="app-main">
